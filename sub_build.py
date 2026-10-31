@@ -723,7 +723,15 @@ def main():
                 q.get("name", "")[:28], q.get("type", ""), r, tcp, med, jit, sp))
         with open(os.path.join(OUT, "table.txt"), "w", encoding="utf-8") as f:
             f.write("\n".join(lines_t) + "\n")
-        log("  table.txt：%d 行" % (len(lines_t) - 1))
+        log("  table.txt：%d 行（按延迟）" % (len(lines_t) - 1))
+
+        lines_s = ["名称\t协议\t地区\t下载(KB/s)\tTCP(ms)\tHTTP(ms)\t抖动(ms)"]
+        for (tcp, med, jit, sp, sc, u, q), r in sorted(zip(keep, regs), key=lambda z: -z[0][3]):
+            lines_s.append("%s\t%s\t%s\t%.0f\t%d\t%d\t%d" % (
+                q.get("name", "")[:28], q.get("type", ""), r, sp, tcp, med, jit))
+        with open(os.path.join(OUT, "table_speed.txt"), "w", encoding="utf-8") as f:
+            f.write("\n".join(lines_s) + "\n")
+        log("  table_speed.txt：%d 行（按下载速度）" % (len(lines_s) - 1))
 
     # ⑯ 全部 AnyTLS：只查真实出口 IP（不测速），查不到的不收
     if anytls_pool:
