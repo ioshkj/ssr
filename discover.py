@@ -122,6 +122,15 @@ def main():
         else:
             dropped += 1
     log("新鲜度检测：丢弃 %d 个超过 30 小时未更新的源" % dropped)
+    if not keep and not found:
+        # 本轮什么都没找到：保留旧清单，避免把历史积累清空
+        try:
+            old_list = json.load(open(OUT, encoding="utf-8"))
+        except Exception:
+            old_list = []
+        if old_list:
+            log("本轮未发现新源，保留原有 %d 个" % len(old_list))
+            return
     final = keep
     json.dump(final, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     log("本轮命中 %d，累积保留 %d 个订阅源" % (len(found), len(final)))
