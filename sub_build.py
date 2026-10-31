@@ -131,41 +131,71 @@ def main():
                 pass
         return best
 
-    # ① TCP 延迟 ≤300ms（这是硬门槛，客户端显示的延迟主要来自这一段）
+    # ① TCP 初筛：3 次取最小，>500ms 淘汰（只做粗筛）
+    def tcp_ms(q):
+        import socket, time as _t
+        best = None
+        for _ in range(3):
+            t0 = _t.time()
+            try:
+                socket.create_connection((q["server"], int(q["port"])), timeout=2).close()
+                v = int((_t.time() - t0) * 1000)
+                best = v if best is None else min(best, v)
+            except Exception:
+                pass
+        return best
+
     with ThreadPoolExecutor(max_workers=256) as ex:
         lat = list(ex.map(tcp_ms, ps))
-    pairs = [(l, q) for q, l in zip(ps, lat) if l is not None and l <= 300]
+    pairs = [(l, q) for q, l in zip(ps, lat) if l is not None and l <= 500]
     pairs.sort(key=lambda x: x[0])
-    ps = [q for _, q in pairs][:300]
-    tcp_of = {(q["server"], int(q["port"])): l for l, q in pairs}
-    log("TCP ≤300ms 的 %d 条，进入可用性验证" % len(ps))
+    ps = [q for _, q in pairs][:400]
+    log("TCP ≤500ms 的 %d 条，进入端到端测试" % len(ps))
 
-    # ② 严格验证：连续 2 次访问 Google 成功，且能下载 100KB 真实内容
-    good = set(k for k in ((q["server"], int(q["port"])) for q in ps))
-    for rnd in (1, 2):
+    # ② 端到端延迟 + 抖动：3 次请求 Google，至少 2 次成功
+    samples = {}
+    for rnd in range(3):
         r = verify.verify([dict(p) for p in ps], workers=192, timeout=8000,
                           url=verify.URL_GOOGLE, log=lambda m: None)
-        passed = {(p["server"], int(p["port"])) for p, _ in r}
-        good &= passed
-        log("  第 %d 次验证 Google：通过 %d，累计交集 %d" % (rnd, len(passed), len(good)))
-        if not good:
-            break
-        ps = [p for p in ps if (p["server"], int(p["port"])) in good]
+        for p, d in r:
+            samples.setdefault((p["server"], int(p["port"])), []).append(d)
+        log("  第 %d 次延迟采样成功 %d" % (rnd + 1, len(r)))
 
-    # ③ 下载 100KB 才算真能用
-    if good:
-        dl = [p for p in ps if (p["server"], int(p["port"])) in good]
-        r3 = verify.verify([dict(p) for p in dl], workers=64, timeout=15000,
-                           url="https://speed.cloudflare.com/__down?bytes=102400", log=lambda m: None)
-        good = {(p["server"], int(p["port"])) for p, _ in r3}
-        log("  100KB 下载通过 %d" % len(good))
+    import statistics
+    stats = {}
+    for k, ds in samples.items():
+        if len(ds) < 2:
+            continue
+        med = sorted(ds)[len(ds) // 2]
+        jit = statistics.pstdev(ds) if len(ds) > 1 else 0
+        if med > 600 or jit > 200:
+            continue
+        stats[k] = (med, jit)
+    log("端到端达标（≤600ms，抖动≤200ms）%d 条" % len(stats))
 
+    # ③ 下载 1MB 测真实速度
+    ps2 = [p for p in ps if (p["server"], int(p["port"])) in stats]
+    sp = verify.verify([dict(p) for p in ps2], workers=48, timeout=20000,
+                       url="https://speed.cloudflare.com/__down?bytes=1000000", log=lambda m: None)
+    speed = {(p["server"], int(p["port"])): 1000.0 / max(d, 1) for p, d in sp}  # KB/s
+    log("下载 1MB 成功 %d 条" % len(speed))
+
+    # ④ 加权评分 0-100：速度 50% + 延迟 35% + 抖动 15%
     keep = []
     for u, q in items:
         k = (q["server"], int(q["port"]))
-        if k in good and k in tcp_of:
-            keep.append((tcp_of[k], u, q))
+        if k not in speed or k not in stats:
+            continue
+        med, jit = stats[k]
+        sp_kb = speed[k]
+        if sp_kb < 300:
+            continue
+        score = 100.0 * (0.50 * min(sp_kb / 2000.0, 1.0)
+                         + 0.35 * (1 - min(med / 1000.0, 1.0))
+                         + 0.15 * (1 - min(jit / 300.0, 1.0)))
+        keep.append(((-score, med), u, q))
     keep.sort(key=lambda x: x[0])
+    log("评分达标 %d 条" % len(keep))
 
     # 同网段最多 12 个，避免整份都是同一家的机器
     lim, seen_net, dedup = 12, {}, []
@@ -187,7 +217,7 @@ def main():
     for (d, u, q), r in zip(keep, regs):
         cnt[r] = cnt.get(r, 0) + 1
         out.append(u.split("#")[0] + "#" + (NAME % (r, cnt[r])).replace(" ", "%20"))
-    out = out[:200]
+    out = out[:50]
 
     old_n = 0
     fp = os.path.join(OUT, "final2.txt")
