@@ -478,6 +478,27 @@ def main():
     n_speed = emit("final4.txt", 2)  # 按下载速度
     n_score = emit("final5.txt", 3)  # 综合评分
 
+    # ⑤ 真实出口地区（逐个查出口 IP，剔除真实在美加的）
+    if keep:
+        from concurrent.futures import ThreadPoolExecutor as _TPE0
+        with _TPE0(max_workers=6) as _ex0:
+            _ccs = list(_ex0.map(lambda row: exit_cc(row[6]), keep[:120]))
+        _real = [(row, geo.CC_NAME.get(cc, "其他")) for row, cc in zip(keep, _ccs)
+                 if cc and cc not in ("US", "CA")]
+        log("真实出口非美加：%d 条" % len(_real))
+        cnt_e, out_e = {}, []
+        for row, r in sorted(_real, key=lambda z: -z[0][4]):
+            if cnt_e.get(r, 0) >= 7:
+                continue
+            cnt_e[r] = cnt_e.get(r, 0) + 1
+            out_e.append(row[5].split("#")[0] + "#" + (NAME % (r, cnt_e[r])).replace(" ", "%20"))
+            if len(out_e) >= 200:
+                break
+        if out_e:
+            with open(os.path.join(OUT, "final6.txt"), "w", encoding="utf-8") as f:
+                f.write(base64.b64encode("\n".join(out_e).encode()).decode())
+        log("  final6.txt：%d 条（真实出口）" % len(out_e))
+
     # ⑥ 第六份：剔除美加后的全部节点（不限地区，最多 200）
     out_all = []
     for (tcp, med, jit, sp, sc, u, q), r in sorted(zip(keep, regs), key=lambda z: -z[0][4]):

@@ -70,6 +70,15 @@ def main():
     oldmap = {"%s|%s" % (x["repo"], x["path"]): x for x in old}
     now = time.time()
 
+    if not repos:
+        # 搜索接口整体失败：不要动现有清单，避免把源清空
+        try:
+            old_n = len(json.load(open(OUT, encoding="utf-8")))
+        except Exception:
+            old_n = 0
+        log("搜索接口无返回，保留原有 %d 个源" % old_n)
+        return
+
     found = []
     for repo, meta in sorted(repos.items(), key=lambda kv: -kv[1]["stars"])[:120]:
         branch = meta["branch"]
