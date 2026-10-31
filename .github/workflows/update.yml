@@ -32,6 +32,8 @@ jobs:
           curl -sL --retry 3 -o bin/mihomo.gz https://github.com/MetaCubeX/mihomo/releases/download/v1.19.33/mihomo-linux-amd64-v1.19.33.gz
           gunzip -f bin/mihomo.gz && chmod +x bin/mihomo && ./bin/mihomo -v
       - name: discover
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python -u discover.py $(date -u -d '2 days ago' +%Y-%m-%d) 2>&1 | tail -5 || true
       - name: build
         env:
