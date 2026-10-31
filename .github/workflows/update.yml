@@ -32,6 +32,8 @@ jobs:
       - name: discover
         run: python -u discover.py $(date -u -d '2 days ago' +%Y-%m-%d) 2>&1 | tail -5 || true
       - name: build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python -u sub_build.py 2>&1 | tee build.log || true
       - name: save
         run: |

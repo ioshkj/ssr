@@ -25,6 +25,36 @@ SRC = [
 NAME = "%s-%02d 0070077.xyz"   # 名字里不要出现冒号和全角符号，QX 会整行丢弃
 
 
+def repo_pushed(repo, cache={}):
+    """返回仓库最近一次 push 时间（datetime），失败返回 None"""
+    if repo in cache:
+        return cache[repo]
+    import json as _json, os as _os, urllib.request as _ur
+    h = {"Accept": "application/vnd.github+json", "User-Agent": "curl/8"}
+    tok = _os.environ.get("GITHUB_TOKEN", "")
+    if tok:
+        h["Authorization"] = "Bearer " + tok
+    try:
+        req = _ur.Request("https://api.github.com/repos/%s" % repo, headers=h)
+        d = _json.loads(_ur.urlopen(req, timeout=20).read().decode())
+        import datetime as _dt
+        t = _dt.datetime.fromisoformat(d["pushed_at"].replace("Z", "+00:00"))
+    except Exception:
+        t = None
+    cache[repo] = t
+    return t
+
+
+def is_fresh(path, hours=48):
+    import datetime as _dt
+    repo = "/".join(path.split("/")[:2])
+    t = repo_pushed(repo)
+    if t is None:
+        return True          # 查不到就放行，避免误杀
+    age = (_dt.datetime.now(_dt.timezone.utc) - t).total_seconds() / 3600.0
+    return age <= hours
+
+
 def log(m):
     print(m, flush=True)
 
@@ -127,7 +157,12 @@ def real_speed(q, bytes_=300000, timeout=25):
 def main():
     os.makedirs(OUT, exist_ok=True)
     seen, lines = set(), []
+    stale = 0
     for p in SRC + discovered():
+        if not is_fresh(p, 48):
+            stale += 1
+            log("  [跳过] %s 超过 48 小时未更新" % p)
+            continue
         n = 0
         for u in lines_of(fetch(p)):
             k = u.split("#")[0]
@@ -137,7 +172,7 @@ def main():
             lines.append(u)
             n += 1
         log("  %-46s +%d" % (p.split("/")[-1][:44], n))
-    log("合并 %d 条（原样，未改）" % len(lines))
+    log("合并 %d 条（原样，未改），跳过过期源 %d 个" % (len(lines), stale))
 
     # 第一步：按 server:port 去重（同一入口只留一条）
     items, seen_ep = [], set()
