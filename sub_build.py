@@ -706,8 +706,8 @@ def main():
     log("  all.txt：%d 条（合并去重）" % len(merged))
 
     # ⑯ 全部 AnyTLS 节点（不限量）
+    # 只取「拿到真实地区且非美加」的 AnyTLS
     any_rows = [(row, r) for row, r in zip(keep, regs) if row[6].get("type") == "anytls"]
-    any_rows += [(row, r) for row, r in unverified_rows if row[6].get("type") == "anytls"]
     if any_rows:
         out_any = []
         seen_any = set()
