@@ -184,7 +184,7 @@ def main():
     log("合并 %d 条（原样，未改），跳过过期源 %d 个" % (len(lines), stale))
 
     # 第一步：按 server:port 去重（同一入口只留一条）
-    items, seen_ep = [], set()
+    items, seen_ep, us_skip = [], set(), 0
     for u in lines:
         q = nodeconv.to_clash(u, "x")
         if not q:
@@ -192,9 +192,13 @@ def main():
         ep = (str(q["server"]).lower(), int(q["port"]))
         if ep in seen_ep:
             continue
+        # 去重阶段就剔除美国节点（测速在境外，美国节点会天然占优）
+        if geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", ""))) == "US":
+            us_skip += 1
+            continue
         seen_ep.add(ep)
         items.append((u, q))
-    log("去重后唯一入口 %d 个" % len(items))
+    log("去重后唯一入口 %d 个（提前剔除疑似美国 %d 个）" % (len(items), us_skip))
     ps = [q for _, q in items]
 
     def tcp_ms(q):
