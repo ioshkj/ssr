@@ -412,6 +412,17 @@ def main():
     n_speed = emit("final4.txt", 2)  # 按下载速度
     n_score = emit("final5.txt", 3)  # 综合评分
 
+    # ⑥ 全部通过测试的节点（不按地区限量，仅按综合分排序，最多 200）
+    out_all = []
+    for (tcp, med, jit, sp, sc, u, q), r in sorted(zip(keep, regs), key=lambda z: -z[0][4]):
+        out_all.append(u.split("#")[0] + "#" + (NAME % (r, 0)).replace(" ", "%20").replace("-00", "-ALL"))
+        if len(out_all) >= 200:
+            break
+    if out_all:
+        with open(os.path.join(OUT, "final7.txt"), "w", encoding="utf-8") as f:
+            f.write(base64.b64encode("\n".join(out_all).encode()).decode())
+    log("  final7.txt：%d 条（全部通过）" % len(out_all))
+
     # ⑤ 第五份：与上面同一批节点，但按真实地区重新编号输出（方便单独对比）
     if keep:
         cnt_r, out_r = {}, []
