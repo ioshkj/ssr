@@ -344,6 +344,8 @@ def main():
     keep = dedup
     log("同网段去重后 %d" % len(keep))
 
+    keep_all = list(keep)   # 全量通过（未做稳定性和地区截断），供 final7 用
+
     # 稳定性（known.json）
     import json as _j, time as _tm
     kp = os.path.join(HERE, "known.json")
@@ -374,8 +376,6 @@ def main():
               if known.get("%s:%d" % (x[6]["server"], int(x[6]["port"])), {}).get("s", 0) >= 3]
     log("连续 3 轮通过 %d 条，本轮通过 %d 条" % (len(stable), len(keep)))
     keep = stable if len(stable) >= 10 else keep[:60]
-
-    keep_raw = list(keep)   # 保存「所有通过测试」的节点，供 final7 用
 
     # 只按「节点名 / 域名」判断地区（不做 IP 反查，避免 CF 节点被误判成加拿大）
     keep2, regs = [], []
@@ -416,7 +416,7 @@ def main():
 
     # ⑥ 全部通过测试的节点（含美国/加拿大，不按地区限量）—— 用来看真实可用率
     out_all = []
-    for (tcp, med, jit, sp, sc, u, q) in sorted(keep_raw, key=lambda x: -x[4]):
+    for (tcp, med, jit, sp, sc, u, q) in sorted(keep_all, key=lambda x: -x[4]):
         cc = geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", "")))
         r = geo.CC_NAME.get(cc, "其他")
         out_all.append(u.split("#")[0] + "#" + (NAME % (r, len(out_all) + 1)).replace(" ", "%20"))
