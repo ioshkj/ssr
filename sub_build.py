@@ -140,21 +140,30 @@ def main():
     tcp_of = {(q["server"], int(q["port"])): l for l, q in pairs}
     log("TCP ≤300ms 的 %d 条，进入可用性验证" % len(ps))
 
-    # ② HTTP 只验证“能不能用”，不作为延迟门槛
-    ok_keys = set()
-    for rnd in range(2):
+    # ② 严格验证：连续 2 次访问 Google 成功，且能下载 100KB 真实内容
+    good = set(k for k in ((q["server"], int(q["port"])) for q in ps))
+    for rnd in (1, 2):
         r = verify.verify([dict(p) for p in ps], workers=192, timeout=8000,
                           url=verify.URL_GOOGLE, log=lambda m: None)
-        for p, d in r:
-            ok_keys.add((p["server"], int(p["port"])))
-        log("  HTTP 第 %d 轮可用 %d（累计 %d）" % (rnd + 1, len(r), len(ok_keys)))
-        if len(ok_keys) >= 30:
+        passed = {(p["server"], int(p["port"])) for p, _ in r}
+        good &= passed
+        log("  第 %d 次验证 Google：通过 %d，累计交集 %d" % (rnd, len(passed), len(good)))
+        if not good:
             break
+        ps = [p for p in ps if (p["server"], int(p["port"])) in good]
+
+    # ③ 下载 100KB 才算真能用
+    if good:
+        dl = [p for p in ps if (p["server"], int(p["port"])) in good]
+        r3 = verify.verify([dict(p) for p in dl], workers=64, timeout=15000,
+                           url="https://speed.cloudflare.com/__down?bytes=102400", log=lambda m: None)
+        good = {(p["server"], int(p["port"])) for p, _ in r3}
+        log("  100KB 下载通过 %d" % len(good))
 
     keep = []
     for u, q in items:
         k = (q["server"], int(q["port"]))
-        if k in ok_keys and k in tcp_of:
+        if k in good and k in tcp_of:
             keep.append((tcp_of[k], u, q))
     keep.sort(key=lambda x: x[0])
 
