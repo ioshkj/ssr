@@ -375,25 +375,17 @@ def main():
     log("连续 3 轮通过 %d 条，本轮通过 %d 条" % (len(stable), len(keep)))
     keep = stable if len(stable) >= 10 else keep[:60]
 
-    # 只按「节点名里的中文地区词」判断，不做任何识别；识别不到就算「其他」
-    import re as _re
-    CN_WORDS = [(w, cc) for w, cc in geo.WORD_CC if _re.search(r"[\u4e00-\u9fff]", w)]
-
-    def region_cn(name):
-        for w, cc in CN_WORDS:
-            if w in (name or ""):
-                return geo.CC_NAME.get(cc, "其他")
-        return "其他"
-
+    # 地区：按原有识别（国旗、英文、域名都认）；屏蔽：只看名字里有没有中文「美国/加拿大」
     keep2, regs = [], []
     for row in keep:
         q = row[6]
-        r = region_cn(q.get("name", ""))
-        if r in ("美国", "加拿大"):      # 只屏蔽这两个中文词
+        nm = q.get("name", "") or ""
+        if ("美国" in nm) or ("加拿大" in nm):
             continue
+        cc = geo.guess_cc("%s %s" % (nm, q.get("server", "")))
         keep2.append(row)
-        regs.append(r)
-    log("按中文名剔除美加后：%d 条" % len(keep2))
+        regs.append(geo.CC_NAME.get(cc, "其他"))
+    log("屏蔽中文美加后：%d 条" % len(keep2))
     keep = keep2
 
     def emit(filename, order):
