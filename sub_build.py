@@ -445,6 +445,21 @@ def main():
             f.write(base64.b64encode("\n".join(out_t).encode()).decode())
     log("  final8.txt：%d 条（按协议类型，每种 7 条）" % len(out_t))
 
+    # ⑧ 高延迟段：TCP 延迟 500~1000ms 的节点（其他规则不变）
+    mid = [(row, r) for row, r in zip(keep, regs) if 500 <= row[0] <= 1000]
+    cnt_m, out_m = {}, []
+    for (tcp, med, jit, sp, sc, u, q), r in sorted(mid, key=lambda z: -z[0][4]):
+        if cnt_m.get(r, 0) >= 7:
+            continue
+        cnt_m[r] = cnt_m.get(r, 0) + 1
+        out_m.append(u.split("#")[0] + "#" + (NAME % (r, cnt_m[r])).replace(" ", "%20"))
+        if len(out_m) >= 200:
+            break
+    if out_m:
+        with open(os.path.join(OUT, "final9.txt"), "w", encoding="utf-8") as f:
+            f.write(base64.b64encode("\n".join(out_m).encode()).decode())
+    log("  final9.txt：%d 条（TCP 500~1000ms）" % len(out_m))
+
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n合并 %d / 通过 %d / 稳定 %d / TCP版 %d / HTTP版 %d / 速度版 %d / 综合版 %d\n"
                 % (time.strftime("%Y-%m-%d %H:%M:%S"), len(lines), len(keep),
