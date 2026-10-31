@@ -389,7 +389,7 @@ def main():
     keep = keep2
 
     def emit(filename, order):
-        PER_REGION = 5
+        PER_REGION = 7
         cnt, out = {}, []
         KEYS = {0: lambda t: t[0], 1: lambda t: t[1], 2: lambda t: -t[3], 3: lambda t: -t[4]}
         for row, r in sorted(zip(keep, regs), key=lambda z: KEYS[order](z[0])):
