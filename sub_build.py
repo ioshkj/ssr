@@ -733,6 +733,22 @@ def main():
             f.write("\n".join(lines_s) + "\n")
         log("  table_speed.txt：%d 行（按下载速度）" % (len(lines_s) - 1))
 
+    # 中速段：下载 100~300 KB/s
+    mid_rows = [(row, r) for row, r in zip(keep, regs) if 100 <= row[3] <= 300]
+    if mid_rows:
+        cnt_d, out_d = {}, []
+        for (tcp, med, jit, sp, sc, u, q), r in sorted(mid_rows, key=lambda z: -z[0][3]):
+            if cnt_d.get(r, 0) >= 7:
+                continue
+            cnt_d[r] = cnt_d.get(r, 0) + 1
+            out_d.append(u.split("#")[0] + "#" + (NAME % (r, cnt_d[r])).replace(" ", "%20"))
+            if len(out_d) >= 200:
+                break
+        if out_d:
+            with open(os.path.join(OUT, "final17.txt"), "w", encoding="utf-8") as f:
+                f.write(base64.b64encode("\n".join(out_d).encode()).decode())
+        log("  final17.txt：%d 条（下载 100~300KB/s）" % len(out_d))
+
     # ⑯ 全部 AnyTLS：只查真实出口 IP（不测速），查不到的不收
     if anytls_pool:
         from concurrent.futures import ThreadPoolExecutor as _TPE_Y
