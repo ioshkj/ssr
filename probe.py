@@ -66,6 +66,47 @@ def parse_line(line):
     return q
 
 
+
+def ip_api(q, timeout=12):
+    """通过节点访问 ip-api，返回 (ip, 国家码) 或 (None, None)"""
+    import json as _j, socket as _sk, subprocess as _sp, tempfile as _tf, time as _t
+    import urllib.request as _ur
+    wd = _tf.mkdtemp(prefix="geo-")
+    a, b = _sk.socket(), _sk.socket()
+    a.bind(("127.0.0.1", 0)); b.bind(("127.0.0.1", 0))
+    api_p, mix_p = a.getsockname()[1], b.getsockname()[1]
+    a.close(); b.close()
+    cfg = {"mixed-port": mix_p, "external-controller": "127.0.0.1:%d" % api_p,
+           "log-level": "warning", "mode": "rule",
+           "proxies": [dict(q, name="p")], "rules": ["MATCH,p"]}
+    path = wd + "/c.yaml"
+    open(path, "w").write(_j.dumps(cfg, ensure_ascii=False))
+    p = _sp.Popen([verify.BIN, "-d", wd, "-f", path], stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
+    try:
+        for _ in range(40):
+            _t.sleep(0.2)
+            try:
+                _ur.urlopen("http://127.0.0.1:%d/version" % api_p, timeout=1).read()
+                break
+            except Exception:
+                if p.poll() is not None:
+                    return None, None
+        r = _sp.run(["curl", "-s", "--max-time", str(timeout),
+                     "-x", "http://127.0.0.1:%d" % mix_p,
+                     "http://ip-api.com/json/?fields=query,countryCode"],
+                    capture_output=True, text=True)
+        d = _j.loads(r.stdout or "{}")
+        return d.get("query"), (d.get("countryCode") or "").upper() or None
+    except Exception:
+        return None, None
+    finally:
+        p.terminate()
+        try:
+            p.wait(3)
+        except Exception:
+            p.kill()
+
+
 def tcp_ms(host, port, n=3):
     best = None
     for _ in range(n):
@@ -118,15 +159,18 @@ def main():
     print("下载完成", flush=True)
 
     for i, p in enumerate(proxies):
-        res[i]["udp"] = sb.udp_ok(p)
+        ip, cc = ip_api(p)
+        res[i]["ip"] = ip
+        res[i]["cc"] = cc
+    print("IP 查询完成", flush=True)
     print("UDP 完成", flush=True)
 
-    rows = ["名称          协议      TCP    Google YT  CF  TW  TG   抖动   下载KB/s  UDP"]
+    rows = ["名称          协议      TCP    Google YT  CF  TW  TG   导出IP           国家  下载KB/s"]
     for i, p in enumerate(proxies):
         r = res[i]
         sm = sorted(r.get("samples", []))
         jit = int(statistics.pstdev(sm)) if len(sm) > 1 else 0
-        rows.append("%-12s %-8s %-6s %-5s %-3s %-3s %-3s %-3s %-5s %-8s %s" % (
+        rows.append("%-12s %-8s %-6s %-5s %-3s %-3s %-3s %-3s %-16s %-5s %-8s" % (
             p["name"][:12], p["type"],
             ("%dms" % r["tcp"]) if r.get("tcp") else "✗",
             "✓" if r.get("Google") else "✗",
@@ -134,9 +178,9 @@ def main():
             "✓" if r.get("Cloudflare") else "✗",
             "✓" if r.get("Twitter") else "✗",
             "✓" if r.get("Telegram") else "✗",
-            ("%dms" % jit) if jit else "-",
-            str(r.get("kbps", "✗")),
-            "✓" if r.get("udp") else "✗"))
+            r.get("ip") or "✗",
+            r.get("cc") or "-",
+            str(r.get("kbps", "✗"))))
     out = "\n".join(rows)
     print(out)
     open(os.path.join(HERE, "sub", "probe.txt"), "w", encoding="utf-8").write(out + "\n")
