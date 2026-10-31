@@ -375,12 +375,19 @@ def main():
     log("连续 3 轮通过 %d 条，本轮通过 %d 条" % (len(stable), len(keep)))
     keep = stable if len(stable) >= 10 else keep[:60]
 
-    regs = geo.regions([q for *_, q in keep])
-    EXCLUDE = {"美国", "加拿大"}
-    pairs = [(x, r) for x, r in zip(keep, regs) if r not in EXCLUDE]
-    keep = [x for x, _ in pairs]
-    regs = [r for _, r in pairs]
-    log("剔除美国/加拿大后 %d 条" % len(keep))
+    # 用「真实出口 IP」判定地区（名字/域名判断会把 CF 中转节点误判成加拿大）
+    from concurrent.futures import ThreadPoolExecutor as _TPE2
+
+    def _cc(row):
+        return exit_cc(row[6])
+
+    with _TPE2(max_workers=6) as _ex2:
+        ccs = list(_ex2.map(_cc, keep[:200]))
+    pairs_r = [(row, cc) for row, cc in zip(keep, ccs)
+               if cc and cc not in ("US", "CA")]
+    log("真实出口非美加：%d 条（共测 %d）" % (len(pairs_r), len(ccs)))
+    keep = [x for x, _ in pairs_r]
+    regs = [geo.CC_NAME.get(cc, "其他") for _, cc in pairs_r]
 
     def emit(filename, order):
         PER_REGION = 5
@@ -407,30 +414,20 @@ def main():
     n_speed = emit("final4.txt", 2)  # 按下载速度
     n_score = emit("final5.txt", 3)  # 综合评分
 
-    # ⑤ 按「真实出口 IP」判断地区的订阅（独立一份）
-    real = []
-    for row in keep[:120]:
-        q = row[6]
-        cc = exit_cc(q)
-        if not cc or cc in ("US", "CA"):
-            continue
-        real.append((row, cc))
-    log("真实出口地区（剔除 US/CA）%d 条" % len(real))
-    if real:
+    # ⑤ 第五份：与上面同一批节点，但按真实地区重新编号输出（方便单独对比）
+    if keep:
         cnt_r, out_r = {}, []
-        for row, cc in sorted(real, key=lambda z: z[0][0]):
-            name_cn = geo.CC_NAME.get(cc, "其他")
-            if cnt_r.get(name_cn, 0) >= 5:
+        for (tcp, med, jit, sp, sc, u, q), r in zip(keep, regs):
+            if cnt_r.get(r, 0) >= 5:
                 continue
-            cnt_r[name_cn] = cnt_r.get(name_cn, 0) + 1
-            u = row[5]
-            out_r.append(u.split("#")[0] + "#" + (NAME % (name_cn, cnt_r[name_cn])).replace(" ", "%20"))
+            cnt_r[r] = cnt_r.get(r, 0) + 1
+            out_r.append(u.split("#")[0] + "#" + (NAME % (r, cnt_r[r])).replace(" ", "%20"))
             if len(out_r) >= 200:
                 break
         if out_r:
             with open(os.path.join(OUT, "final6.txt"), "w", encoding="utf-8") as f:
                 f.write(base64.b64encode("\n".join(out_r).encode()).decode())
-            log("  final6.txt：%d 条（真实出口地区）" % len(out_r))
+            log("  final6.txt：%d 条（真实出口）" % len(out_r))
 
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n合并 %d / 通过 %d / 稳定 %d / TCP版 %d / HTTP版 %d / 速度版 %d / 综合版 %d\n"
