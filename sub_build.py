@@ -625,6 +625,26 @@ def main():
                 f.write(base64.b64encode("\n".join(out_c2).encode()).decode())
         log("  final13.txt：%d 条（SNI 敏感 + UDP）" % len(out_c2))
 
+    # ⑬ 单独一份：支持 UDP 的节点
+    if keep:
+        from concurrent.futures import ThreadPoolExecutor as _TPE4
+        with _TPE4(max_workers=6) as _ex4:
+            u_flags = list(_ex4.map(lambda row: udp_ok(row[6]), keep))
+        u_rows = [(row, r) for row, r, ok in zip(keep, regs, u_flags) if ok]
+        log("支持 UDP：%d 条" % len(u_rows))
+        cnt_u, out_u = {}, []
+        for row, r in sorted(u_rows, key=lambda z: -z[0][4]):
+            if cnt_u.get(r, 0) >= 7:
+                continue
+            cnt_u[r] = cnt_u.get(r, 0) + 1
+            out_u.append(row[5].split("#")[0] + "#" + (NAME % (r, cnt_u[r])).replace(" ", "%20"))
+            if len(out_u) >= 200:
+                break
+        if out_u:
+            with open(os.path.join(OUT, "final14.txt"), "w", encoding="utf-8") as f:
+                f.write(base64.b64encode("\n".join(out_u).encode()).decode())
+        log("  final14.txt：%d 条（支持 UDP）" % len(out_u))
+
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n合并 %d / 通过 %d / 稳定 %d / TCP版 %d / HTTP版 %d / 速度版 %d / 综合版 %d\n"
                 % (time.strftime("%Y-%m-%d %H:%M:%S"), len(lines), len(keep),
