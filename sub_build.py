@@ -300,7 +300,7 @@ def main():
 
     # ③ 真实带宽：全部达标节点，6 路并行，每路单独内核 + curl 下载 300KB
     speed = {}
-    top_keys = [k for k, _ in sorted(stats.items(), key=lambda kv: kv[1][0])][:600]
+    top_keys = [k for k, _ in sorted(stats.items(), key=lambda kv: kv[1][0])][:200]
 
     def _one(k):
         q = next((x for _, x in items if (x["server"], int(x["port"])) == k), None)
@@ -420,7 +420,7 @@ def main():
         cc = geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", "")))
         r = geo.CC_NAME.get(cc, "其他")
         out_all.append(u.split("#")[0] + "#" + (NAME % (r, len(out_all) + 1)).replace(" ", "%20"))
-        if len(out_all) >= 1000:
+        if len(out_all) >= 200:
             break
     if out_all:
         with open(os.path.join(OUT, "final7.txt"), "w", encoding="utf-8") as f:
