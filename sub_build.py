@@ -97,6 +97,8 @@ def discovered():
         items = json.load(open(p, encoding="utf-8"))
     except Exception:
         return []
+    if not isinstance(items, list):
+        return []
     out = []
     for x in items:
         if isinstance(x, str):
@@ -322,7 +324,7 @@ def main():
     stable = [x for x in keep
               if known.get("%s:%d" % (x[3]["server"], int(x[3]["port"])), {}).get("s", 0) >= 3]
     log("连续 3 轮通过 %d 条，本轮通过 %d 条" % (len(stable), len(keep)))
-    keep = stable or keep[:40]
+    keep = stable if len(stable) >= 10 else keep[:60]
 
     regs = geo.regions([q for *_, q in keep])
     EXCLUDE = {"美国", "加拿大"}
