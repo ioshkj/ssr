@@ -715,6 +715,16 @@ def main():
             f.write(base64.b64encode("\n".join(merged).encode()).decode())
     log("  all.txt：%d 条（合并去重）" % len(merged))
 
+    # 测速明细表（剔除美加后，按延迟排序）
+    if keep:
+        lines_t = ["名称\t协议\t地区\tTCP(ms)\tHTTP(ms)\t抖动(ms)\t下载(KB/s)"]
+        for (tcp, med, jit, sp, sc, u, q), r in sorted(zip(keep, regs), key=lambda z: z[0][0]):
+            lines_t.append("%s\t%s\t%s\t%d\t%d\t%d\t%.0f" % (
+                q.get("name", "")[:28], q.get("type", ""), r, tcp, med, jit, sp))
+        with open(os.path.join(OUT, "table.txt"), "w", encoding="utf-8") as f:
+            f.write("\n".join(lines_t) + "\n")
+        log("  table.txt：%d 行" % (len(lines_t) - 1))
+
     # ⑯ 全部 AnyTLS：只查真实出口 IP（不测速），查不到的不收
     if anytls_pool:
         from concurrent.futures import ThreadPoolExecutor as _TPE_Y
