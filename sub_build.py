@@ -581,6 +581,7 @@ def main():
                 f.write(base64.b64encode("\n".join(out_f).encode()).decode())
         log("  final11.txt：%d 条（五目标全通）" % len(out_f))
 
+    sni_rows = []
     # ⑪ SNI 敏感性：Google 不通但 Apple 通（说明不是节点坏，是针对性封锁）
     if keep:
         apple = verify.verify([dict(row[6]) for row in keep], workers=24, timeout=10000,
