@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""把 QX 配置行转成 clash proxy，逐个测：Google / YouTube / 下载"""
-import base64, json, os, re, sys, time
+"""对指定节点做多维度测试：TCP / 五个目标 / 抖动 / 下载 / UDP"""
+import base64, json, os, re, socket, statistics, time
 import verify
+import sub_build as sb
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+TARGETS = [
+    ("Google", "https://www.gstatic.com/generate_204"),
+    ("YouTube", "https://i.ytimg.com/generate_204"),
+    ("Cloudflare", "https://cp.cloudflare.com/generate_204"),
+    ("Twitter", "https://abs.twimg.com/favicon.ico"),
+    ("Telegram", "https://telegram.org/favicon.ico"),
+]
 
 
 def parse_line(line):
@@ -12,8 +20,7 @@ def parse_line(line):
     if not m:
         return None
     typ, hostport, rest = m.group(1), m.group(2), m.group(3)
-    kv = {}
-    tag = ""
+    kv, tag = {}, ""
     for part in re.split(r",\s*(?=[a-z0-9_-]+=)", rest):
         if "=" in part:
             k, v = part.split("=", 1)
@@ -34,8 +41,7 @@ def parse_line(line):
             q["network"] = "ws"
             q["ws-opts"] = {"path": kv.get("obfs-uri", "/"),
                             "headers": {"Host": kv.get("obfs-host") or kv.get("tls-host", host)}}
-        if kv.get("over-tls", "true") == "true":
-            q["tls"] = True
+        q["tls"] = True
     elif typ == "vless":
         q.update(type="vless", uuid=kv.get("password", ""), udp=True, tls=True,
                  servername=kv.get("obfs-host") or kv.get("tls-host") or host)
@@ -44,8 +50,7 @@ def parse_line(line):
         if kv.get("reality-base64-pubkey"):
             q["reality-opts"] = {"public-key": kv["reality-base64-pubkey"],
                                  "short-id": kv.get("reality-hex-shortid", "")}
-        obfs = kv.get("obfs", "")
-        if obfs in ("wss", "ws"):
+        if kv.get("obfs") in ("wss", "ws"):
             q["network"] = "ws"
             q["ws-opts"] = {"path": kv.get("obfs-uri", "/"),
                             "headers": {"Host": kv.get("obfs-host", host)}}
@@ -61,35 +66,78 @@ def parse_line(line):
     return q
 
 
+def tcp_ms(host, port, n=3):
+    best = None
+    for _ in range(n):
+        t0 = time.time()
+        try:
+            socket.create_connection((host, port), timeout=2).close()
+            v = int((time.time() - t0) * 1000)
+            best = v if best is None else min(best, v)
+        except Exception:
+            pass
+    return best
+
+
 def main():
     lines = [l for l in open(os.path.join(HERE, "probe_nodes.txt"), encoding="utf-8").read().splitlines() if l.strip()]
     proxies = [p for p in (parse_line(l) for l in lines) if p]
     print("解析 %d 条" % len(proxies), flush=True)
+    res = {i: {} for i in range(len(proxies))}
 
-    results = {}
-    for label, url in [("Google", "https://www.gstatic.com/generate_204"),
-                       ("YouTube", "https://i.ytimg.com/generate_204")]:
+    for i, p in enumerate(proxies):
+        res[i]["tcp"] = tcp_ms(p["server"], p["port"])
+    print("TCP 完成", flush=True)
+
+    for label, url in TARGETS:
         r = verify.verify([dict(p) for p in proxies], workers=16, timeout=10000, url=url, log=lambda m: None)
-        for p, d in r:
-            results.setdefault((p["server"], int(p["port"])), {})[label] = d
+        key = {(p["server"], int(p["port"])) for p, _ in r}
+        for i, p in enumerate(proxies):
+            if (p["server"], int(p["port"])) in key:
+                res[i][label] = 1
         print("%s 通过 %d" % (label, len(r)), flush=True)
 
-    dl = verify.verify([dict(p) for p in proxies
-                        if (p["server"], int(p["port"])) in results],
-                       workers=8, timeout=20000,
+    # 抖动：Google 打三次
+    for _ in range(3):
+        r = verify.verify([dict(p) for p in proxies], workers=16, timeout=10000,
+                          url=TARGETS[0][1], log=lambda m: None)
+        for p, d in r:
+            k = (p["server"], int(p["port"]))
+            for i, q in enumerate(proxies):
+                if (q["server"], int(q["port"])) == k:
+                    res[i].setdefault("samples", []).append(d)
+    print("延迟采样完成", flush=True)
+
+    dl = verify.verify([dict(p) for p in proxies], workers=8, timeout=25000,
                        url="https://speed.cloudflare.com/__down?bytes=300000", log=lambda m: None)
     for p, d in dl:
-        results.setdefault((p["server"], int(p["port"])), {})["下载KB/s"] = round(300.0 / max(d, 1) * 1000, 0)
+        k = (p["server"], int(p["port"]))
+        for i, q in enumerate(proxies):
+            if (q["server"], int(q["port"])) == k:
+                res[i]["kbps"] = round(300.0 / max(d, 1) * 1000)
+    print("下载完成", flush=True)
 
-    rows = []
-    for p in proxies:
-        r = results.get((p["server"], int(p["port"])), {})
-        rows.append("%-14s %-8s %-8s %-8s %s" % (
-            p["name"][:14], p["type"],
-            ("%dms" % r["Google"]) if "Google" in r else "✗",
-            ("%dms" % r["YouTube"]) if "YouTube" in r else "✗",
-            ("%.0fKB/s" % r["下载KB/s"]) if "下载KB/s" in r else "✗"))
-    out = "名称           协议     Google   YouTube  下载\n" + "\n".join(rows)
+    for i, p in enumerate(proxies):
+        res[i]["udp"] = sb.udp_ok(p)
+    print("UDP 完成", flush=True)
+
+    rows = ["名称          协议      TCP    Google YT  CF  TW  TG   抖动   下载KB/s  UDP"]
+    for i, p in enumerate(proxies):
+        r = res[i]
+        sm = sorted(r.get("samples", []))
+        jit = int(statistics.pstdev(sm)) if len(sm) > 1 else 0
+        rows.append("%-12s %-8s %-6s %-5s %-3s %-3s %-3s %-3s %-5s %-8s %s" % (
+            p["name"][:12], p["type"],
+            ("%dms" % r["tcp"]) if r.get("tcp") else "✗",
+            "✓" if r.get("Google") else "✗",
+            "✓" if r.get("YouTube") else "✗",
+            "✓" if r.get("Cloudflare") else "✗",
+            "✓" if r.get("Twitter") else "✗",
+            "✓" if r.get("Telegram") else "✗",
+            ("%dms" % jit) if jit else "-",
+            str(r.get("kbps", "✗")),
+            "✓" if r.get("udp") else "✗"))
+    out = "\n".join(rows)
     print(out)
     open(os.path.join(HERE, "sub", "probe.txt"), "w", encoding="utf-8").write(out + "\n")
 
