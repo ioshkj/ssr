@@ -375,16 +375,25 @@ def main():
     log("连续 3 轮通过 %d 条，本轮通过 %d 条" % (len(stable), len(keep)))
     keep = stable if len(stable) >= 10 else keep[:60]
 
-    # 只按「节点名 / 域名」判断地区（不做 IP 反查，避免 CF 节点被误判成加拿大）
+    # 只按「节点名里的中文地区词」判断，不做任何识别；识别不到就算「其他」
+    import re as _re
+    CN_WORDS = [(w, cc) for w, cc in geo.WORD_CC if _re.search(r"[\u4e00-\u9fff]", w)]
+
+    def region_cn(name):
+        for w, cc in CN_WORDS:
+            if w in (name or ""):
+                return geo.CC_NAME.get(cc, "其他")
+        return "其他"
+
     keep2, regs = [], []
     for row in keep:
         q = row[6]
-        cc = geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", "")))
-        if cc in ("US", "CA"):
+        r = region_cn(q.get("name", ""))
+        if r in ("美国", "加拿大"):      # 只屏蔽这两个中文词
             continue
         keep2.append(row)
-        regs.append(geo.CC_NAME.get(cc, "其他"))
-    log("按名称剔除美加后：%d 条" % len(keep2))
+        regs.append(r)
+    log("按中文名剔除美加后：%d 条" % len(keep2))
     keep = keep2
 
     def emit(filename, order):
@@ -412,19 +421,16 @@ def main():
     n_speed = emit("final4.txt", 2)  # 按下载速度
     n_score = emit("final5.txt", 3)  # 综合评分
 
-    # ⑥ 第六份：与 final5 同规则，独立文件方便单独对比
-    out_all, cnt_r = [], {}
+    # ⑥ 第六份：剔除美加后的全部节点（不限地区，最多 200）
+    out_all = []
     for (tcp, med, jit, sp, sc, u, q), r in sorted(zip(keep, regs), key=lambda z: -z[0][4]):
-        if cnt_r.get(r, 0) >= 5:
-            continue
-        cnt_r[r] = cnt_r.get(r, 0) + 1
-        out_all.append(u.split("#")[0] + "#" + (NAME % (r, cnt_r[r])).replace(" ", "%20"))
+        out_all.append(u.split("#")[0] + "#" + (NAME % (r, 0)).replace(" ", "%20").replace("-00", "-ALL"))
         if len(out_all) >= 200:
             break
     if out_all:
         with open(os.path.join(OUT, "final7.txt"), "w", encoding="utf-8") as f:
             f.write(base64.b64encode("\n".join(out_all).encode()).decode())
-    log("  final7.txt：%d 条（剔除美加，每地区 5 条）" % len(out_all))
+    log("  final7.txt：%d 条（全部通过，不限地区）" % len(out_all))
 
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n合并 %d / 通过 %d / 稳定 %d / TCP版 %d / HTTP版 %d / 速度版 %d / 综合版 %d\n"
