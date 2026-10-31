@@ -127,6 +127,69 @@ def tcp_ok(host, port, timeout=1.5):
 
 
 
+
+def udp_ok(q, timeout=8):
+    """通过 SOCKS5 UDP ASSOCIATE 发一次 DNS 查询，能收到回包说明节点支持 UDP"""
+    import json as _json, socket as _sk, struct as _st, subprocess as _sp
+    import tempfile as _tf, time as _t, urllib.request as _ur
+    wd = _tf.mkdtemp(prefix="udp-")
+    a, b = _sk.socket(), _sk.socket()
+    a.bind(("127.0.0.1", 0)); b.bind(("127.0.0.1", 0))
+    api_p, mix_p = a.getsockname()[1], b.getsockname()[1]
+    a.close(); b.close()
+    cfg = {"mixed-port": mix_p, "external-controller": "127.0.0.1:%d" % api_p,
+           "log-level": "warning", "mode": "rule",
+           "proxies": [dict(q, name="p")], "rules": ["MATCH,p"]}
+    path = wd + "/c.yaml"
+    open(path, "w").write(_json.dumps(cfg, ensure_ascii=False))
+    p = _sp.Popen([verify.BIN, "-d", wd, "-f", path], stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
+    s = None
+    try:
+        for _ in range(40):
+            _t.sleep(0.2)
+            try:
+                _ur.urlopen("http://127.0.0.1:%d/version" % api_p, timeout=1).read()
+                break
+            except Exception:
+                if p.poll() is not None:
+                    return False
+        s = _sk.create_connection(("127.0.0.1", mix_p), timeout=timeout)
+        s.sendall(b"\x05\x01\x00")
+        if s.recv(2) != b"\x05\x00":
+            return False
+        s.sendall(b"\x05\x03\x00\x01" + b"\x00" * 6)
+        rep = s.recv(32)
+        if len(rep) < 10 or rep[1] != 0:
+            return False
+        u = _sk.socket(_sk.AF_INET, _sk.SOCK_DGRAM)
+        u.settimeout(timeout)
+        relay = (_sk.inet_ntoa(rep[4:8]) if rep[3] == 1 else "127.0.0.1",
+                 _st.unpack(">H", rep[8:10])[0])
+        if relay[0] == "0.0.0.0":
+            relay = ("127.0.0.1", relay[1])
+        tid = 0x1234
+        header = _st.pack(">HHHHHH", tid, 0x0100, 1, 0, 0, 0)
+        qn = b"".join(bytes([len(x)]) + x.encode() for x in "example.com".split(".")) + b"\x00"
+        dns = header + qn + _st.pack(">HH", 1, 1)
+        pkt = b"\x00\x00\x00\x01" + _sk.inet_aton("8.8.8.8") + _st.pack(">H", 53) + dns
+        u.sendto(pkt, relay)
+        data, _ = u.recvfrom(2048)
+        return len(data) > 10
+    except Exception:
+        return False
+    finally:
+        if s:
+            try:
+                s.close()
+            except Exception:
+                pass
+        p.terminate()
+        try:
+            p.wait(3)
+        except Exception:
+            p.kill()
+
+
 def exit_cc(q, timeout=12):
     """通过节点查询真实出口国家码：起单节点内核 + curl 走本地代理问 ip-api"""
     import json as _json, socket as _sock, subprocess as _sp, tempfile as _tf, time as _t, urllib.request as _ur
@@ -541,6 +604,26 @@ def main():
             with open(os.path.join(OUT, "final12.txt"), "w", encoding="utf-8") as f:
                 f.write(base64.b64encode("\n".join(out_s).encode()).decode())
         log("  final12.txt：%d 条（SNI 敏感节点）" % len(out_s))
+
+    # ⑫ ①+② 结合：SNI 敏感（Apple 通/Google 不通）且支持 UDP
+    if sni_rows:
+        from concurrent.futures import ThreadPoolExecutor as _TPE3
+        with _TPE3(max_workers=4) as _ex3:
+            udp_res = list(_ex3.map(lambda z: udp_ok(z[0][6]), sni_rows))
+        combo = [z for z, ok in zip(sni_rows, udp_res) if ok]
+        log("SNI 敏感且支持 UDP：%d 条" % len(combo))
+        cnt_c2, out_c2 = {}, []
+        for row, r in sorted(combo, key=lambda z: -z[0][4]):
+            if cnt_c2.get(r, 0) >= 7:
+                continue
+            cnt_c2[r] = cnt_c2.get(r, 0) + 1
+            out_c2.append(row[5].split("#")[0] + "#" + (NAME % (r, cnt_c2[r])).replace(" ", "%20"))
+            if len(out_c2) >= 200:
+                break
+        if out_c2:
+            with open(os.path.join(OUT, "final13.txt"), "w", encoding="utf-8") as f:
+                f.write(base64.b64encode("\n".join(out_c2).encode()).decode())
+        log("  final13.txt：%d 条（SNI 敏感 + UDP）" % len(out_c2))
 
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n合并 %d / 通过 %d / 稳定 %d / TCP版 %d / HTTP版 %d / 速度版 %d / 综合版 %d\n"
