@@ -708,17 +708,22 @@ def main():
             f.write(base64.b64encode("\n".join(merged).encode()).decode())
     log("  all.txt：%d 条（合并去重）" % len(merged))
 
-    # ⑯ 全部 AnyTLS（去重池直接输出，不测速、不限量）
+    # ⑯ 全部 AnyTLS：只查真实出口 IP（不测速），查不到的不收
     if anytls_pool:
+        from concurrent.futures import ThreadPoolExecutor as _TPE_Y
+        with _TPE_Y(max_workers=6) as _exy:
+            _ycc = list(_exy.map(lambda uq: exit_cc(uq[1]), anytls_pool))
         cnt_y, out_y = {}, []
-        for u, q in anytls_pool:
-            cc = geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", "")))
+        for (u, q), cc in zip(anytls_pool, _ycc):
+            if not cc:
+                continue
             r = geo.CC_NAME.get(cc, "其他")
             cnt_y[r] = cnt_y.get(r, 0) + 1
             out_y.append(u.split("#")[0] + "#" + (NAME % (r, cnt_y[r])).replace(" ", "%20"))
-        with open(os.path.join(OUT, "final16.txt"), "w", encoding="utf-8") as f:
-            f.write(base64.b64encode("\n".join(out_y).encode()).decode())
-        log("  final16.txt：%d 条（全部 AnyTLS，未测速）" % len(out_y))
+        if out_y:
+            with open(os.path.join(OUT, "final16.txt"), "w", encoding="utf-8") as f:
+                f.write(base64.b64encode("\n".join(out_y).encode()).decode())
+        log("  final16.txt：%d 条（AnyTLS，仅查 IP，共 %d）" % (len(out_y), len(anytls_pool)))
 
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n合并 %d / 通过 %d / 稳定 %d / TCP版 %d / HTTP版 %d / 速度版 %d / 综合版 %d\n"
