@@ -291,6 +291,8 @@ def main():
 
     # 第一步：按 server:port 去重（同一入口只留一条）
     items, seen_ep, us_skip = [], set(), 0
+    raw_types = {}
+    raw_total = 0
     for u in lines:
         _name = up.unquote(u.split("#")[-1]) if "#" in u else ""
         q = nodeconv.to_clash(u, _name)
@@ -299,6 +301,9 @@ def main():
         ep = (str(q["server"]).lower(), int(q["port"]))
         if ep in seen_ep:
             continue
+        raw_total += 1
+        _t0 = q.get("type", "?")
+        raw_types[_t0] = raw_types.get(_t0, 0) + 1
         # 去重阶段就剔除美国节点（测速在境外，美国节点会天然占优）
         _cc0 = geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", "")))
         if _cc0 in ("US", "CA") and q.get("type") != "anytls":
@@ -309,7 +314,9 @@ def main():
     import collections as _col
     _types = _col.Counter(q.get("type", "?") for _, q in items)
     log("去重后唯一入口 %d 个（提前剔除疑似美国/加拿大 %d 个）" % (len(items), us_skip))
-    log("  类型分布：" + "  ".join("%s %d" % (k, v) for k, v in _types.most_common(10)))
+    log("  去重后总量 %d，类型分布：" % raw_total)
+    for _k, _v in sorted(raw_types.items(), key=lambda kv: -kv[1]):
+        log("    %-10s %d" % (_k, _v))
     anytls_pool = [(u, q) for u, q in items if q.get("type") == "anytls"]
     log("  AnyTLS 原始 %d 条" % len(anytls_pool))
     ps = [q for _, q in items]
