@@ -550,81 +550,61 @@ def main():
                 f.write(base64.b64encode("\n".join(out_c).encode()).decode())
         log("  final10.txt：%d 条（回国方向，每地区 7 条）" % len(out_c))
 
-    # ⑩ 五目标全通（独立一份，其他订阅不受影响）
+    # ⑩ 逐目标测试，记录每个节点在哪些目标上通过
     TARGETS = [
-        ("Google", "https://www.gstatic.com/generate_204"),
         ("YouTube", "https://i.ytimg.com/generate_204"),
         ("Cloudflare", "https://cp.cloudflare.com/generate_204"),
         ("Twitter", "https://abs.twimg.com/favicon.ico"),
         ("Telegram", "https://telegram.org/favicon.ico"),
     ]
+    passed = {}          # key -> set(通过的 target)
     if keep:
-        alive = {(row[6]["server"], int(row[6]["port"])): row for row in keep}
-        for _, url in TARGETS:
-            got = verify.verify([dict(row[6]) for row in alive.values()],
+        keys = [(row[6]["server"], int(row[6]["port"])) for row in keep]
+        for tname, url in TARGETS:
+            got = verify.verify([dict(row[6]) for row in keep],
                                 workers=24, timeout=10000, url=url, log=lambda m: None)
-            alive = {(p["server"], int(p["port"])): alive[(p["server"], int(p["port"]))]
-                     for p, _ in got if (p["server"], int(p["port"])) in alive}
-            log("  五目标 %-10s 剩余 %d" % (_, len(alive)))
-        five = [(row, r) for row, r in zip(keep, regs)
-                if (row[6]["server"], int(row[6]["port"])) in alive]
-        cnt_f, out_f = {}, []
-        for row, r in sorted(five, key=lambda z: -z[0][4]):
-            if cnt_f.get(r, 0) >= 7:
-                continue
-            cnt_f[r] = cnt_f.get(r, 0) + 1
-            out_f.append(row[5].split("#")[0] + "#" + (NAME % (r, cnt_f[r])).replace(" ", "%20"))
-            if len(out_f) >= 200:
-                break
-        if out_f:
-            with open(os.path.join(OUT, "final11.txt"), "w", encoding="utf-8") as f:
-                f.write(base64.b64encode("\n".join(out_f).encode()).decode())
-        log("  final11.txt：%d 条（五目标全通）" % len(out_f))
+            ok = {(p["server"], int(p["port"])) for p, _ in got}
+            for k in keys:
+                passed.setdefault(k, set())
+                if k in ok:
+                    passed[k].add(tname)
+            log("  目标 %-10s 通过 %d / %d" % (tname, len(ok), len(keys)))
 
-    sni_rows = []
-    # ⑪ SNI 敏感性：Google 不通但 Apple 通（说明不是节点坏，是针对性封锁）
-    if keep:
-        apple = verify.verify([dict(row[6]) for row in keep], workers=24, timeout=10000,
-                              url="https://www.apple.com/library/test/success.html",
-                              log=lambda m: None)
-        google_ok = {(row[6]["server"], int(row[6]["port"])) for row in keep}
-        apple_ok = {(p["server"], int(p["port"])) for p, _ in apple}
-        sni_rows = [(row, r) for row, r in zip(keep, regs)
-                    if (row[6]["server"], int(row[6]["port"])) in apple_ok
-                    and (row[6]["server"], int(row[6]["port"])) not in google_ok]
-        log("Apple 通但 Google 不通：%d 条" % len(sni_rows))
-        cnt_s, out_s = {}, []
-        for row, r in sorted(sni_rows, key=lambda z: -z[0][4]):
-            if cnt_s.get(r, 0) >= 7:
+    def dump(filename, rows, cap=7):
+        cnt, out = {}, []
+        for row, r in sorted(rows, key=lambda z: -z[0][4]):
+            if cnt.get(r, 0) >= cap:
                 continue
-            cnt_s[r] = cnt_s.get(r, 0) + 1
-            out_s.append(row[5].split("#")[0] + "#" + (NAME % (r, cnt_s[r])).replace(" ", "%20"))
-            if len(out_s) >= 200:
+            cnt[r] = cnt.get(r, 0) + 1
+            out.append(row[5].split("#")[0] + "#" + (NAME % (r, cnt[r])).replace(" ", "%20"))
+            if len(out) >= 200:
                 break
-        if out_s:
-            with open(os.path.join(OUT, "final12.txt"), "w", encoding="utf-8") as f:
-                f.write(base64.b64encode("\n".join(out_s).encode()).decode())
-        log("  final12.txt：%d 条（SNI 敏感节点）" % len(out_s))
+        if out:
+            with open(os.path.join(OUT, filename), "w", encoding="utf-8") as f:
+                f.write(base64.b64encode("\n".join(out).encode()).decode())
+        log("  %s：%d 条" % (filename, len(out)))
+        return out
 
-    # ⑫ ①+② 结合：SNI 敏感（Apple 通/Google 不通）且支持 UDP
+    # ⑪ 五目标全通（Google 由前面的测试保证）
+    full_ok = [(row, r) for row, r in zip(keep, regs)
+               if len(passed.get((row[6]["server"], int(row[6]["port"])), set())) == len(TARGETS)]
+    log("五目标全通：%d 条" % len(full_ok))
+    dump("final11.txt", full_ok)
+
+    # ⑫ SNI 敏感：Google 通，但其它目标里至少有一个不通
+    sni_rows = [(row, r) for row, r in zip(keep, regs)
+                if 0 < len(passed.get((row[6]["server"], int(row[6]["port"])), set())) < len(TARGETS)]
+    log("SNI 敏感（部分目标被封）：%d 条" % len(sni_rows))
+    dump("final12.txt", sni_rows)
+
+    # ⑬ SNI 敏感 + 支持 UDP
     if sni_rows:
         from concurrent.futures import ThreadPoolExecutor as _TPE3
         with _TPE3(max_workers=4) as _ex3:
             udp_res = list(_ex3.map(lambda z: udp_ok(z[0][6]), sni_rows))
         combo = [z for z, ok in zip(sni_rows, udp_res) if ok]
         log("SNI 敏感且支持 UDP：%d 条" % len(combo))
-        cnt_c2, out_c2 = {}, []
-        for row, r in sorted(combo, key=lambda z: -z[0][4]):
-            if cnt_c2.get(r, 0) >= 7:
-                continue
-            cnt_c2[r] = cnt_c2.get(r, 0) + 1
-            out_c2.append(row[5].split("#")[0] + "#" + (NAME % (r, cnt_c2[r])).replace(" ", "%20"))
-            if len(out_c2) >= 200:
-                break
-        if out_c2:
-            with open(os.path.join(OUT, "final13.txt"), "w", encoding="utf-8") as f:
-                f.write(base64.b64encode("\n".join(out_c2).encode()).decode())
-        log("  final13.txt：%d 条（SNI 敏感 + UDP）" % len(out_c2))
+        dump("final13.txt", combo)
 
     # ⑬ 单独一份：支持 UDP 的节点
     if keep:

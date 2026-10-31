@@ -122,6 +122,14 @@ def main():
         else:
             dropped += 1
     log("新鲜度检测：丢弃 %d 个超过 30 小时未更新的源" % dropped)
+    # 备份一份，防止意外清空
+    try:
+        import shutil as _sh
+        if os.path.exists(OUT):
+            _sh.copy(OUT, os.path.join(HERE, "sources.backup.json"))
+    except Exception:
+        pass
+
     if not keep and not found:
         # 本轮什么都没找到：保留旧清单，避免把历史积累清空
         try:
