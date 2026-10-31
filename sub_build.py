@@ -460,6 +460,33 @@ def main():
             f.write(base64.b64encode("\n".join(out_m).encode()).decode())
     log("  final9.txt：%d 条（TCP 500~1000ms）" % len(out_m))
 
+    # ⑨ 回国方向：通过节点访问国内站点，按该延迟排序，每地区 7 条
+    cn_rows = [(row, r) for row, r in zip(keep, regs)]
+    if cn_rows:
+        probes = [dict(row[6]) for row, _ in cn_rows]
+        r_cn = verify.verify(probes, workers=16, timeout=10000,
+                             url="http://www.baidu.com", log=lambda m: None)
+        cn_map = {(p["server"], int(p["port"])): d for p, d in r_cn}
+        log("回国方向可用 %d 条" % len(cn_map))
+        picked = []
+        for row, r in cn_rows:
+            k = (row[6]["server"], int(row[6]["port"]))
+            if k in cn_map:
+                picked.append((cn_map[k], row, r))
+        picked.sort(key=lambda z: z[0])
+        cnt_c, out_c = {}, []
+        for delay, row, r in picked:
+            if cnt_c.get(r, 0) >= 7:
+                continue
+            cnt_c[r] = cnt_c.get(r, 0) + 1
+            out_c.append(row[5].split("#")[0] + "#" + (NAME % (r, cnt_c[r])).replace(" ", "%20"))
+            if len(out_c) >= 200:
+                break
+        if out_c:
+            with open(os.path.join(OUT, "final10.txt"), "w", encoding="utf-8") as f:
+                f.write(base64.b64encode("\n".join(out_c).encode()).decode())
+        log("  final10.txt：%d 条（回国方向，每地区 7 条）" % len(out_c))
+
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n合并 %d / 通过 %d / 稳定 %d / TCP版 %d / HTTP版 %d / 速度版 %d / 综合版 %d\n"
                 % (time.strftime("%Y-%m-%d %H:%M:%S"), len(lines), len(keep),
