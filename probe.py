@@ -6,7 +6,7 @@ import verify
 import sub_build as sb
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-CF_URL = "https://cp.cloudflare.com/generate_204"
+CF_URL = "http://cp.cloudflare.com/generate_204"
 
 
 def parse_line(line):
@@ -117,7 +117,9 @@ def tcp_ms(host, port, n=3):
 def load_proxies():
     """优先读 sub/final8.txt（订阅），否则读 probe_nodes.txt（QX 行）"""
     import nodeconv, urllib.parse as up
-    sub = os.path.join(HERE, "sub", "final8.txt")
+    sub = os.path.join(HERE, "sub", "final15.txt")
+    if not os.path.exists(sub):
+        sub = os.path.join(HERE, "sub", "final8.txt")
     if os.path.exists(sub):
         try:
             text = base64.b64decode(open(sub, "rb").read()).decode()
