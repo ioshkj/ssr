@@ -188,6 +188,7 @@ def main():
     with ThreadPoolExecutor(max_workers=256) as ex:
         lat = list(ex.map(tcp_ms, ps))
     pairs = [(l, q) for q, l in zip(ps, lat) if l is not None and l <= 500]
+    tcp_of = {(q["server"], int(q["port"])): l for l, q in pairs}
     pairs.sort(key=lambda x: x[0])
     ps = [q for _, q in pairs]
     log("TCP ≤500ms 的 %d 条，进入端到端测试" % len(ps))
@@ -240,14 +241,14 @@ def main():
         score = 100.0 * (0.50 * min(sp_kb / 2000.0, 1.0)
                          + 0.35 * (1 - min(med / 1000.0, 1.0))
                          + 0.15 * (1 - min(jit / 300.0, 1.0)))
-        keep.append(((-score, med), u, q))
-    keep.sort(key=lambda x: x[0])
+        keep.append((tcp_of.get(k, 9999), -score, u, q))
+    keep.sort(key=lambda x: (x[0], x[1]))
     log("评分达标 %d 条" % len(keep))
 
     # 同网段最多 12 个，避免整份都是同一家的机器
     lim, seen_net, dedup = 12, {}, []
     import ipaddress
-    for d, u, q in keep:
+    for tcp, sc, u, q in keep:
         try:
             net = str(ipaddress.ip_network(q["server"] + "/24", strict=False))
         except Exception:
@@ -255,7 +256,7 @@ def main():
         if seen_net.get(net, 0) >= lim:
             continue
         seen_net[net] = seen_net.get(net, 0) + 1
-        dedup.append((d, u, q))
+        dedup.append((tcp, sc, u, q))
     keep = dedup
     log("同网段去重后 %d" % len(keep))
 
@@ -267,13 +268,13 @@ def main():
     except Exception:
         known = {}
     now = _tm.time()
-    cur = {"%s:%d" % (q["server"], int(q["port"])) for _, _, q in keep}
+    cur = {"%s:%d" % (q["server"], int(q["port"])) for *_, q in keep}
     for k in list(known):
         if k not in cur:
             known[k]["s"] = known[k].get("s", 0) - 1
             if known[k]["s"] <= 0:
                 del known[k]
-    for _, u, q in keep:
+    for *_, u, q in keep:
         k = "%s:%d" % (q["server"], int(q["port"]))
         rec = known.get(k, {"s": 0})
         rec["s"] = rec.get("s", 0) + 1
@@ -286,16 +287,18 @@ def main():
     except Exception:
         pass
     stable = [x for x in keep
-              if known.get("%s:%d" % (x[2]["server"], int(x[2]["port"])), {}).get("s", 0) >= 3]
+              if known.get("%s:%d" % (x[3]["server"], int(x[3]["port"])), {}).get("s", 0) >= 3]
     log("连续 3 轮通过 %d 条，本轮通过 %d 条" % (len(stable), len(keep)))
     keep = stable or keep[:30]
+    # 最终按 TCP 延迟从低到高排（客户端显示的延迟更接近这个值）
+    keep = sorted(keep, key=lambda x: (x[0], x[1]))
 
-    regs = geo.regions([q for _, _, q in keep])
+    regs = geo.regions([q for *_, q in keep])
     cnt, out = {}, []
-    for (d, u, q), r in zip(keep, regs):
+    for (tcp, sc, u, q), r in zip(keep, regs):
         cnt[r] = cnt.get(r, 0) + 1
         out.append(u.split("#")[0] + "#" + (NAME % (r, cnt[r])).replace(" ", "%20"))
-    out = out[:200]
+    out = out[:50]
 
     old_n = 0
     fp = os.path.join(OUT, "final2.txt")
