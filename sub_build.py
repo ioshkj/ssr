@@ -424,6 +424,25 @@ def main():
             f.write(base64.b64encode("\n".join(out_all).encode()).decode())
     log("  final7.txt：%d 条（全部通过，不限地区）" % len(out_all))
 
+    # ⑦ 按协议类型分组，每种最多 7 条（按综合分排序）
+    TYPE_CN = {"vmess": "VMess", "vless": "VLESS", "trojan": "Trojan",
+               "ss": "SS", "ssr": "SSR", "anytls": "AnyTLS",
+               "http": "HTTP", "socks5": "Socks5", "hysteria2": "Hy2"}
+    cnt_t, out_t = {}, []
+    for (tcp, med, jit, sp, sc, u, q), r in sorted(zip(keep, regs), key=lambda z: -z[0][4]):
+        t = q.get("type", "other")
+        if cnt_t.get(t, 0) >= 7:
+            continue
+        cnt_t[t] = cnt_t.get(t, 0) + 1
+        nm = "%s-%02d 0070077.xyz" % (TYPE_CN.get(t, t), cnt_t[t])
+        out_t.append(u.split("#")[0] + "#" + nm.replace(" ", "%20"))
+        if len(out_t) >= 200:
+            break
+    if out_t:
+        with open(os.path.join(OUT, "final8.txt"), "w", encoding="utf-8") as f:
+            f.write(base64.b64encode("\n".join(out_t).encode()).decode())
+    log("  final8.txt：%d 条（按协议类型，每种 7 条）" % len(out_t))
+
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n合并 %d / 通过 %d / 稳定 %d / TCP版 %d / HTTP版 %d / 速度版 %d / 综合版 %d\n"
                 % (time.strftime("%Y-%m-%d %H:%M:%S"), len(lines), len(keep),
