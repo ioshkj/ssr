@@ -438,7 +438,7 @@ def main():
     stable = [x for x in keep
               if known.get("%s:%d" % (x[6]["server"], int(x[6]["port"])), {}).get("s", 0) >= 3]
     log("连续 3 轮通过 %d 条，本轮通过 %d 条" % (len(stable), len(keep)))
-    keep = stable if len(stable) >= 10 else keep[:60]
+    keep = stable if len(stable) >= 10 else keep   # 不截断：本轮通过多少就留多少
 
     # 地区：按原有识别（国旗、英文、域名都认）；屏蔽：只看名字里有没有中文「美国/加拿大」
     keep2, regs = [], []
