@@ -300,7 +300,8 @@ def main():
         if ep in seen_ep:
             continue
         # 去重阶段就剔除美国节点（测速在境外，美国节点会天然占优）
-        if geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", ""))) in ("US", "CA"):
+        _cc0 = geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", "")))
+        if _cc0 in ("US", "CA") and q.get("type") != "anytls":
             us_skip += 1
             continue
         seen_ep.add(ep)
@@ -309,6 +310,8 @@ def main():
     _types = _col.Counter(q.get("type", "?") for _, q in items)
     log("去重后唯一入口 %d 个（提前剔除疑似美国/加拿大 %d 个）" % (len(items), us_skip))
     log("  类型分布：" + "  ".join("%s %d" % (k, v) for k, v in _types.most_common(10)))
+    anytls_pool = [(u, q) for u, q in items if q.get("type") == "anytls"]
+    log("  AnyTLS 原始 %d 条" % len(anytls_pool))
     ps = [q for _, q in items]
 
     def tcp_ms(q):
@@ -705,24 +708,17 @@ def main():
             f.write(base64.b64encode("\n".join(merged).encode()).decode())
     log("  all.txt：%d 条（合并去重）" % len(merged))
 
-    # ⑯ 全部 AnyTLS 节点（不限量）
-    # 只取「拿到真实地区且非美加」的 AnyTLS
-    any_rows = [(row, r) for row, r in zip(keep, regs) if row[6].get("type") == "anytls"]
-    if any_rows:
-        out_any = []
-        seen_any = set()
-        for row, r in sorted(any_rows, key=lambda z: -z[0][4]):
-            k = (row[6]["server"], int(row[6]["port"]))
-            if k in seen_any:
-                continue
-            seen_any.add(k)
-            out_any.append(row[5].split("#")[0] + "#" + (NAME % (r, len(out_any) + 1)).replace(" ", "%20"))
-        if out_any:
-            with open(os.path.join(OUT, "final16.txt"), "w", encoding="utf-8") as f:
-                f.write(base64.b64encode("\n".join(out_any).encode()).decode())
-        log("  final16.txt：%d 条（全部 AnyTLS）" % len(out_any))
-    else:
-        log("  final16.txt：本轮没有 AnyTLS 节点")
+    # ⑯ 全部 AnyTLS（去重池直接输出，不测速、不限量）
+    if anytls_pool:
+        cnt_y, out_y = {}, []
+        for u, q in anytls_pool:
+            cc = geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", "")))
+            r = geo.CC_NAME.get(cc, "其他")
+            cnt_y[r] = cnt_y.get(r, 0) + 1
+            out_y.append(u.split("#")[0] + "#" + (NAME % (r, cnt_y[r])).replace(" ", "%20"))
+        with open(os.path.join(OUT, "final16.txt"), "w", encoding="utf-8") as f:
+            f.write(base64.b64encode("\n".join(out_y).encode()).decode())
+        log("  final16.txt：%d 条（全部 AnyTLS，未测速）" % len(out_y))
 
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n合并 %d / 通过 %d / 稳定 %d / TCP版 %d / HTTP版 %d / 速度版 %d / 综合版 %d\n"
