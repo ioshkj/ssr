@@ -272,11 +272,11 @@ def main():
 
     with ThreadPoolExecutor(max_workers=256) as ex:
         lat = list(ex.map(tcp_ms, ps))
-    pairs = [(l, q) for q, l in zip(ps, lat) if l is not None and l <= 800]
+    pairs = [(l, q) for q, l in zip(ps, lat) if l is not None and l <= 1500]
     tcp_of = {(q["server"], int(q["port"])): l for l, q in pairs}
     pairs.sort(key=lambda x: x[0])
     ps = [q for _, q in pairs]
-    log("TCP ≤800ms 的 %d 条，进入端到端测试" % len(ps))
+    log("TCP ≤1500ms 的 %d 条，进入端到端测试" % len(ps))
 
     # ② 端到端延迟：并发 32，测 2 次取最小值；抖动 = 两次差值
     samples = {}
@@ -293,10 +293,10 @@ def main():
             continue
         med = min(ds)
         jit = (max(ds) - min(ds)) if len(ds) > 1 else 0
-        if med > 1000 or jit > 400:
+        if med > 2500 or jit > 600:
             continue
         stats[k] = (med, jit)
-    log("端到端达标（≤1000ms，抖动≤400ms）%d 条" % len(stats))
+    log("端到端达标（≤2500ms，抖动≤600ms）%d 条" % len(stats))
 
     # ③ 真实带宽：全部达标节点，6 路并行，每路单独内核 + curl 下载 300KB
     speed = {}
