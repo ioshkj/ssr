@@ -3,6 +3,7 @@
 """原样合并订阅源 -> 测速 -> 只改名字 -> 生成唯一订阅 sub/sub.txt
    规则：节点链接一个字都不改，只替换 # 后面的名称"""
 import base64, os, re, subprocess, time
+import urllib.parse as up
 import verify, nodeconv, geo
 from concurrent.futures import ThreadPoolExecutor
 
@@ -228,7 +229,8 @@ def main():
     # 第一步：按 server:port 去重（同一入口只留一条）
     items, seen_ep, us_skip = [], set(), 0
     for u in lines:
-        q = nodeconv.to_clash(u, "x")
+        _name = up.unquote(u.split("#")[-1]) if "#" in u else ""
+        q = nodeconv.to_clash(u, _name)
         if not q:
             continue
         ep = (str(q["server"]).lower(), int(q["port"]))
