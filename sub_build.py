@@ -228,27 +228,23 @@ def main():
                 speed[k] = v
     log("真实带宽达标 %d 条" % len(speed))
 
-    # ④ 加权评分 0-100：速度 50% + 延迟 35% + 抖动 15%
+    # ④ 记录两条延迟指标
     keep = []
     for u, q in items:
         k = (q["server"], int(q["port"]))
         if k not in speed or k not in stats:
             continue
         med, jit = stats[k]
-        sp_kb = speed[k]
-        if sp_kb < 30:
+        if speed[k] < 30:
             continue
-        score = 100.0 * (0.50 * min(sp_kb / 2000.0, 1.0)
-                         + 0.35 * (1 - min(med / 1000.0, 1.0))
-                         + 0.15 * (1 - min(jit / 300.0, 1.0)))
-        keep.append((tcp_of.get(k, 9999), -score, u, q))
-    keep.sort(key=lambda x: (x[0], x[1]))
-    log("评分达标 %d 条" % len(keep))
+        keep.append((tcp_of.get(k, 9999), med, u, q))
+    keep.sort(key=lambda x: x[0])
+    log("通过全部测试 %d 条" % len(keep))
 
-    # 同网段最多 12 个，避免整份都是同一家的机器
+    # 同网段最多 12 个
     lim, seen_net, dedup = 12, {}, []
     import ipaddress
-    for tcp, sc, u, q in keep:
+    for tcp, med, u, q in keep:
         try:
             net = str(ipaddress.ip_network(q["server"] + "/24", strict=False))
         except Exception:
@@ -256,11 +252,11 @@ def main():
         if seen_net.get(net, 0) >= lim:
             continue
         seen_net[net] = seen_net.get(net, 0) + 1
-        dedup.append((tcp, sc, u, q))
+        dedup.append((tcp, med, u, q))
     keep = dedup
     log("同网段去重后 %d" % len(keep))
 
-    # 稳定性：连续多轮通过才收录（known.json 记录每轮结果）
+    # 稳定性（known.json）
     import json as _j, time as _tm
     kp = os.path.join(HERE, "known.json")
     try:
@@ -281,7 +277,7 @@ def main():
         rec["t"] = now
         rec["u"] = u
         known[k] = rec
-    known = dict(sorted(known.items(), key=lambda kv: -kv[1].get("t", 0))[:800])
+    known = dict(sorted(known.items(), key=lambda kv: -kv[1].get("t", 0))[:1200])
     try:
         _j.dump(known, open(kp, "w", encoding="utf-8"), ensure_ascii=False)
     except Exception:
@@ -289,43 +285,40 @@ def main():
     stable = [x for x in keep
               if known.get("%s:%d" % (x[3]["server"], int(x[3]["port"])), {}).get("s", 0) >= 3]
     log("连续 3 轮通过 %d 条，本轮通过 %d 条" % (len(stable), len(keep)))
-    keep = stable or keep[:30]
-    # 最终按 TCP 延迟从低到高排（客户端显示的延迟更接近这个值）
-    keep = sorted(keep, key=lambda x: (x[0], x[1]))
+    keep = stable or keep[:40]
 
     regs = geo.regions([q for *_, q in keep])
     EXCLUDE = {"美国", "加拿大"}
-    keep, regs = zip(*[(x, r) for x, r in zip(keep, regs) if r not in EXCLUDE]) if keep else ([], [])
-    keep, regs = list(keep), list(regs)
+    pairs = [(x, r) for x, r in zip(keep, regs) if r not in EXCLUDE]
+    keep = [x for x, _ in pairs]
+    regs = [r for _, r in pairs]
     log("剔除美国/加拿大后 %d 条" % len(keep))
-    # 每个地区最多 5 条（列表已按延迟升序，取各地区最靠前的 5 个）
-    PER_REGION = 5
-    cnt, out = {}, []
-    for (tcp, sc, u, q), r in zip(keep, regs):
-        if cnt.get(r, 0) >= PER_REGION:
-            continue
-        cnt[r] = cnt.get(r, 0) + 1
-        out.append(u.split("#")[0] + "#" + (NAME % (r, cnt[r])).replace(" ", "%20"))
-        if len(out) >= 200:
-            break
-    log("每地区限 %d 条后共 %d 条，地区数 %d" % (PER_REGION, len(out), len(cnt)))
 
-    old_n = 0
-    fp = os.path.join(OUT, "final2.txt")
-    if os.path.exists(fp):
-        try:
-            old_n = len(base64.b64decode(open(fp).read()).decode().splitlines())
-        except Exception:
-            old_n = 0
-    if not out:
-        log("  !! 本轮结果 %d 条，明显少于上一版 %d 条，保留上一版" % (len(out), old_n))
-        return
-    with open(os.path.join(OUT, "final2.txt"), "w", encoding="utf-8") as f:
-        f.write(base64.b64encode("\n".join(out).encode()).decode())
+    def emit(filename, order):
+        PER_REGION = 5
+        cnt, out = {}, []
+        for (tcp, med, u, q), r in sorted(zip(keep, regs), key=lambda z: z[0][order]):
+            if cnt.get(r, 0) >= PER_REGION:
+                continue
+            cnt[r] = cnt.get(r, 0) + 1
+            out.append(u.split("#")[0] + "#" + (NAME % (r, cnt[r])).replace(" ", "%20"))
+            if len(out) >= 200:
+                break
+        if not out:
+            log("  !! %s 本轮无结果，保留上一版" % filename)
+            return 0
+        with open(os.path.join(OUT, filename), "w", encoding="utf-8") as f:
+            f.write(base64.b64encode("\n".join(out).encode()).decode())
+        log("  %s：%d 条（%d 个地区）" % (filename, len(out), len(cnt)))
+        return len(out)
+
+    n_tcp = emit("final2.txt", 0)   # 按 TCP 延迟
+    n_http = emit("final3.txt", 1)  # 按 HTTP 延迟
+
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
-        f.write("更新 %s\n合并 %d / 通过 %d / 收录 %d\n"
-                % (time.strftime("%Y-%m-%d %H:%M:%S"), len(lines), len(speed), len(out)))
-    log("写入 sub.txt：%d 条" % len(out))
+        f.write("更新 %s\n合并 %d / 通过 %d / 稳定 %d / TCP版 %d / HTTP版 %d\n"
+                % (time.strftime("%Y-%m-%d %H:%M:%S"), len(lines), len(keep),
+                   len(stable), n_tcp, n_http))
 
 
 if __name__ == "__main__":
