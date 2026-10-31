@@ -375,6 +375,8 @@ def main():
     log("连续 3 轮通过 %d 条，本轮通过 %d 条" % (len(stable), len(keep)))
     keep = stable if len(stable) >= 10 else keep[:60]
 
+    keep_raw = list(keep)   # 保存「所有通过测试」的节点，供 final7 用
+
     # 只按「节点名 / 域名」判断地区（不做 IP 反查，避免 CF 节点被误判成加拿大）
     keep2, regs = [], []
     for row in keep:
@@ -412,31 +414,18 @@ def main():
     n_speed = emit("final4.txt", 2)  # 按下载速度
     n_score = emit("final5.txt", 3)  # 综合评分
 
-    # ⑥ 全部通过测试的节点（不按地区限量，仅按综合分排序，最多 200）
+    # ⑥ 全部通过测试的节点（含美国/加拿大，不按地区限量）—— 用来看真实可用率
     out_all = []
-    for (tcp, med, jit, sp, sc, u, q), r in sorted(zip(keep, regs), key=lambda z: -z[0][4]):
-        out_all.append(u.split("#")[0] + "#" + (NAME % (r, 0)).replace(" ", "%20").replace("-00", "-ALL"))
+    for (tcp, med, jit, sp, sc, u, q) in sorted(keep_raw, key=lambda x: -x[4]):
+        cc = geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", "")))
+        r = geo.CC_NAME.get(cc, "其他")
+        out_all.append(u.split("#")[0] + "#" + (NAME % (r, len(out_all) + 1)).replace(" ", "%20"))
         if len(out_all) >= 200:
             break
     if out_all:
         with open(os.path.join(OUT, "final7.txt"), "w", encoding="utf-8") as f:
             f.write(base64.b64encode("\n".join(out_all).encode()).decode())
-    log("  final7.txt：%d 条（全部通过）" % len(out_all))
-
-    # ⑤ 第五份：与上面同一批节点，但按真实地区重新编号输出（方便单独对比）
-    if keep:
-        cnt_r, out_r = {}, []
-        for (tcp, med, jit, sp, sc, u, q), r in zip(keep, regs):
-            if cnt_r.get(r, 0) >= 5:
-                continue
-            cnt_r[r] = cnt_r.get(r, 0) + 1
-            out_r.append(u.split("#")[0] + "#" + (NAME % (r, cnt_r[r])).replace(" ", "%20"))
-            if len(out_r) >= 200:
-                break
-        if out_r:
-            with open(os.path.join(OUT, "final6.txt"), "w", encoding="utf-8") as f:
-                f.write(base64.b64encode("\n".join(out_r).encode()).decode())
-            log("  final6.txt：%d 条（真实出口）" % len(out_r))
+    log("  final7.txt：%d 条（全部通过测试，含美加）" % len(out_all))
 
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n合并 %d / 通过 %d / 稳定 %d / TCP版 %d / HTTP版 %d / 速度版 %d / 综合版 %d\n"
