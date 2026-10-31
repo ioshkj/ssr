@@ -193,12 +193,12 @@ def main():
         if ep in seen_ep:
             continue
         # 去重阶段就剔除美国节点（测速在境外，美国节点会天然占优）
-        if geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", ""))) == "US":
+        if geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", ""))) in ("US", "CA"):
             us_skip += 1
             continue
         seen_ep.add(ep)
         items.append((u, q))
-    log("去重后唯一入口 %d 个（提前剔除疑似美国 %d 个）" % (len(items), us_skip))
+    log("去重后唯一入口 %d 个（提前剔除疑似美国/加拿大 %d 个）" % (len(items), us_skip))
     ps = [q for _, q in items]
 
     def tcp_ms(q):
@@ -334,7 +334,7 @@ def main():
     keep = stable if len(stable) >= 10 else keep[:60]
 
     regs = geo.regions([q for *_, q in keep])
-    EXCLUDE = {"美国"}
+    EXCLUDE = {"美国", "加拿大"}
     pairs = [(x, r) for x, r in zip(keep, regs) if r not in EXCLUDE]
     keep = [x for x, _ in pairs]
     regs = [r for _, r in pairs]
