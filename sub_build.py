@@ -149,7 +149,7 @@ def main():
         lat = list(ex.map(tcp_ms, ps))
     pairs = [(l, q) for q, l in zip(ps, lat) if l is not None and l <= 500]
     pairs.sort(key=lambda x: x[0])
-    ps = [q for _, q in pairs][:1000]
+    ps = [q for _, q in pairs]
     log("TCP ≤500ms 的 %d 条，进入端到端测试" % len(ps))
 
     # ② 端到端延迟：并发 32，测 2 次取最小值；抖动 = 两次差值
@@ -172,54 +172,19 @@ def main():
         stats[k] = (med, jit)
     log("端到端达标（≤1000ms，抖动≤400ms）%d 条" % len(stats))
 
-    # ③ 真实带宽：单独起一个只含该节点的内核，用 curl 走本地代理下载 300KB
-    import json as _json, socket as _sock, subprocess as _sp, tempfile as _tf, time as _t, urllib.request as _ur
-
-    def real_speed(q, bytes_=300000, timeout=25):
-        wd = _tf.mkdtemp(prefix="sp-")
-        s1, s2 = _sock.socket(), _sock.socket()
-        s1.bind(("127.0.0.1", 0)); s2.bind(("127.0.0.1", 0))
-        api_p, mix_p = s1.getsockname()[1], s2.getsockname()[1]
-        s1.close(); s2.close()
-        cfg = {"mixed-port": mix_p, "external-controller": "127.0.0.1:%d" % api_p,
-               "log-level": "warning", "mode": "rule",
-               "proxies": [dict(q, name="p")], "rules": ["MATCH,p"]}
-        path = wd + "/c.yaml"
-        open(path, "w").write(_json.dumps(cfg, ensure_ascii=False))
-        p = _sp.Popen([verify.BIN, "-d", wd, "-f", path],
-                      stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
-        try:
-            for _ in range(40):
-                _t.sleep(0.2)
-                try:
-                    _ur.urlopen("http://127.0.0.1:%d/version" % api_p, timeout=1).read()
-                    break
-                except Exception:
-                    if p.poll() is not None:
-                        return None
-            r = _sp.run(["curl", "-s", "-o", "/dev/null", "-x", "http://127.0.0.1:%d" % mix_p,
-                         "--max-time", str(timeout), "-w", "%{speed_download}",
-                         "https://speed.cloudflare.com/__down?bytes=%d" % bytes_],
-                        capture_output=True, text=True)
-            speed = float(r.stdout.strip() or 0) / 1024.0
-            return speed if speed > 1 else None
-        finally:
-            p.terminate()
-            try:
-                p.wait(3)
-            except Exception:
-                p.kill()
-
+    # ③ 真实带宽：全部达标节点，6 路并行，每路单独内核 + curl 下载 300KB
     speed = {}
-    # 只对延迟最低的 40 个做带宽测试，控制耗时
-    top_keys = [k for k, _ in sorted(stats.items(), key=lambda kv: kv[1][0])[:40]]
-    for k in top_keys:
-        q = next((x for u, x in items if (x["server"], int(x["port"])) == k), None)
-        if not q:
-            continue
-        v = real_speed(q)
-        if v:
-            speed[k] = v
+    top_keys = [k for k, _ in sorted(stats.items(), key=lambda kv: kv[1][0])][:200]
+
+    def _one(k):
+        q = next((x for _, x in items if (x["server"], int(x["port"])) == k), None)
+        return k, (real_speed(q) if q else None)
+
+    from concurrent.futures import ThreadPoolExecutor as _TPE
+    with _TPE(max_workers=6) as _ex:
+        for k, v in _ex.map(_one, top_keys):
+            if v:
+                speed[k] = v
     log("真实带宽达标 %d 条" % len(speed))
 
     # ④ 加权评分 0-100：速度 50% + 延迟 35% + 抖动 15%
@@ -259,7 +224,7 @@ def main():
     for (d, u, q), r in zip(keep, regs):
         cnt[r] = cnt.get(r, 0) + 1
         out.append(u.split("#")[0] + "#" + (NAME % (r, cnt[r])).replace(" ", "%20"))
-    out = out[:50]
+    out = out[:200]
 
     old_n = 0
     fp = os.path.join(OUT, "final2.txt")
