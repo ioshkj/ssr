@@ -28,7 +28,18 @@ jobs:
           curl -sL --retry 3 -o bin/mihomo.gz https://github.com/MetaCubeX/mihomo/releases/download/v1.19.33/mihomo-linux-amd64-v1.19.33.gz
           gunzip -f bin/mihomo.gz && chmod +x bin/mihomo && ./bin/mihomo -v
       - name: build
-        run: python -u sub_build.py
+        run: |
+          set -o pipefail
+          python -u sub_build.py 2>&1 | tee build.log
+
+      - name: save log
+        if: always()
+        run: |
+          git config user.name "bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add -f build.log
+          git commit -q -m "log" || true
+          git push -q || true
       - name: commit
         run: |
           git config user.name "bot"
