@@ -305,7 +305,10 @@ def main():
             continue
         seen_ep.add(ep)
         items.append((u, q))
+    import collections as _col
+    _types = _col.Counter(q.get("type", "?") for _, q in items)
     log("去重后唯一入口 %d 个（提前剔除疑似美国/加拿大 %d 个）" % (len(items), us_skip))
+    log("  类型分布：" + "  ".join("%s %d" % (k, v) for k, v in _types.most_common(10)))
     ps = [q for _, q in items]
 
     def tcp_ms(q):
