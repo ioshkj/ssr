@@ -294,6 +294,10 @@ def main():
     keep = sorted(keep, key=lambda x: (x[0], x[1]))
 
     regs = geo.regions([q for *_, q in keep])
+    EXCLUDE = {"美国", "加拿大"}
+    keep, regs = zip(*[(x, r) for x, r in zip(keep, regs) if r not in EXCLUDE]) if keep else ([], [])
+    keep, regs = list(keep), list(regs)
+    log("剔除美国/加拿大后 %d 条" % len(keep))
     cnt, out = {}, []
     for (tcp, sc, u, q), r in zip(keep, regs):
         cnt[r] = cnt.get(r, 0) + 1
