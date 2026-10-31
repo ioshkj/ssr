@@ -487,6 +487,37 @@ def main():
                 f.write(base64.b64encode("\n".join(out_c).encode()).decode())
         log("  final10.txt：%d 条（回国方向，每地区 7 条）" % len(out_c))
 
+    # ⑩ 五目标全通（独立一份，其他订阅不受影响）
+    TARGETS = [
+        ("Google", "https://www.gstatic.com/generate_204"),
+        ("YouTube", "https://i.ytimg.com/generate_204"),
+        ("Cloudflare", "https://cp.cloudflare.com/generate_204"),
+        ("Twitter", "https://abs.twimg.com/favicon.ico"),
+        ("Telegram", "https://telegram.org/favicon.ico"),
+    ]
+    if keep:
+        alive = {(row[6]["server"], int(row[6]["port"])): row for row in keep}
+        for _, url in TARGETS:
+            got = verify.verify([dict(row[6]) for row in alive.values()],
+                                workers=24, timeout=10000, url=url, log=lambda m: None)
+            alive = {(p["server"], int(p["port"])): alive[(p["server"], int(p["port"]))]
+                     for p, _ in got if (p["server"], int(p["port"])) in alive}
+            log("  五目标 %-10s 剩余 %d" % (_, len(alive)))
+        five = [(row, r) for row, r in zip(keep, regs)
+                if (row[6]["server"], int(row[6]["port"])) in alive]
+        cnt_f, out_f = {}, []
+        for row, r in sorted(five, key=lambda z: -z[0][4]):
+            if cnt_f.get(r, 0) >= 7:
+                continue
+            cnt_f[r] = cnt_f.get(r, 0) + 1
+            out_f.append(row[5].split("#")[0] + "#" + (NAME % (r, cnt_f[r])).replace(" ", "%20"))
+            if len(out_f) >= 200:
+                break
+        if out_f:
+            with open(os.path.join(OUT, "final11.txt"), "w", encoding="utf-8") as f:
+                f.write(base64.b64encode("\n".join(out_f).encode()).decode())
+        log("  final11.txt：%d 条（五目标全通）" % len(out_f))
+
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n合并 %d / 通过 %d / 稳定 %d / TCP版 %d / HTTP版 %d / 速度版 %d / 综合版 %d\n"
                 % (time.strftime("%Y-%m-%d %H:%M:%S"), len(lines), len(keep),
