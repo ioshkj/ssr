@@ -71,18 +71,19 @@ def main():
                        ("YouTube", "https://i.ytimg.com/generate_204")]:
         r = verify.verify([dict(p) for p in proxies], workers=16, timeout=10000, url=url, log=lambda m: None)
         for p, d in r:
-            results.setdefault(p["name"], {})[label] = d
+            results.setdefault((p["server"], int(p["port"])), {})[label] = d
         print("%s 通过 %d" % (label, len(r)), flush=True)
 
-    dl = verify.verify([dict(p) for p in proxies if p["name"] in results],
+    dl = verify.verify([dict(p) for p in proxies
+                        if (p["server"], int(p["port"])) in results],
                        workers=8, timeout=20000,
                        url="https://speed.cloudflare.com/__down?bytes=300000", log=lambda m: None)
     for p, d in dl:
-        results.setdefault(p["name"], {})["下载KB/s"] = round(300.0 / max(d, 1) * 1000, 0)
+        results.setdefault((p["server"], int(p["port"])), {})["下载KB/s"] = round(300.0 / max(d, 1) * 1000, 0)
 
     rows = []
     for p in proxies:
-        r = results.get(p["name"], {})
+        r = results.get((p["server"], int(p["port"])), {})
         rows.append("%-14s %-8s %-8s %-8s %s" % (
             p["name"][:14], p["type"],
             ("%dms" % r["Google"]) if "Google" in r else "✗",
