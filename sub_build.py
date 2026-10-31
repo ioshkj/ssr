@@ -705,6 +705,25 @@ def main():
             f.write(base64.b64encode("\n".join(merged).encode()).decode())
     log("  all.txt：%d 条（合并去重）" % len(merged))
 
+    # ⑯ 全部 AnyTLS 节点（不限量）
+    any_rows = [(row, r) for row, r in zip(keep, regs) if row[6].get("type") == "anytls"]
+    any_rows += [(row, r) for row, r in unverified_rows if row[6].get("type") == "anytls"]
+    if any_rows:
+        out_any = []
+        seen_any = set()
+        for row, r in sorted(any_rows, key=lambda z: -z[0][4]):
+            k = (row[6]["server"], int(row[6]["port"]))
+            if k in seen_any:
+                continue
+            seen_any.add(k)
+            out_any.append(row[5].split("#")[0] + "#" + (NAME % (r, len(out_any) + 1)).replace(" ", "%20"))
+        if out_any:
+            with open(os.path.join(OUT, "final16.txt"), "w", encoding="utf-8") as f:
+                f.write(base64.b64encode("\n".join(out_any).encode()).decode())
+        log("  final16.txt：%d 条（全部 AnyTLS）" % len(out_any))
+    else:
+        log("  final16.txt：本轮没有 AnyTLS 节点")
+
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n合并 %d / 通过 %d / 稳定 %d / TCP版 %d / HTTP版 %d / 速度版 %d / 综合版 %d\n"
                 % (time.strftime("%Y-%m-%d %H:%M:%S"), len(lines), len(keep),
