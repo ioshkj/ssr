@@ -115,9 +115,18 @@ def tcp_ms(host, port, n=3):
 
 
 def load_proxies():
-    """只读 probe_nodes.txt（QX 配置行）"""
-    lines = [l for l in open(os.path.join(HERE, "probe_nodes.txt"), encoding="utf-8").read().splitlines() if l.strip()]
-    return [p for p in (parse_line(l) for l in lines) if p]
+    """读 sub/final14.txt（订阅）"""
+    import nodeconv, urllib.parse as up
+    fn = os.path.join(HERE, "sub", "final14.txt")
+    text = base64.b64decode(open(fn, "rb").read()).decode()
+    out = []
+    for u in [x.strip() for x in text.splitlines() if x.strip()]:
+        nm = up.unquote(u.split("#")[-1]) if "#" in u else "n"
+        q = nodeconv.to_clash(u, nm)
+        if q:
+            out.append(q)
+    print("载入 final14 %d 条" % len(out), flush=True)
+    return out
 
 
 def main():
