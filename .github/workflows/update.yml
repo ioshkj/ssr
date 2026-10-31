@@ -36,7 +36,7 @@ jobs:
           git config user.name "bot"
           git config user.email "bot@users.noreply.github.com"
           git add -f build.log 2>/dev/null || true
-          git add -f sources.json 2>/dev/null || true
+          git add -f sources.json known.json 2>/dev/null || true
           git add -A sub/ 2>/dev/null || true
           git commit -q -m "update" 2>/dev/null || true
           for i in 1 2 3; do git push -q && break; sleep 5; done

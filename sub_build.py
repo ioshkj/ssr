@@ -259,6 +259,37 @@ def main():
     keep = dedup
     log("同网段去重后 %d" % len(keep))
 
+    # 稳定性：连续多轮通过才收录（known.json 记录每轮结果）
+    import json as _j, time as _tm
+    kp = os.path.join(HERE, "known.json")
+    try:
+        known = _j.load(open(kp, encoding="utf-8"))
+    except Exception:
+        known = {}
+    now = _tm.time()
+    cur = {"%s:%d" % (q["server"], int(q["port"])) for _, _, q in keep}
+    for k in list(known):
+        if k not in cur:
+            known[k]["s"] = known[k].get("s", 0) - 1
+            if known[k]["s"] <= 0:
+                del known[k]
+    for _, u, q in keep:
+        k = "%s:%d" % (q["server"], int(q["port"]))
+        rec = known.get(k, {"s": 0})
+        rec["s"] = rec.get("s", 0) + 1
+        rec["t"] = now
+        rec["u"] = u
+        known[k] = rec
+    known = dict(sorted(known.items(), key=lambda kv: -kv[1].get("t", 0))[:800])
+    try:
+        _j.dump(known, open(kp, "w", encoding="utf-8"), ensure_ascii=False)
+    except Exception:
+        pass
+    stable = [x for x in keep
+              if known.get("%s:%d" % (x[2]["server"], int(x[2]["port"])), {}).get("s", 0) >= 3]
+    log("连续 3 轮通过 %d 条，本轮通过 %d 条" % (len(stable), len(keep)))
+    keep = stable or keep[:30]
+
     regs = geo.regions([q for _, _, q in keep])
     cnt, out = {}, []
     for (d, u, q), r in zip(keep, regs):
