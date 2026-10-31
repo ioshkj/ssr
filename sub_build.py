@@ -300,14 +300,14 @@ def main():
 
     # ③ 真实带宽：全部达标节点，6 路并行，每路单独内核 + curl 下载 300KB
     speed = {}
-    top_keys = [k for k, _ in sorted(stats.items(), key=lambda kv: kv[1][0])][:200]
+    top_keys = [k for k, _ in sorted(stats.items(), key=lambda kv: kv[1][0])]  # 全部测，不设名额
 
     def _one(k):
         q = next((x for _, x in items if (x["server"], int(x["port"])) == k), None)
         return k, (real_speed(q) if q else None)
 
     from concurrent.futures import ThreadPoolExecutor as _TPE
-    with _TPE(max_workers=6) as _ex:
+    with _TPE(max_workers=10) as _ex:
         for k, v in _ex.map(_one, top_keys):
             if v:
                 speed[k] = v
