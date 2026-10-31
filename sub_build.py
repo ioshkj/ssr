@@ -99,9 +99,16 @@ def discovered():
         return []
     out = []
     for x in items:
+        if isinstance(x, str):
+            out.append(x)
+            continue
         if x.get("fails", 0) >= 3:
             continue
-        out.append("%s/%s/%s" % (x["repo"], x.get("branch", "main"), x["path"]))
+        repo = x.get("repo")
+        path = x.get("path")
+        if not repo or not path:
+            continue
+        out.append("%s/%s/%s" % (repo, x.get("branch", "main"), path))
     return out
 
 
