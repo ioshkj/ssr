@@ -298,11 +298,17 @@ def main():
     keep, regs = zip(*[(x, r) for x, r in zip(keep, regs) if r not in EXCLUDE]) if keep else ([], [])
     keep, regs = list(keep), list(regs)
     log("剔除美国/加拿大后 %d 条" % len(keep))
+    # 每个地区最多 5 条（列表已按延迟升序，取各地区最靠前的 5 个）
+    PER_REGION = 5
     cnt, out = {}, []
     for (tcp, sc, u, q), r in zip(keep, regs):
+        if cnt.get(r, 0) >= PER_REGION:
+            continue
         cnt[r] = cnt.get(r, 0) + 1
         out.append(u.split("#")[0] + "#" + (NAME % (r, cnt[r])).replace(" ", "%20"))
-    out = out[:200]
+        if len(out) >= 200:
+            break
+    log("每地区限 %d 条后共 %d 条，地区数 %d" % (PER_REGION, len(out), len(cnt)))
 
     old_n = 0
     fp = os.path.join(OUT, "final2.txt")
