@@ -440,18 +440,27 @@ def main():
     log("连续 3 轮通过 %d 条，本轮通过 %d 条" % (len(stable), len(keep)))
     keep = stable if len(stable) >= 10 else keep   # 不截断：本轮通过多少就留多少
 
-    # 地区：按原有识别（国旗、英文、域名都认）；屏蔽：只看名字里有没有中文「美国/加拿大」
-    keep2, regs = [], []
-    for row in keep:
-        q = row[6]
-        nm = q.get("name", "") or ""
-        if ("美国" in nm) or ("加拿大" in nm):
+    # 地区判定：通过节点查真实出口 IP（名字/域名判断不可靠，CF 节点会被误判）
+    from concurrent.futures import ThreadPoolExecutor as _TPE_R
+
+    def _lookup(row):
+        return exit_cc(row[6])
+
+    with _TPE_R(max_workers=6) as _exr:
+        _ccs = list(_exr.map(_lookup, keep[:250]))
+    _rows = keep
+    keep, regs, unverified = [], [], []
+    for row, cc in zip(_rows, _ccs):
+        if not cc:
+            unverified.append(row)          # 拿不到地区 → 单独一份
             continue
-        cc = geo.guess_cc("%s %s" % (nm, q.get("server", "")))
-        keep2.append(row)
+        if cc in ("US", "CA"):
+            continue                        # 真实出口在美国/加拿大 → 剔除
+        keep.append(row)
         regs.append(geo.CC_NAME.get(cc, "其他"))
-    log("屏蔽中文美加后：%d 条" % len(keep2))
-    keep = keep2
+    log("真实出口非美加：%d 条，未验证：%d 条" % (len(keep), len(unverified)))
+    unverified_rows = [(row, geo.CC_NAME.get(geo.guess_cc(row[6].get("name", "")), "其他"))
+                       for row in unverified]
 
     def emit(filename, order):
         PER_REGION = 7
@@ -646,6 +655,21 @@ def main():
             with open(os.path.join(OUT, "final14.txt"), "w", encoding="utf-8") as f:
                 f.write(base64.b64encode("\n".join(out_u).encode()).decode())
         log("  final14.txt：%d 条（支持 UDP）" % len(out_u))
+
+    # ⑭ 拿不到出口地区的节点（可能仍能用，单独放）
+    if unverified_rows:
+        cnt_v, out_v = {}, []
+        for row, r in sorted(unverified_rows, key=lambda z: -z[0][4]):
+            if cnt_v.get(r, 0) >= 7:
+                continue
+            cnt_v[r] = cnt_v.get(r, 0) + 1
+            out_v.append(row[5].split("#")[0] + "#" + (NAME % (r, cnt_v[r])).replace(" ", "%20"))
+            if len(out_v) >= 200:
+                break
+        if out_v:
+            with open(os.path.join(OUT, "final15.txt"), "w", encoding="utf-8") as f:
+                f.write(base64.b64encode("\n".join(out_v).encode()).decode())
+        log("  final15.txt：%d 条（未验证地区）" % len(out_v))
 
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n合并 %d / 通过 %d / 稳定 %d / TCP版 %d / HTTP版 %d / 速度版 %d / 综合版 %d\n"
