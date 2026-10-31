@@ -187,7 +187,7 @@ def main():
 
     with ThreadPoolExecutor(max_workers=256) as ex:
         lat = list(ex.map(tcp_ms, ps))
-    pairs = [(l, q) for q, l in zip(ps, lat) if l is not None and l <= 500]
+    pairs = [(l, q) for q, l in zip(ps, lat) if l is not None and l <= 600]
     tcp_of = {(q["server"], int(q["port"])): l for l, q in pairs}
     pairs.sort(key=lambda x: x[0])
     ps = [q for _, q in pairs]
@@ -298,7 +298,7 @@ def main():
     for (tcp, sc, u, q), r in zip(keep, regs):
         cnt[r] = cnt.get(r, 0) + 1
         out.append(u.split("#")[0] + "#" + (NAME % (r, cnt[r])).replace(" ", "%20"))
-    out = out[:50]
+    out = out[:200]
 
     old_n = 0
     fp = os.path.join(OUT, "final2.txt")
