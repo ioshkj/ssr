@@ -67,16 +67,11 @@ def discovered():
         items = json.load(open(p, encoding="utf-8"))
     except Exception:
         return []
-    import datetime
-    cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=36)
     out = []
     for x in items:
-        try:
-            t = datetime.datetime.fromisoformat(x["pushed"].replace("Z", "+00:00"))
-        except Exception:
+        if x.get("fails", 0) >= 3:
             continue
-        if t >= cutoff:
-            out.append("%s/%s/%s" % (x["repo"], x.get("branch", "main"), x["path"]))
+        out.append("%s/%s/%s" % (x["repo"], x.get("branch", "main"), x["path"]))
     return out
 
 

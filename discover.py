@@ -60,6 +60,16 @@ def main():
         log("  %-26s 累计 %d" % (q, len(repos)))
         time.sleep(6.5)
 
+    # 读旧的源清单（累积）
+    old = []
+    if os.path.exists(OUT):
+        try:
+            old = json.load(open(OUT, encoding="utf-8"))
+        except Exception:
+            old = []
+    oldmap = {"%s|%s" % (x["repo"], x["path"]): x for x in old}
+    now = time.time()
+
     found = []
     for repo, meta in sorted(repos.items(), key=lambda kv: -kv[1]["stars"])[:120]:
         branch = meta["branch"]
@@ -80,12 +90,26 @@ def main():
             if len(b) > 400 and b"<html" not in b[:200].lower():
                 found.append({"repo": repo, "branch": branch, "path": p,
                               "kind": "clash" if p.lower().endswith((".yaml", ".yml")) else "uri",
-                              "pushed": meta["pushed"], "stars": meta["stars"]})
+                              "pushed": meta["pushed"], "stars": meta["stars"],
+                              "last_ok": now, "fails": 0})
                 break
     if not found:
         found = []
-    json.dump(found, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-    log("共 %d 个订阅源 -> sources.json" % len(found))
+    # 合并：本轮命中的更新，未命中的记失败，失败 3 次淘汰
+    merged = {}
+    for x in found:
+        merged["%s|%s" % (x["repo"], x["path"])] = x
+    for k, x in oldmap.items():
+        if k in merged:
+            continue
+        x = dict(x)
+        x["fails"] = x.get("fails", 0) + 1
+        if x["fails"] >= 3:
+            continue
+        merged[k] = x
+    final = list(merged.values())
+    json.dump(final, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    log("本轮命中 %d，累积保留 %d 个订阅源" % (len(found), len(final)))
 
 
 if __name__ == "__main__":
