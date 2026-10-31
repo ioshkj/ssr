@@ -125,6 +125,48 @@ def tcp_ok(host, port, timeout=1.5):
 
 
 
+
+def exit_cc(q, timeout=12):
+    """通过节点查询真实出口国家码：起单节点内核 + curl 走本地代理问 ip-api"""
+    import json as _json, socket as _sock, subprocess as _sp, tempfile as _tf, time as _t, urllib.request as _ur
+
+    wd = _tf.mkdtemp(prefix="geo-")
+    a, b = _sock.socket(), _sock.socket()
+    a.bind(("127.0.0.1", 0)); b.bind(("127.0.0.1", 0))
+    api_p, mix_p = a.getsockname()[1], b.getsockname()[1]
+    a.close(); b.close()
+    cfg = {"mixed-port": mix_p, "external-controller": "127.0.0.1:%d" % api_p,
+           "log-level": "warning", "mode": "rule",
+           "proxies": [dict(q, name="p")], "rules": ["MATCH,p"]}
+    path = wd + "/c.yaml"
+    open(path, "w").write(_json.dumps(cfg, ensure_ascii=False))
+    p = _sp.Popen([verify.BIN, "-d", wd, "-f", path], stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
+    try:
+        for _ in range(40):
+            _t.sleep(0.2)
+            try:
+                _ur.urlopen("http://127.0.0.1:%d/version" % api_p, timeout=1).read()
+                break
+            except Exception:
+                if p.poll() is not None:
+                    return None
+        r = _sp.run(["curl", "-s", "--max-time", str(timeout),
+                     "-x", "http://127.0.0.1:%d" % mix_p,
+                     "http://ip-api.com/json/?fields=countryCode"],
+                    capture_output=True, text=True)
+        d = _json.loads(r.stdout or "{}")
+        cc = (d.get("countryCode") or "").upper()
+        return cc or None
+    except Exception:
+        return None
+    finally:
+        p.terminate()
+        try:
+            p.wait(3)
+        except Exception:
+            p.kill()
+
+
 def real_speed(q, bytes_=300000, timeout=25):
     """单节点：起一个只含它的内核，用 curl 走本地代理下载，返回 KB/s"""
     import json as _json, socket as _sock, subprocess as _sp, tempfile as _tf, time as _t, urllib.request as _ur
@@ -364,6 +406,31 @@ def main():
     n_http = emit("final3.txt", 1)   # 按 HTTP 延迟
     n_speed = emit("final4.txt", 2)  # 按下载速度
     n_score = emit("final5.txt", 3)  # 综合评分
+
+    # ⑤ 按「真实出口 IP」判断地区的订阅（独立一份）
+    real = []
+    for row in keep[:120]:
+        q = row[6]
+        cc = exit_cc(q)
+        if not cc or cc in ("US", "CA"):
+            continue
+        real.append((row, cc))
+    log("真实出口地区（剔除 US/CA）%d 条" % len(real))
+    if real:
+        cnt_r, out_r = {}, []
+        for row, cc in sorted(real, key=lambda z: z[0][0]):
+            name_cn = geo.CC_NAME.get(cc, "其他")
+            if cnt_r.get(name_cn, 0) >= 5:
+                continue
+            cnt_r[name_cn] = cnt_r.get(name_cn, 0) + 1
+            u = row[5]
+            out_r.append(u.split("#")[0] + "#" + (NAME % (name_cn, cnt_r[name_cn])).replace(" ", "%20"))
+            if len(out_r) >= 200:
+                break
+        if out_r:
+            with open(os.path.join(OUT, "final6.txt"), "w", encoding="utf-8") as f:
+                f.write(base64.b64encode("\n".join(out_r).encode()).decode())
+            log("  final6.txt：%d 条（真实出口地区）" % len(out_r))
 
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n合并 %d / 通过 %d / 稳定 %d / TCP版 %d / HTTP版 %d / 速度版 %d / 综合版 %d\n"
