@@ -26,6 +26,10 @@ CC_NAME = {
  "AZ":"阿塞拜疆","BY":"白俄罗斯","UZ":"乌兹别克","MO":"澳门","PR":"波多黎各","GU":"关岛",
 }
 
+CC_NAME["CN"] = "中国"
+
+HOST_CC = re.compile(r"(?:^|[.-])(jp|us|hk|tw|sg|kr|de|fr|uk|gb|nl|ca|au|ru|in|tr|ir|vn|th|my|id|ph|br|ar|ua|pl|se|ch|fi|no|dk|ie|it|es|at|cz|ro|md|lt|lv|ee|bg|rs|gr|il|ae|sa|za|eg|mx|cl|co|pe|nz|be|pt)\d*(?:[.-]|$)", re.I)
+
 WORD_CC = [
  ("香港","HK"),("台湾","TW"),("澳門","MO"),("澳门","MO"),("新加坡","SG"),("日本","JP"),
  ("韩国","KR"),("韓國","KR"),("美国","US"),("美國","US"),("加拿大","CA"),("澳大利亚","AU"),
@@ -63,6 +67,10 @@ def guess_cc(text):
     m = CC_RE.search(text)
     if m:
         cc = m.group(1)
+        return "GB" if cc == "UK" else cc
+    h = HOST_CC.search("." + text.replace(" ", ".") + ".")
+    if h:
+        cc = h.group(1).upper()
         return "GB" if cc == "UK" else cc
     return None
 
