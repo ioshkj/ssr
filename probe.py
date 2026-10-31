@@ -115,25 +115,7 @@ def tcp_ms(host, port, n=3):
 
 
 def load_proxies():
-    """优先读 sub/final8.txt（订阅），否则读 probe_nodes.txt（QX 行）"""
-    import nodeconv, urllib.parse as up
-    sub = os.path.join(HERE, "sub", "final15.txt")
-    if not os.path.exists(sub):
-        sub = os.path.join(HERE, "sub", "final8.txt")
-    if os.path.exists(sub):
-        try:
-            text = base64.b64decode(open(sub, "rb").read()).decode()
-            out = []
-            for u in [x.strip() for x in text.splitlines() if x.strip()]:
-                nm = up.unquote(u.split("#")[-1]) if "#" in u else "n"
-                q = nodeconv.to_clash(u, nm)
-                if q:
-                    out.append(q)
-            if out:
-                print("从 final8.txt 载入 %d 条" % len(out), flush=True)
-                return out
-        except Exception as e:
-            print("读取 final8 失败:", e, flush=True)
+    """只读 probe_nodes.txt（QX 配置行）"""
     lines = [l for l in open(os.path.join(HERE, "probe_nodes.txt"), encoding="utf-8").read().splitlines() if l.strip()]
     return [p for p in (parse_line(l) for l in lines) if p]
 
