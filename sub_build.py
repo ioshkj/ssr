@@ -327,7 +327,7 @@ def main():
     keep = stable if len(stable) >= 10 else keep[:60]
 
     regs = geo.regions([q for *_, q in keep])
-    EXCLUDE = {"美国", "加拿大"}
+    EXCLUDE = {"美国"}
     pairs = [(x, r) for x, r in zip(keep, regs) if r not in EXCLUDE]
     keep = [x for x, _ in pairs]
     regs = [r for _, r in pairs]
