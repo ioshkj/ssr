@@ -375,19 +375,17 @@ def main():
     log("连续 3 轮通过 %d 条，本轮通过 %d 条" % (len(stable), len(keep)))
     keep = stable if len(stable) >= 10 else keep[:60]
 
-    # 用「真实出口 IP」判定地区（名字/域名判断会把 CF 中转节点误判成加拿大）
-    from concurrent.futures import ThreadPoolExecutor as _TPE2
-
-    def _cc(row):
-        return exit_cc(row[6])
-
-    with _TPE2(max_workers=6) as _ex2:
-        ccs = list(_ex2.map(_cc, keep[:200]))
-    pairs_r = [(row, cc) for row, cc in zip(keep, ccs)
-               if cc and cc not in ("US", "CA")]
-    log("真实出口非美加：%d 条（共测 %d）" % (len(pairs_r), len(ccs)))
-    keep = [x for x, _ in pairs_r]
-    regs = [geo.CC_NAME.get(cc, "其他") for _, cc in pairs_r]
+    # 只按「节点名 / 域名」判断地区（不做 IP 反查，避免 CF 节点被误判成加拿大）
+    keep2, regs = [], []
+    for row in keep:
+        q = row[6]
+        cc = geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", "")))
+        if cc in ("US", "CA"):
+            continue
+        keep2.append(row)
+        regs.append(geo.CC_NAME.get(cc, "其他"))
+    log("按名称剔除美加后：%d 条" % len(keep2))
+    keep = keep2
 
     def emit(filename, order):
         PER_REGION = 5
