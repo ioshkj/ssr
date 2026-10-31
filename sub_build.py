@@ -344,8 +344,6 @@ def main():
     keep = dedup
     log("同网段去重后 %d" % len(keep))
 
-    keep_all = list(keep)   # 全量通过（未做稳定性和地区截断），供 final7 用
-
     # 稳定性（known.json）
     import json as _j, time as _tm
     kp = os.path.join(HERE, "known.json")
@@ -414,18 +412,19 @@ def main():
     n_speed = emit("final4.txt", 2)  # 按下载速度
     n_score = emit("final5.txt", 3)  # 综合评分
 
-    # ⑥ 全部通过测试的节点（含美国/加拿大，不按地区限量）—— 用来看真实可用率
-    out_all = []
-    for (tcp, med, jit, sp, sc, u, q) in sorted(keep_all, key=lambda x: -x[4]):
-        cc = geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", "")))
-        r = geo.CC_NAME.get(cc, "其他")
-        out_all.append(u.split("#")[0] + "#" + (NAME % (r, len(out_all) + 1)).replace(" ", "%20"))
+    # ⑥ 第六份：与 final5 同规则，独立文件方便单独对比
+    out_all, cnt_r = [], {}
+    for (tcp, med, jit, sp, sc, u, q), r in sorted(zip(keep, regs), key=lambda z: -z[0][4]):
+        if cnt_r.get(r, 0) >= 5:
+            continue
+        cnt_r[r] = cnt_r.get(r, 0) + 1
+        out_all.append(u.split("#")[0] + "#" + (NAME % (r, cnt_r[r])).replace(" ", "%20"))
         if len(out_all) >= 200:
             break
     if out_all:
         with open(os.path.join(OUT, "final7.txt"), "w", encoding="utf-8") as f:
             f.write(base64.b64encode("\n".join(out_all).encode()).decode())
-    log("  final7.txt：%d 条（全部通过测试，含美加）" % len(out_all))
+    log("  final7.txt：%d 条（剔除美加，每地区 5 条）" % len(out_all))
 
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n合并 %d / 通过 %d / 稳定 %d / TCP版 %d / HTTP版 %d / 速度版 %d / 综合版 %d\n"
