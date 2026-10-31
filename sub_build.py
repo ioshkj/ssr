@@ -518,6 +518,30 @@ def main():
                 f.write(base64.b64encode("\n".join(out_f).encode()).decode())
         log("  final11.txt：%d 条（五目标全通）" % len(out_f))
 
+    # ⑪ SNI 敏感性：Google 不通但 Apple 通（说明不是节点坏，是针对性封锁）
+    if keep:
+        apple = verify.verify([dict(row[6]) for row in keep], workers=24, timeout=10000,
+                              url="https://www.apple.com/library/test/success.html",
+                              log=lambda m: None)
+        google_ok = {(row[6]["server"], int(row[6]["port"])) for row in keep}
+        apple_ok = {(p["server"], int(p["port"])) for p, _ in apple}
+        sni_rows = [(row, r) for row, r in zip(keep, regs)
+                    if (row[6]["server"], int(row[6]["port"])) in apple_ok
+                    and (row[6]["server"], int(row[6]["port"])) not in google_ok]
+        log("Apple 通但 Google 不通：%d 条" % len(sni_rows))
+        cnt_s, out_s = {}, []
+        for row, r in sorted(sni_rows, key=lambda z: -z[0][4]):
+            if cnt_s.get(r, 0) >= 7:
+                continue
+            cnt_s[r] = cnt_s.get(r, 0) + 1
+            out_s.append(row[5].split("#")[0] + "#" + (NAME % (r, cnt_s[r])).replace(" ", "%20"))
+            if len(out_s) >= 200:
+                break
+        if out_s:
+            with open(os.path.join(OUT, "final12.txt"), "w", encoding="utf-8") as f:
+                f.write(base64.b64encode("\n".join(out_s).encode()).decode())
+        log("  final12.txt：%d 条（SNI 敏感节点）" % len(out_s))
+
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n合并 %d / 通过 %d / 稳定 %d / TCP版 %d / HTTP版 %d / 速度版 %d / 综合版 %d\n"
                 % (time.strftime("%Y-%m-%d %H:%M:%S"), len(lines), len(keep),
