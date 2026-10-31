@@ -149,36 +149,78 @@ def main():
         lat = list(ex.map(tcp_ms, ps))
     pairs = [(l, q) for q, l in zip(ps, lat) if l is not None and l <= 500]
     pairs.sort(key=lambda x: x[0])
-    ps = [q for _, q in pairs][:400]
+    ps = [q for _, q in pairs][:1000]
     log("TCP ≤500ms 的 %d 条，进入端到端测试" % len(ps))
 
-    # ② 端到端延迟 + 抖动：3 次请求 Google，至少 2 次成功
+    # ② 端到端延迟：并发 32，测 2 次取最小值；抖动 = 两次差值
     samples = {}
-    for rnd in range(3):
-        r = verify.verify([dict(p) for p in ps], workers=192, timeout=8000,
-                          url=verify.URL_GOOGLE, log=lambda m: None)
+    for rnd in range(2):
+        r = verify.verify([dict(p) for p in ps], workers=32, timeout=8000,
+                          url="http://www.gstatic.com/generate_204", log=lambda m: None)
         for p, d in r:
             samples.setdefault((p["server"], int(p["port"])), []).append(d)
-        log("  第 %d 次延迟采样成功 %d" % (rnd + 1, len(r)))
+        log("  第 %d 次采样成功 %d" % (rnd + 1, len(r)))
 
-    import statistics
     stats = {}
     for k, ds in samples.items():
-        if len(ds) < 2:
+        if not ds:
             continue
-        med = sorted(ds)[len(ds) // 2]
-        jit = statistics.pstdev(ds) if len(ds) > 1 else 0
-        if med > 600 or jit > 200:
+        med = min(ds)
+        jit = (max(ds) - min(ds)) if len(ds) > 1 else 0
+        if med > 1000 or jit > 400:
             continue
         stats[k] = (med, jit)
-    log("端到端达标（≤600ms，抖动≤200ms）%d 条" % len(stats))
+    log("端到端达标（≤1000ms，抖动≤400ms）%d 条" % len(stats))
 
-    # ③ 下载 1MB 测真实速度
-    ps2 = [p for p in ps if (p["server"], int(p["port"])) in stats]
-    sp = verify.verify([dict(p) for p in ps2], workers=48, timeout=20000,
-                       url="https://speed.cloudflare.com/__down?bytes=1000000", log=lambda m: None)
-    speed = {(p["server"], int(p["port"])): 1000.0 / max(d, 1) for p, d in sp}  # KB/s
-    log("下载 1MB 成功 %d 条" % len(speed))
+    # ③ 真实带宽：单独起一个只含该节点的内核，用 curl 走本地代理下载 300KB
+    import json as _json, socket as _sock, subprocess as _sp, tempfile as _tf, time as _t, urllib.request as _ur
+
+    def real_speed(q, bytes_=300000, timeout=25):
+        wd = _tf.mkdtemp(prefix="sp-")
+        s1, s2 = _sock.socket(), _sock.socket()
+        s1.bind(("127.0.0.1", 0)); s2.bind(("127.0.0.1", 0))
+        api_p, mix_p = s1.getsockname()[1], s2.getsockname()[1]
+        s1.close(); s2.close()
+        cfg = {"mixed-port": mix_p, "external-controller": "127.0.0.1:%d" % api_p,
+               "log-level": "warning", "mode": "rule",
+               "proxies": [dict(q, name="p")], "rules": ["MATCH,p"]}
+        path = wd + "/c.yaml"
+        open(path, "w").write(_json.dumps(cfg, ensure_ascii=False))
+        p = _sp.Popen([verify.BIN, "-d", wd, "-f", path],
+                      stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
+        try:
+            for _ in range(40):
+                _t.sleep(0.2)
+                try:
+                    _ur.urlopen("http://127.0.0.1:%d/version" % api_p, timeout=1).read()
+                    break
+                except Exception:
+                    if p.poll() is not None:
+                        return None
+            r = _sp.run(["curl", "-s", "-o", "/dev/null", "-x", "http://127.0.0.1:%d" % mix_p,
+                         "--max-time", str(timeout), "-w", "%{speed_download}",
+                         "https://speed.cloudflare.com/__down?bytes=%d" % bytes_],
+                        capture_output=True, text=True)
+            speed = float(r.stdout.strip() or 0) / 1024.0
+            return speed if speed > 1 else None
+        finally:
+            p.terminate()
+            try:
+                p.wait(3)
+            except Exception:
+                p.kill()
+
+    speed = {}
+    # 只对延迟最低的 40 个做带宽测试，控制耗时
+    top_keys = [k for k, _ in sorted(stats.items(), key=lambda kv: kv[1][0])[:40]]
+    for k in top_keys:
+        q = next((x for u, x in items if (x["server"], int(x["port"])) == k), None)
+        if not q:
+            continue
+        v = real_speed(q)
+        if v:
+            speed[k] = v
+    log("真实带宽达标 %d 条" % len(speed))
 
     # ④ 加权评分 0-100：速度 50% + 延迟 35% + 抖动 15%
     keep = []
@@ -188,7 +230,7 @@ def main():
             continue
         med, jit = stats[k]
         sp_kb = speed[k]
-        if sp_kb < 300:
+        if sp_kb < 30:
             continue
         score = 100.0 * (0.50 * min(sp_kb / 2000.0, 1.0)
                          + 0.35 * (1 - min(med / 1000.0, 1.0))
@@ -226,14 +268,14 @@ def main():
             old_n = len(base64.b64decode(open(fp).read()).decode().splitlines())
         except Exception:
             old_n = 0
-    if not out or (old_n >= 40 and len(out) < old_n * 0.5):
+    if not out:
         log("  !! 本轮结果 %d 条，明显少于上一版 %d 条，保留上一版" % (len(out), old_n))
         return
     with open(os.path.join(OUT, "final2.txt"), "w", encoding="utf-8") as f:
         f.write(base64.b64encode("\n".join(out).encode()).decode())
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n合并 %d / 通过 %d / 收录 %d\n"
-                % (time.strftime("%Y-%m-%d %H:%M:%S"), len(lines), len(ok_keys), len(out)))
+                % (time.strftime("%Y-%m-%d %H:%M:%S"), len(lines), len(speed), len(out)))
     log("写入 sub.txt：%d 条" % len(out))
 
 
