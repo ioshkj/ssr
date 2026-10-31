@@ -454,7 +454,7 @@ def main():
     keep = keep2
 
     def emit(filename, order):
-        PER_REGION = 5
+        PER_REGION = 7
         cnt, out = {}, []
         KEYS = {0: lambda t: t[0], 1: lambda t: t[1], 2: lambda t: -t[3], 3: lambda t: -t[4]}
         for row, r in sorted(zip(keep, regs), key=lambda z: KEYS[order](z[0])):
@@ -496,7 +496,7 @@ def main():
     cnt_t, out_t = {}, []
     for (tcp, med, jit, sp, sc, u, q), r in sorted(zip(keep, regs), key=lambda z: -z[0][4]):
         t = q.get("type", "other")
-        if cnt_t.get(t, 0) >= 5:
+        if cnt_t.get(t, 0) >= 7:
             continue
         cnt_t[t] = cnt_t.get(t, 0) + 1
         nm = "%s-%02d 0070077.xyz" % (TYPE_CN.get(t, t), cnt_t[t])
@@ -512,7 +512,7 @@ def main():
     mid = [(row, r) for row, r in zip(keep, regs) if 500 <= row[0] <= 1000]
     cnt_m, out_m = {}, []
     for (tcp, med, jit, sp, sc, u, q), r in sorted(mid, key=lambda z: -z[0][4]):
-        if cnt_m.get(r, 0) >= 5:
+        if cnt_m.get(r, 0) >= 7:
             continue
         cnt_m[r] = cnt_m.get(r, 0) + 1
         out_m.append(u.split("#")[0] + "#" + (NAME % (r, cnt_m[r])).replace(" ", "%20"))
@@ -539,7 +539,7 @@ def main():
         picked.sort(key=lambda z: z[0])
         cnt_c, out_c = {}, []
         for delay, row, r in picked:
-            if cnt_c.get(r, 0) >= 5:
+            if cnt_c.get(r, 0) >= 7:
                 continue
             cnt_c[r] = cnt_c.get(r, 0) + 1
             out_c.append(row[5].split("#")[0] + "#" + (NAME % (r, cnt_c[r])).replace(" ", "%20"))
@@ -570,7 +570,7 @@ def main():
                 if (row[6]["server"], int(row[6]["port"])) in alive]
         cnt_f, out_f = {}, []
         for row, r in sorted(five, key=lambda z: -z[0][4]):
-            if cnt_f.get(r, 0) >= 5:
+            if cnt_f.get(r, 0) >= 7:
                 continue
             cnt_f[r] = cnt_f.get(r, 0) + 1
             out_f.append(row[5].split("#")[0] + "#" + (NAME % (r, cnt_f[r])).replace(" ", "%20"))
@@ -595,7 +595,7 @@ def main():
         log("Apple 通但 Google 不通：%d 条" % len(sni_rows))
         cnt_s, out_s = {}, []
         for row, r in sorted(sni_rows, key=lambda z: -z[0][4]):
-            if cnt_s.get(r, 0) >= 5:
+            if cnt_s.get(r, 0) >= 7:
                 continue
             cnt_s[r] = cnt_s.get(r, 0) + 1
             out_s.append(row[5].split("#")[0] + "#" + (NAME % (r, cnt_s[r])).replace(" ", "%20"))
@@ -615,7 +615,7 @@ def main():
         log("SNI 敏感且支持 UDP：%d 条" % len(combo))
         cnt_c2, out_c2 = {}, []
         for row, r in sorted(combo, key=lambda z: -z[0][4]):
-            if cnt_c2.get(r, 0) >= 5:
+            if cnt_c2.get(r, 0) >= 7:
                 continue
             cnt_c2[r] = cnt_c2.get(r, 0) + 1
             out_c2.append(row[5].split("#")[0] + "#" + (NAME % (r, cnt_c2[r])).replace(" ", "%20"))
@@ -635,7 +635,7 @@ def main():
         log("支持 UDP：%d 条" % len(u_rows))
         cnt_u, out_u = {}, []
         for row, r in sorted(u_rows, key=lambda z: -z[0][4]):
-            if cnt_u.get(r, 0) >= 5:
+            if cnt_u.get(r, 0) >= 7:
                 continue
             cnt_u[r] = cnt_u.get(r, 0) + 1
             out_u.append(row[5].split("#")[0] + "#" + (NAME % (r, cnt_u[r])).replace(" ", "%20"))
