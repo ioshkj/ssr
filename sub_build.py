@@ -509,9 +509,10 @@ def main():
         log("  final6.txt：%d 条（真实出口）" % len(out_e))
 
     # ⑥ 第六份：剔除美加后的全部节点（不限地区，最多 200）
-    out_all = []
+    out_all, cnt_a = [], {}
     for (tcp, med, jit, sp, sc, u, q), r in sorted(zip(keep, regs), key=lambda z: -z[0][4]):
-        out_all.append(u.split("#")[0] + "#" + (NAME % (r, 0)).replace(" ", "%20").replace("-00", "-ALL"))
+        cnt_a[r] = cnt_a.get(r, 0) + 1
+        out_all.append(u.split("#")[0] + "#" + (NAME % (r, cnt_a[r])).replace(" ", "%20"))
         if len(out_all) >= 200:
             break
     if out_all:
@@ -670,6 +671,36 @@ def main():
             with open(os.path.join(OUT, "final15.txt"), "w", encoding="utf-8") as f:
                 f.write(base64.b64encode("\n".join(out_v).encode()).decode())
         log("  final15.txt：%d 条（未验证地区）" % len(out_v))
+
+    # ⑮ 全部合并（final2~15 去重后重新编号，避免重名）
+    merged, seen_ep2, cnt_m2 = [], set(), {}
+    for i in range(2, 16):
+        fn = os.path.join(OUT, "final%d.txt" % i)
+        if not os.path.exists(fn):
+            continue
+        try:
+            text = base64.b64decode(open(fn, "rb").read()).decode()
+        except Exception:
+            continue
+        for line in text.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            q = nodeconv.to_clash(line, "x")
+            if not q:
+                continue
+            ep = (str(q["server"]).lower(), int(q["port"]))
+            if ep in seen_ep2:
+                continue
+            seen_ep2.add(ep)
+            cc = geo.guess_cc(q.get("name", ""))
+            r = geo.CC_NAME.get(cc, "其他")
+            cnt_m2[r] = cnt_m2.get(r, 0) + 1
+            merged.append(line.split("#")[0] + "#" + (NAME % (r, cnt_m2[r])).replace(" ", "%20"))
+    if merged:
+        with open(os.path.join(OUT, "all.txt"), "w", encoding="utf-8") as f:
+            f.write(base64.b64encode("\n".join(merged).encode()).decode())
+    log("  all.txt：%d 条（合并去重）" % len(merged))
 
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n合并 %d / 通过 %d / 稳定 %d / TCP版 %d / HTTP版 %d / 速度版 %d / 综合版 %d\n"
