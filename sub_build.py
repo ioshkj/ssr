@@ -228,7 +228,7 @@ def main():
     tcp_of = {(q["server"], int(q["port"])): l for l, q in pairs}
     pairs.sort(key=lambda x: x[0])
     ps = [q for _, q in pairs]
-    log("TCP ≤500ms 的 %d 条，进入端到端测试" % len(ps))
+    log("TCP ≤600ms 的 %d 条，进入端到端测试" % len(ps))
 
     # ② 端到端延迟：并发 32，测 2 次取最小值；抖动 = 两次差值
     samples = {}
