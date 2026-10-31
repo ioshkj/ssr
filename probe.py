@@ -6,13 +6,7 @@ import verify
 import sub_build as sb
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-TARGETS = [
-    ("Google", "https://www.gstatic.com/generate_204"),
-    ("YouTube", "https://i.ytimg.com/generate_204"),
-    ("Cloudflare", "https://cp.cloudflare.com/generate_204"),
-    ("Twitter", "https://abs.twimg.com/favicon.ico"),
-    ("Telegram", "https://telegram.org/favicon.ico"),
-]
+CF_URL = "https://cp.cloudflare.com/generate_204"
 
 
 def parse_line(line):
@@ -130,18 +124,18 @@ def main():
         res[i]["tcp"] = tcp_ms(p["server"], p["port"])
     print("TCP 完成", flush=True)
 
-    for label, url in TARGETS:
-        r = verify.verify([dict(p) for p in proxies], workers=16, timeout=10000, url=url, log=lambda m: None)
-        key = {(p["server"], int(p["port"])) for p, _ in r}
-        for i, p in enumerate(proxies):
-            if (p["server"], int(p["port"])) in key:
-                res[i][label] = 1
-        print("%s 通过 %d" % (label, len(r)), flush=True)
+    r = verify.verify([dict(p) for p in proxies], workers=16, timeout=10000, url=CF_URL, log=lambda m: None)
+    for p, d in r:
+        k = (p["server"], int(p["port"]))
+        for i, q in enumerate(proxies):
+            if (q["server"], int(q["port"])) == k:
+                res[i]["cf"] = d
+    print("CF 通过 %d" % len(r), flush=True)
 
-    # 抖动：Google 打三次
-    for _ in range(3):
+    # 抖动：CF 打三次
+    for _ in range(2):
         r = verify.verify([dict(p) for p in proxies], workers=16, timeout=10000,
-                          url=TARGETS[0][1], log=lambda m: None)
+                          url=CF_URL, log=lambda m: None)
         for p, d in r:
             k = (p["server"], int(p["port"]))
             for i, q in enumerate(proxies):
@@ -165,21 +159,19 @@ def main():
     print("IP 查询完成", flush=True)
     print("UDP 完成", flush=True)
 
-    rows = ["名称          协议      TCP    Google YT  CF  TW  TG   导出IP           国家  下载KB/s"]
+    rows = ["名称          协议      TCP    CF延迟   抖动   导出IP           国家  地区 下载KB/s"]
     for i, p in enumerate(proxies):
         r = res[i]
         sm = sorted(r.get("samples", []))
         jit = int(statistics.pstdev(sm)) if len(sm) > 1 else 0
-        rows.append("%-12s %-8s %-6s %-5s %-3s %-3s %-3s %-3s %-16s %-5s %-8s" % (
+        rows.append("%-12s %-8s %-6s %-7s %-5s %-16s %-5s %-4s %-8s" % (
             p["name"][:12], p["type"],
             ("%dms" % r["tcp"]) if r.get("tcp") else "✗",
-            "✓" if r.get("Google") else "✗",
-            "✓" if r.get("YouTube") else "✗",
-            "✓" if r.get("Cloudflare") else "✗",
-            "✓" if r.get("Twitter") else "✗",
-            "✓" if r.get("Telegram") else "✗",
+            ("%dms" % r["cf"]) if r.get("cf") else "✗",
+            ("%dms" % jit) if jit else "-",
             r.get("ip") or "✗",
             r.get("cc") or "-",
+            "✓" if r.get("cc") else "✗",
             str(r.get("kbps", "✗"))))
     out = "\n".join(rows)
     print(out)
