@@ -720,10 +720,14 @@ def main():
         from concurrent.futures import ThreadPoolExecutor as _TPE_Y
         with _TPE_Y(max_workers=6) as _exy:
             _ycc = list(_exy.map(lambda uq: exit_cc(uq[1]), anytls_pool))
-        cnt_y, out_y = {}, []
+        cnt_y, out_y, seen_y = {}, [], set()
         for (u, q), cc in zip(anytls_pool, _ycc):
             if not cc:
                 continue
+            ep_y = (str(q["server"]).lower(), int(q["port"]))
+            if ep_y in seen_y:
+                continue
+            seen_y.add(ep_y)
             r = geo.CC_NAME.get(cc, "其他")
             cnt_y[r] = cnt_y.get(r, 0) + 1
             out_y.append(u.split("#")[0] + "#" + (NAME % (r, cnt_y[r])).replace(" ", "%20"))
