@@ -45,7 +45,7 @@ def repo_pushed(repo, cache={}):
     return t
 
 
-def is_fresh(path, hours=28):
+def is_fresh(path, hours=48):
     import datetime as _dt
     repo = "/".join(path.split("/")[:2])
     t = repo_pushed(repo)
@@ -159,9 +159,9 @@ def main():
     seen, lines = set(), []
     stale = 0
     for p in SRC + discovered():
-        if not is_fresh(p, 28):
+        if not is_fresh(p, 48):
             stale += 1
-            log("  [跳过] %s 超过 28 小时未更新" % p)
+            log("  [跳过] %s 超过 48 小时未更新" % p)
             continue
         n = 0
         for u in lines_of(fetch(p)):

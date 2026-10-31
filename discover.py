@@ -46,7 +46,7 @@ def fetch(url, timeout=12):
 
 
 def main():
-    since = (datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=28))
+    since = (datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=48))
     q_since = since.strftime("%Y-%m-%dT%H:%M:%SZ")
     repos = {}
     for q in QUERIES:
@@ -107,9 +107,9 @@ def main():
         if x["fails"] >= 3:
             continue
         merged[k] = x
-    # 独立的新鲜度检测：超过 28 小时没更新的源直接丢弃
+    # 独立的新鲜度检测：超过 48 小时没更新的源直接丢弃
     import datetime as _dt
-    cutoff = _dt.datetime.now(_dt.timezone.utc) - _dt.timedelta(hours=28)
+    cutoff = _dt.datetime.now(_dt.timezone.utc) - _dt.timedelta(hours=48)
     keep, dropped = [], 0
     for x in merged.values():
         try:
@@ -121,7 +121,7 @@ def main():
             keep.append(x)
         else:
             dropped += 1
-    log("新鲜度检测：丢弃 %d 个超过 28 小时未更新的源" % dropped)
+    log("新鲜度检测：丢弃 %d 个超过 48 小时未更新的源" % dropped)
     final = keep
     json.dump(final, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     log("本轮命中 %d，累积保留 %d 个订阅源" % (len(found), len(final)))
