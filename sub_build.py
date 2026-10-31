@@ -276,14 +276,17 @@ def main():
         med, jit = stats[k]
         if speed[k] < 30:
             continue
-        keep.append((tcp_of.get(k, 9999), med, speed[k], u, q))
+        sc = 100.0 * (0.50 * min(speed[k] / 2000.0, 1.0)
+                      + 0.35 * (1 - min(med / 1000.0, 1.0))
+                      + 0.15 * (1 - min(jit / 300.0, 1.0)))
+        keep.append((tcp_of.get(k, 9999), med, jit, speed[k], sc, u, q))
     keep.sort(key=lambda x: x[0])
     log("通过全部测试 %d 条" % len(keep))
 
     # 同网段最多 12 个
     lim, seen_net, dedup = 12, {}, []
     import ipaddress
-    for tcp, med, sp, u, q in keep:
+    for tcp, med, jit, sp, sc, u, q in keep:
         try:
             net = str(ipaddress.ip_network(q["server"] + "/24", strict=False))
         except Exception:
@@ -291,7 +294,7 @@ def main():
         if seen_net.get(net, 0) >= lim:
             continue
         seen_net[net] = seen_net.get(net, 0) + 1
-        dedup.append((tcp, med, sp, u, q))
+        dedup.append((tcp, med, jit, sp, sc, u, q))
     keep = dedup
     log("同网段去重后 %d" % len(keep))
 
@@ -322,7 +325,7 @@ def main():
     except Exception:
         pass
     stable = [x for x in keep
-              if known.get("%s:%d" % (x[4]["server"], int(x[4]["port"])), {}).get("s", 0) >= 3]
+              if known.get("%s:%d" % (x[6]["server"], int(x[6]["port"])), {}).get("s", 0) >= 3]
     log("连续 3 轮通过 %d 条，本轮通过 %d 条" % (len(stable), len(keep)))
     keep = stable if len(stable) >= 10 else keep[:60]
 
@@ -336,8 +339,9 @@ def main():
     def emit(filename, order):
         PER_REGION = 5
         cnt, out = {}, []
-        for row, r in sorted(zip(keep, regs), key=lambda z: z[0][order] if order != 2 else -z[0][2]):
-            tcp, med, sp, u, q = row
+        KEYS = {0: lambda t: t[0], 1: lambda t: t[1], 2: lambda t: -t[3], 3: lambda t: -t[4]}
+        for row, r in sorted(zip(keep, regs), key=lambda z: KEYS[order](z[0])):
+            tcp, med, jit, sp, sc, u, q = row
             if cnt.get(r, 0) >= PER_REGION:
                 continue
             cnt[r] = cnt.get(r, 0) + 1
@@ -355,11 +359,12 @@ def main():
     n_tcp = emit("final2.txt", 0)    # 按 TCP 延迟
     n_http = emit("final3.txt", 1)   # 按 HTTP 延迟
     n_speed = emit("final4.txt", 2)  # 按下载速度
+    n_score = emit("final5.txt", 3)  # 综合评分
 
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
-        f.write("更新 %s\n合并 %d / 通过 %d / 稳定 %d / TCP版 %d / HTTP版 %d / 速度版 %d\n"
+        f.write("更新 %s\n合并 %d / 通过 %d / 稳定 %d / TCP版 %d / HTTP版 %d / 速度版 %d / 综合版 %d\n"
                 % (time.strftime("%Y-%m-%d %H:%M:%S"), len(lines), len(keep),
-                   len(stable), n_tcp, n_http, n_speed))
+                   len(stable), n_tcp, n_http, n_speed, n_score))
 
 
 if __name__ == "__main__":
