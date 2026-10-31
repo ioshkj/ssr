@@ -82,6 +82,8 @@ def main():
                               "kind": "clash" if p.lower().endswith((".yaml", ".yml")) else "uri",
                               "pushed": meta["pushed"], "stars": meta["stars"]})
                 break
+    if not found:
+        found = []
     json.dump(found, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     log("共 %d 个订阅源 -> sources.json" % len(found))
 
