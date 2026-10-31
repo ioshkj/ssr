@@ -89,6 +89,46 @@ def tcp_ok(host, port, timeout=1.5):
         return False
 
 
+
+
+def real_speed(q, bytes_=300000, timeout=25):
+    """单节点：起一个只含它的内核，用 curl 走本地代理下载，返回 KB/s"""
+    import json as _json, socket as _sock, subprocess as _sp, tempfile as _tf, time as _t, urllib.request as _ur
+
+    wd = _tf.mkdtemp(prefix="sp-")
+    s1, s2 = _sock.socket(), _sock.socket()
+    s1.bind(("127.0.0.1", 0)); s2.bind(("127.0.0.1", 0))
+    api_p, mix_p = s1.getsockname()[1], s2.getsockname()[1]
+    s1.close(); s2.close()
+    cfg = {"mixed-port": mix_p, "external-controller": "127.0.0.1:%d" % api_p,
+           "log-level": "warning", "mode": "rule",
+           "proxies": [dict(q, name="p")], "rules": ["MATCH,p"]}
+    path = wd + "/c.yaml"
+    open(path, "w").write(_json.dumps(cfg, ensure_ascii=False))
+    p = _sp.Popen([verify.BIN, "-d", wd, "-f", path],
+                  stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
+    try:
+        for _ in range(40):
+            _t.sleep(0.2)
+            try:
+                _ur.urlopen("http://127.0.0.1:%d/version" % api_p, timeout=1).read()
+                break
+            except Exception:
+                if p.poll() is not None:
+                    return None
+        r = _sp.run(["curl", "-s", "-o", "/dev/null", "-x", "http://127.0.0.1:%d" % mix_p,
+                     "--max-time", str(timeout), "-w", "%{speed_download}",
+                     "https://speed.cloudflare.com/__down?bytes=%d" % bytes_],
+                    capture_output=True, text=True)
+        speed = float(r.stdout.strip() or 0) / 1024.0
+        return speed if speed > 1 else None
+    finally:
+        p.terminate()
+        try:
+            p.wait(3)
+        except Exception:
+            p.kill()
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     seen, lines = set(), []
