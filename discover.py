@@ -15,6 +15,10 @@ QUERIES = [
     "proxy+sub+clash", "免费节点", "机场订阅", "free+vless+nodes",
     "vmess+free+sub", "trojan+free+sub", "clash+yaml+proxy", "代理+订阅",
     "v2ray+configs", "shadowrocket+sub", "singbox+subscription", "proxy+pool",
+    # 针对 http / anytls / trojan 这类少而精的节点
+    "anytls", "anytls+sub", "anytls+nodes", "anytls+subscription",
+    "trojan+subscription", "trojan+nodes", "trojan+clash",
+    "http+proxy+list", "https+proxy+nodes", "http+proxy+sub",
 ]
 COMMON = ["sub", "sub.txt", "sub.yaml", "base64.txt", "clash.yaml", "all.yaml",
           "nodes.txt", "list.yml", "list.txt", "output/clash.yaml"]
