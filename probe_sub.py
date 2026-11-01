@@ -26,8 +26,8 @@ def tcp_ms(host, port, n=2, timeout=2.5):
     return best
 
 
-def via_node(q, url, timeout=15):
-    """起单节点内核，curl 走代理访问 url，返回毫秒或 None"""
+def start_kernel(q):
+    """起一个只含该节点的内核，返回 (进程, 代理端口, API端口)"""
     import subprocess as sp, tempfile as tf, urllib.request as ur
     wd = tf.mkdtemp(prefix="p-")
     a, b = socket.socket(), socket.socket()
@@ -40,105 +40,126 @@ def via_node(q, url, timeout=15):
     path = os.path.join(wd, "c.yaml")
     open(path, "w").write(json.dumps(cfg, ensure_ascii=False))
     p = sp.Popen([BIN, "-d", wd, "-f", path], stdout=sp.DEVNULL, stderr=sp.DEVNULL)
-    try:
-        for _ in range(30):
-            time.sleep(0.2)
-            try:
-                ur.urlopen("http://127.0.0.1:%d/version" % api_p, timeout=1).read()
-                break
-            except Exception:
-                if p.poll() is not None:
-                    return None
-        r = sp.run(["curl", "-s", "-o", "/dev/null", "--max-time", str(timeout),
-                    "-x", "http://127.0.0.1:%d" % mix_p,
-                    "-w", "%{time_total}", url], capture_output=True, text=True)
-        v = float(r.stdout.strip() or 0)
-        return int(v * 1000) if v > 0 else None
-    except Exception:
-        return None
-    finally:
-        p.terminate()
+    for _ in range(30):
+        time.sleep(0.2)
         try:
-            p.wait(3)
+            ur.urlopen("http://127.0.0.1:%d/version" % api_p, timeout=1).read()
+            return p, mix_p
         except Exception:
-            p.kill()
+            if p.poll() is not None:
+                return p, None
+    return p, None
 
 
-def download_kbps(q, bytes_=300000, timeout=25):
-    import subprocess as sp, tempfile as tf, urllib.request as ur
-    wd = tf.mkdtemp(prefix="d-")
-    a, b = socket.socket(), socket.socket()
-    a.bind(("127.0.0.1", 0)); b.bind(("127.0.0.1", 0))
-    api_p, mix_p = a.getsockname()[1], b.getsockname()[1]
-    a.close(); b.close()
-    cfg = {"mixed-port": mix_p, "external-controller": "127.0.0.1:%d" % api_p,
-           "log-level": "warning", "mode": "rule",
-           "proxies": [dict(q, name="p")], "rules": ["MATCH,p"]}
-    path = os.path.join(wd, "c.yaml")
-    open(path, "w").write(json.dumps(cfg, ensure_ascii=False))
-    p = sp.Popen([BIN, "-d", wd, "-f", path], stdout=sp.DEVNULL, stderr=sp.DEVNULL)
-    try:
-        for _ in range(30):
-            time.sleep(0.2)
-            try:
-                ur.urlopen("http://127.0.0.1:%d/version" % api_p, timeout=1).read()
-                break
-            except Exception:
-                if p.poll() is not None:
-                    return None
-        r = sp.run(["curl", "-s", "-o", "/dev/null", "--max-time", str(timeout),
-                    "-x", "http://127.0.0.1:%d" % mix_p,
-                    "-w", "%{speed_download}",
-                    "https://speed.cloudflare.com/__down?bytes=%d" % bytes_],
-                   capture_output=True, text=True)
-        v = float(r.stdout.strip() or 0) / 1024.0
-        return round(v) if v > 1 else None
-    except Exception:
+def curl_ms(proxy, url, timeout=15):
+    import subprocess as sp
+    r = sp.run(["curl", "-s", "-o", "/dev/null", "--max-time", str(timeout),
+                "-x", "http://127.0.0.1:%d" % proxy, "-w", "%{time_total}", url],
+               capture_output=True, text=True)
+    v = float(r.stdout.strip() or 0)
+    return int(v * 1000) if v > 0 else None
+
+
+def curl_dl(proxy, timeout=25, bytes_=300000):
+    import subprocess as sp
+    r = sp.run(["curl", "-s", "-o", "/dev/null", "--max-time", str(timeout),
+                "-x", "http://127.0.0.1:%d" % proxy,
+                "-w", "%{http_code} %{size_download} %{speed_download}",
+                "https://speed.cloudflare.com/__down?bytes=%d" % bytes_],
+               capture_output=True, text=True)
+    parts = (r.stdout or "").split()
+    if len(parts) < 3 or parts[0] != "200" or float(parts[1] or 0) < bytes_ * 0.9:
         return None
-    finally:
-        p.terminate()
-        try:
-            p.wait(3)
-        except Exception:
-            p.kill()
+    kb = float(parts[2] or 0) / 1024.0
+    return round(kb) if kb > 1 else None
 
 
-def exit_country(q, timeout=12):
-    import subprocess as sp, tempfile as tf, urllib.request as ur
-    wd = tf.mkdtemp(prefix="g-")
-    a, b = socket.socket(), socket.socket()
-    a.bind(("127.0.0.1", 0)); b.bind(("127.0.0.1", 0))
-    api_p, mix_p = a.getsockname()[1], b.getsockname()[1]
-    a.close(); b.close()
-    cfg = {"mixed-port": mix_p, "external-controller": "127.0.0.1:%d" % api_p,
-           "log-level": "warning", "mode": "rule",
-           "proxies": [dict(q, name="p")], "rules": ["MATCH,p"]}
-    path = os.path.join(wd, "c.yaml")
-    open(path, "w").write(json.dumps(cfg, ensure_ascii=False))
-    p = sp.Popen([BIN, "-d", wd, "-f", path], stdout=sp.DEVNULL, stderr=sp.DEVNULL)
+def curl_ip(proxy, timeout=12):
+    import subprocess as sp
+    r = sp.run(["curl", "-s", "--max-time", str(timeout),
+                "-x", "http://127.0.0.1:%d" % proxy,
+                "http://ip-api.com/json/?fields=query,countryCode"],
+               capture_output=True, text=True)
     try:
-        for _ in range(30):
-            time.sleep(0.2)
-            try:
-                ur.urlopen("http://127.0.0.1:%d/version" % api_p, timeout=1).read()
-                break
-            except Exception:
-                if p.poll() is not None:
-                    return None, None
-        r = sp.run(["curl", "-s", "--max-time", str(timeout),
-                    "-x", "http://127.0.0.1:%d" % mix_p,
-                    "http://ip-api.com/json/?fields=query,countryCode"],
-                   capture_output=True, text=True)
         d = json.loads(r.stdout or "{}")
         return d.get("query"), (d.get("countryCode") or "").upper() or None
     except Exception:
         return None, None
+
+
+def udp_via(proxy, timeout=8):
+    """复用同一个代理端口做 SOCKS5 UDP 测试"""
+    import struct
+    s = None
+    try:
+        s = socket.create_connection(("127.0.0.1", proxy), timeout=timeout)
+        s.sendall(b"\x05\x01\x00")
+        if s.recv(2) != b"\x05\x00":
+            return False
+        s.sendall(b"\x05\x03\x00\x01" + b"\x00" * 6)
+        rep = s.recv(32)
+        if len(rep) < 10 or rep[1] != 0:
+            return False
+        relay = (socket.inet_ntoa(rep[4:8]) if rep[3] == 1 else "127.0.0.1",
+                 struct.unpack(">H", rep[8:10])[0])
+        if relay[0] == "0.0.0.0":
+            relay = ("127.0.0.1", relay[1])
+        u = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        u.settimeout(timeout)
+        tid = 0x1234
+        header = struct.pack(">HHHHHH", tid, 0x0100, 1, 0, 0, 0)
+        qn = b"".join(bytes([len(x)]) + x.encode() for x in "example.com".split(".")) + b"\x00"
+        dns = header + qn + struct.pack(">HH", 1, 1)
+        pkt = b"\x00\x00\x00\x01" + socket.inet_aton("8.8.8.8") + struct.pack(">H", 53) + dns
+        u.sendto(pkt, relay)
+        data, _ = u.recvfrom(2048)
+        return len(data) > 10
+    except Exception:
+        return False
+    finally:
+        if s:
+            try:
+                s.close()
+            except Exception:
+                pass
+
+
+def profile(q):
+    """一次内核，测完全部指标"""
+    tcp = tcp_ms(q["server"], q["port"])
+    out = {"tcp": tcp, "cf": None, "jit": None, "gg": None, "yt": None,
+           "dl": None, "ip": None, "cc": None, "udp": False}
+    if not tcp:
+        return out
+    p, port = start_kernel(q)
+    if port is None:
+        try:
+            p.terminate()
+        except Exception:
+            pass
+        return out
+    try:
+        samples = [v for v in (curl_ms(port, CF) for _ in range(3)) if v]
+        if samples:
+            out["cf"] = min(samples)
+            out["jit"] = max(samples) - min(samples) if len(samples) > 1 else 0
+            out["gg"] = curl_ms(port, GOOGLE)
+            out["yt"] = curl_ms(port, YT)
+            best = None
+            for _ in range(3):
+                v = curl_dl(port)
+                if v:
+                    best = max(best or 0, v)
+            out["dl"] = best
+            out["ip"], out["cc"] = curl_ip(port)
+            out["udp"] = udp_via(port)
     finally:
         p.terminate()
         try:
             p.wait(3)
         except Exception:
             p.kill()
+    return out
 
 
 def test_one(item):
@@ -146,37 +167,18 @@ def test_one(item):
     name = u.split("#")[-1].replace("%20", " ") if "#" in u else ""
     q = nodeconv.to_clash(u, name)
     if not q:
-        return idx, [name, "-", "-", "-", "-", "-", "-", "-"]
-    tcp = tcp_ms(q["server"], q["port"])
-    cf_samples = []
-    if tcp:
-        for _ in range(3):
-            v = via_node(q, CF)
-            if v:
-                cf_samples.append(v)
-    cf = min(cf_samples) if cf_samples else None
-    cf2 = max(cf_samples) if len(cf_samples) > 1 else None
-    gg = via_node(q, GOOGLE) if cf else None
-    yt = via_node(q, YT) if cf else None
-    dl = None
-    if cf:
-        for _ in range(3):
-            v = sub_build.real_speed(q)
-            if v:
-                dl = max(dl or 0, v)
-    ip, cc = exit_country(q) if tcp else (None, None)
-    udp = sub_build.udp_ok(q) if tcp else False
-    cc = cc or geo.guess_cc(name) or "-"
-    jit = abs(cf2 - cf) if (cf and cf2) else None
-    return idx, [name, q.get("type", "-"), cc, ip or "-",
-                 "UDP" if udp else "-",
-                 str(tcp) if tcp else "-",
-                 str(cf) if cf else "-",
-                 str(gg) if gg else "-",
-                 str(yt) if yt else "-",
-                 str(jit) if jit is not None else "-",
-                 str(dl) if dl else "-",
-                 "OK" if dl else "X"]
+        return idx, [name, "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "X"]
+    r = profile(q)
+    cc = r["cc"] or geo.guess_cc(name) or "-"
+    return idx, [name, q.get("type", "-"), cc, r["ip"] or "-",
+                 "UDP" if r["udp"] else "-",
+                 str(r["tcp"]) if r["tcp"] else "-",
+                 str(r["cf"]) if r["cf"] else "-",
+                 str(r["gg"]) if r["gg"] else "-",
+                 str(r["yt"]) if r["yt"] else "-",
+                 str(r["jit"]) if r["jit"] is not None else "-",
+                 str(r["dl"]) if r["dl"] else "-",
+                 "OK" if r["dl"] else "X"]
 
 
 def main():
@@ -196,12 +198,12 @@ def main():
     print("共 %d 条，并行测试（保持原顺序）" % len(uris), flush=True)
     from concurrent.futures import ThreadPoolExecutor
     res = {}
-    with ThreadPoolExecutor(max_workers=2) as ex:
+    with ThreadPoolExecutor(max_workers=6) as ex:
         for idx, row in ex.map(test_one, list(enumerate(uris))):
             res[idx] = row
-            print("%3d/%d %-20s %-7s %s tcp=%s cf=%s g=%s dl=%s" % (
+            print("%3d/%d %-20s %-7s %-3s cf=%-6s dl=%-6s %s" % (
                 idx + 1, len(uris), row[0][:20], row[1], row[2],
-                row[4], row[5], row[6], row[9]), flush=True)
+                row[6], row[10], row[11]), flush=True)
     rows = [res[i] for i in range(len(uris))]
     hdr = ["名称", "协议", "地区", "出口IP", "UDP", "TCP(ms)", "CF(ms)", "Google(ms)", "YouTube(ms)", "抖动(ms)", "下载(KB/s)", "可用"]
     out = ["\t".join(hdr)] + ["\t".join(map(str, r)) for r in rows]
@@ -291,7 +293,7 @@ document.querySelectorAll('#t th').forEach(function(th,i){
     os.makedirs(os.path.dirname(out), exist_ok=True)
     open(out, "w", encoding="utf-8").write(html)
     print("写入 sub/report.html", flush=True)
-    ok = sum(1 for r in rows if r[10] == "OK")
+    ok = sum(1 for r in rows if r[11] == "OK")
     print("完成：%d 条，可用 %d 条" % (len(rows), ok), flush=True)
 
 
