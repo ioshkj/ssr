@@ -427,6 +427,8 @@ def main():
 
     asia_cand = []
     for (u, q), ip in zip(allpool, ips):
+        if q.get("type") in ("http", "anytls"):
+            continue          # 这两类归主订阅，亚太只放其他协议
         cc = ip_table.get(ip) if ip else None
         cc = cc or geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", "")))
         if cc and geo.CC_NAME.get(cc, "其他") in ASIA:
