@@ -365,13 +365,12 @@ def main():
         log("  %-12s %d 条，%d 个地区" % (filename, len(out), len(cnt)))
         return len(out)
 
-    # ④ 两份：都保证首条是 QX 能识别的 https
-    http_mix = [((u, q), cc) for (u, q), cc in zip(pool, ccs)
-                if u.startswith("http://") or u.startswith("https://")]
-    any_mix = [((u, q), cc) for (u, q), cc in zip(pool, ccs)
+    # ④ ivapp.cn = HTTPS + AnyTLS；ivapp2.cn = 明文 HTTP
+    tls_any = [((u, q), cc) for (u, q), cc in zip(pool, ccs)
                if u.startswith("https://") or q.get("type") == "anytls"]
-    n_http = emit(http_mix, "ivapp.cn")
-    n_any = emit(any_mix, "ivapp2.cn")
+    plain_http = [((u, q), cc) for (u, q), cc in zip(pool, ccs) if u.startswith("http://")]
+    n_any = emit(tls_any, "ivapp.cn")
+    n_http = emit(plain_http, "ivapp2.cn")
 
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n抓取 %d / 去重后 %d / 查到地区 %d / HTTP %d / HTTPS+AnyTLS %d\n"
