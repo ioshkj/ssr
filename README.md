@@ -4,7 +4,7 @@
 
 订阅：
 ```
-https://raw.githubusercontent.com/ioshkj/ssr/main/sub/ivapp.cn
+https://raw.githubusercontent.com/ioshkj/ssr/main/sub/0070077.xyz
 ```
 
 测速表（网页）：

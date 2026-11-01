@@ -389,9 +389,9 @@ def main():
         out.append(fix_http_auth(u.split("#")[0]) + "#" + (NAME % (r, cnt[r])).replace(" ", "%20"))
 
     if out:
-        with open(os.path.join(OUT, "ivapp.cn"), "w", encoding="utf-8") as f:
+        with open(os.path.join(OUT, "0070077.xyz"), "w", encoding="utf-8") as f:
             f.write(base64.b64encode("\n".join(out).encode()).decode())
-    log("写入 ivapp.cn：%d 条，%d 个地区" % (len(out), len(cnt)))
+    log("写入 0070077.xyz：%d 条，%d 个地区" % (len(out), len(cnt)))
 
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n抓取 %d / 去重后 %d / 查到地区 %d / 下载通过 %d / 输出 %d\n"

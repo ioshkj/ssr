@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""对 sub/ivapp.cn 里的节点逐个测速，保留下单中的原始顺序，输出 sub/probe.txt"""
+"""对 sub/0070077.xyz 里的节点逐个测速，保留下单中的原始顺序，输出 sub/probe.txt"""
 import base64, json, os, socket, statistics, time
 import nodeconv
 import geo
@@ -167,7 +167,7 @@ def test_one(item):
 
 def main():
     uris = []
-    for fn in ("ivapp.cn", "ivapp2.cn"):
+    for fn in ("0070077.xyz",):
         p = os.path.join(HERE, "sub", fn)
         if not os.path.exists(p):
             continue
