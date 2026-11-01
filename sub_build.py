@@ -330,7 +330,7 @@ def main():
         if ep not in seen_all:
             seen_all.add(ep)
             allpool.append((u, q))
-        if t not in ("http", "anytls"):
+        if t not in ("http", "anytls", "trojan"):
             continue
         if ep in seen_ep:
             continue
@@ -338,7 +338,7 @@ def main():
         pool.append((u, q))
     log("全部协议去重后 %d 条" % len(allpool))
     log("全部节点类型：" + "  ".join("%s %d" % (k, v) for k, v in sorted(types.items(), key=lambda kv: -kv[1])[:8]))
-    log("http/anytls 去重后 %d 条" % len(pool))
+    log("http/anytls/trojan 去重后 %d 条" % len(pool))
 
     # ③ 地区检测（只用于命名，不删减）
     from concurrent.futures import ThreadPoolExecutor as _TPE
@@ -412,53 +412,6 @@ def main():
         with open(os.path.join(OUT, "0070077.xyz"), "w", encoding="utf-8") as f:
             f.write(base64.b64encode("\n".join(out).encode()).decode())
     log("写入 0070077.xyz：%d 条，%d 个地区" % (len(out), len(cnt)))
-
-    # 亚太：先用服务器 IP 批量初筛（快），再对候选查出口 IP（准）
-    ASIA = {"香港", "台湾", "日本", "韩国", "新加坡", "马来西亚", "泰国",
-            "菲律宾", "越南", "印度尼西亚", "印度", "澳门", "柬埔寨", "澳大利亚"}
-
-    # 阶段1：服务器域名解析 → 批量查 IP 归属
-    from concurrent.futures import ThreadPoolExecutor as _TPE_A
-    hosts = [q["server"] for _, q in allpool]
-    with _TPE_A(max_workers=32) as _exa:
-        ips = list(_exa.map(geo.resolve, hosts))
-    ip_table = geo.geo_ips(list({i for i in ips if i}))
-    log("阶段1：解析到 IP %d 个，查到归属 %d 个" % (len([i for i in ips if i]), len(ip_table)))
-
-    asia_cand = []
-    for (u, q), ip in zip(allpool, ips):
-        if q.get("type") in ("http", "anytls"):
-            continue          # 这两类归主订阅，亚太只放其他协议
-        cc = ip_table.get(ip) if ip else None
-        cc = cc or geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", "")))
-        if cc and geo.CC_NAME.get(cc, "其他") in ASIA:
-            asia_cand.append((u, q))
-    log("阶段1 亚太候选：%d 条" % len(asia_cand))
-
-    # 阶段2：候选逐个查真实出口
-    _need = [(u, q) for u, q in asia_cand
-             if (q["server"], int(q["port"])) not in cc_map]
-    if _need:
-        with _TPE_A(max_workers=16) as _exa2:
-            _acc = list(_exa2.map(lambda uq: exit_cc(uq[1]), _need))
-        for (u, q), cc in zip(_need, _acc):
-            cc_map[(q["server"], int(q["port"]))] = cc
-
-    asia_pool = []
-    for u, q in asia_cand:
-        cc = cc_map.get((q["server"], int(q["port"])))
-        if cc and geo.CC_NAME.get(cc, "其他") in ASIA:
-            asia_pool.append((u, q, geo.CC_NAME.get(cc, "其他")))
-    log("阶段2 亚太确认：%d 条" % len(asia_pool))
-
-    cnt2, out2 = {}, []
-    for u, q, r in asia_pool:
-        cnt2[r] = cnt2.get(r, 0) + 1
-        out2.append(fix_http_auth(u.split("#")[0]) + "#" + (NAME % (r, cnt2[r])).replace(" ", "%20"))
-    if out2:
-        with open(os.path.join(OUT, "asia.xyz"), "w", encoding="utf-8") as f:
-            f.write(base64.b64encode("\n".join(out2).encode()).decode())
-    log("写入 asia.xyz：%d 条，%d 个地区" % (len(out2), len(cnt2)))
 
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n抓取 %d / 去重后 %d / 查到地区 %d / 下载通过 %d / 输出 %d\n"

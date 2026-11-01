@@ -183,7 +183,7 @@ def test_one(item):
 
 def main():
     uris = []
-    for fn in ("0070077.xyz", "asia.xyz"):
+    for fn in ("0070077.xyz",):
         p = os.path.join(HERE, "sub", fn)
         if not os.path.exists(p):
             continue
@@ -213,7 +213,7 @@ def main():
 
     # 回写两份订阅：只保留 OK 的（X 的全部剔除）
     keep_set = {u for u, r in zip(uris, rows) if r[11] == "OK"}
-    for fn in ("0070077.xyz", "asia.xyz"):
+    for fn in ("0070077.xyz",):
         p = os.path.join(HERE, "sub", fn)
         if not os.path.exists(p):
             continue
