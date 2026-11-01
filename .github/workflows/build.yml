@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: "5,35 * * * *"
+    - cron: "5 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TZ: Asia/Shanghai
-    timeout-minutes: 100
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -40,17 +40,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python -u sub_build.py 2>&1 | tee build.log || true
-      - name: next
-        if: success()
-        env:
-          PAT: ${{ secrets.PAT_TOKEN }}
-        run: |
-          TOKEN="${PAT:-$GITHUB_TOKEN}"
-          echo "等待 45 分钟后再触发下一轮…"
-          sleep 2700
-          code=$(curl -s -o /tmp/resp.txt -w "%{http_code}" -X POST             -H "Authorization: Bearer $TOKEN"             -H "Accept: application/vnd.github+json"             "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/build.yml/dispatches"             -d '{"ref":"main"}')
-          echo "dispatch http=$code"
-          cat /tmp/resp.txt || true
       - name: save
         run: |
           git config user.name "bot"
