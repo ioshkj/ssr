@@ -413,38 +413,41 @@ def main():
             f.write(base64.b64encode("\n".join(out).encode()).decode())
     log("写入 0070077.xyz：%d 条，%d 个地区" % (len(out), len(cnt)))
 
-    # 亚太近距离地区：按「测出来的真实出口」判断（不靠名字）
+    # 亚太：先用服务器 IP 批量初筛（快），再对候选查出口 IP（准）
     ASIA = {"香港", "台湾", "日本", "韩国", "新加坡", "马来西亚", "泰国",
             "菲律宾", "越南", "印度尼西亚", "印度", "澳门", "柬埔寨", "澳大利亚"}
 
-    def _tcp_quick(uq):
-        q = uq[1]
-        try:
-            import socket as _s
-            _s.create_connection((q["server"], int(q["port"])), timeout=2).close()
-            return True
-        except Exception:
-            return False
-
+    # 阶段1：服务器域名解析 → 批量查 IP 归属
     from concurrent.futures import ThreadPoolExecutor as _TPE_A
-    with _TPE_A(max_workers=48) as _exa:
-        _flags = list(_exa.map(_tcp_quick, allpool))
-    _alive_all = [uq for uq, ok in zip(allpool, _flags) if ok]
-    log("全部协议 TCP 通：%d / %d" % (len(_alive_all), len(allpool)))
+    hosts = [q["server"] for _, q in allpool]
+    with _TPE_A(max_workers=32) as _exa:
+        ips = list(_exa.map(geo.resolve, hosts))
+    ip_table = geo.geo_ips(list({i for i in ips if i}))
+    log("阶段1：解析到 IP %d 个，查到归属 %d 个" % (len([i for i in ips if i]), len(ip_table)))
 
-    _need = [uq for uq in _alive_all if (uq[1]["server"], int(uq[1]["port"])) not in cc_map]
+    asia_cand = []
+    for (u, q), ip in zip(allpool, ips):
+        cc = ip_table.get(ip) if ip else None
+        cc = cc or geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", "")))
+        if cc and geo.CC_NAME.get(cc, "其他") in ASIA:
+            asia_cand.append((u, q))
+    log("阶段1 亚太候选：%d 条" % len(asia_cand))
+
+    # 阶段2：候选逐个查真实出口
+    _need = [(u, q) for u, q in asia_cand
+             if (q["server"], int(q["port"])) not in cc_map]
     if _need:
-        with _TPE_A(max_workers=24) as _exa2:
+        with _TPE_A(max_workers=16) as _exa2:
             _acc = list(_exa2.map(lambda uq: exit_cc(uq[1]), _need))
         for (u, q), cc in zip(_need, _acc):
             cc_map[(q["server"], int(q["port"]))] = cc
 
     asia_pool = []
-    for u, q in _alive_all:
+    for u, q in asia_cand:
         cc = cc_map.get((q["server"], int(q["port"])))
         if cc and geo.CC_NAME.get(cc, "其他") in ASIA:
             asia_pool.append((u, q, geo.CC_NAME.get(cc, "其他")))
-    log("亚太（按真实出口）：%d 条" % len(asia_pool))
+    log("阶段2 亚太确认：%d 条" % len(asia_pool))
 
     cnt2, out2 = {}, []
     for u, q, r in asia_pool:
