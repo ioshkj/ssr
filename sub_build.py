@@ -366,11 +366,12 @@ def main():
 
     def _dl_try(uq):
         u, q = uq
+        best = None
         for _ in range(3):
             v = real_speed(q)
-            if v and v > 20:
-                return uq, v
-        return uq, None
+            if v and v > 1:
+                best = max(best or 0, v)
+        return uq, best
 
     with _TPE_D(max_workers=8) as _exd:
         _res = list(_exd.map(_dl_try, pool))

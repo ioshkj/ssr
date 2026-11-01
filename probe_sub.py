@@ -4,6 +4,7 @@
 import base64, json, os, socket, statistics, time
 import nodeconv
 import geo
+import sub_build
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BIN = os.path.join(HERE, "bin", "mihomo")
@@ -151,7 +152,7 @@ def test_one(item):
     cf2 = via_node(q, CF) if cf else None
     gg = via_node(q, GOOGLE) if cf else None
     yt = via_node(q, YT) if cf else None
-    dl = download_kbps(q) if cf else None
+    dl = sub_build.real_speed(q) if cf else None
     ip, cc = exit_country(q) if tcp else (None, None)
     cc = cc or geo.guess_cc(name) or "-"
     jit = abs(cf2 - cf) if (cf and cf2) else None
