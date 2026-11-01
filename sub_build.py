@@ -348,7 +348,23 @@ def main():
         pool.append((u, q))
     log("去重后目标类型 %d 条" % len(pool))
 
-    # ③ 测试（一次内核测全部指标）
+    # ③ 先查 IP 地区 + 取名（地区+后戳）
+    from concurrent.futures import ThreadPoolExecutor as _TPE_R
+    log("查 IP 地区…")
+    with _TPE_R(max_workers=16) as _exr:
+        _ccs = list(_exr.map(lambda uq: exit_cc(uq[1]), pool))
+    named, cnt_pre = [], {}
+    for (u, q), cc in zip(pool, _ccs):
+        rn = geo.CC_NAME.get(cc, "其他") if cc else geo.CC_NAME.get(
+            geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", ""))), "其他")
+        cnt_pre[rn] = cnt_pre.get(rn, 0) + 1
+        nm = NAME % (rn, cnt_pre[rn])
+        named.append((u, dict(q, name=nm), rn, cc))
+    pool = [(u, q) for u, q, _, _ in named]
+    regs = [rn for _, _, rn, _ in named]
+    log("取好名字 %d 条" % len(pool))
+
+    # ④ 测试（一次内核测全部指标）
     from concurrent.futures import ThreadPoolExecutor
     log("开始测试，6 并发…")
     results = {}
@@ -364,10 +380,8 @@ def main():
     rows = []
     for i, (u, q) in enumerate(pool):
         r = results[i]
-        cc = r["cc"] or geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", ""))) or "-"
-        rn = geo.CC_NAME.get(cc, "其他") if cc != "-" else "其他"
         rows.append({
-            "uri": u, "q": q, "r": r, "cc": cc, "region": rn,
+            "uri": u, "q": q, "r": r, "cc": r["cc"] or "-", "region": regs[i],
             "ok": bool(r["dl"]),
         })
 
@@ -410,64 +424,15 @@ def main():
 
     # ⑥ 去 X → 命名 → 排序 → 订阅
     keeps = [row for row in rows if row["ok"]]
-    keeps.sort(key=lambda x: (scheme_rank(x["uri"]), region_rank(x["region"])))
-    cnt, out = {}, []
+    keeps.sort(key=lambda x: (region_rank(x["region"]), x["q"].get("name", "")))
+    out = []
     for row in keeps:
-        rn = row["region"]
-        cnt[rn] = cnt.get(rn, 0) + 1
         out.append(fix_http_auth(row["uri"].split("#")[0]) + "#" +
-                   (NAME % (rn, cnt[rn])).replace(" ", "%20"))
+                   row["q"]["name"].replace(" ", "%20"))
     if out:
         open(os.path.join(OUT, "0070077.xyz"), "w", encoding="utf-8").write(
             base64.b64encode("\n".join(out).encode()).decode())
-    log("写入 0070077.xyz：%d 条，%d 个地区" % (len(out), len(cnt)))
-
-    # ⑦ 家族订阅：同凭据/同 SNI 的其他协议节点（不测试，只去重）
-    def sig_of(q):
-        cred = (q.get("password") or q.get("uuid") or "").strip()
-        sni = (q.get("sni") or q.get("servername") or "").strip().lower()
-        host = (q.get("ws-opts") or {}).get("headers", {}).get("Host", "").lower()
-        return cred, sni or host
-
-    good_sigs = set()
-    for row in keeps:
-        cred, host = sig_of(row["q"])
-        if cred and len(cred) >= 6:
-            good_sigs.add(("cred", cred))
-        if host and "." in host:
-            good_sigs.add(("host", host.split(".")[-2] + "." + host.split(".")[-1]))
-
-    fam, seen_fam = [], set()
-    for u, q in allpool_uris:
-        if q.get("type") in KEEP_TYPES:
-            continue
-        cred, host = sig_of(q)
-        hit = False
-        if cred and ("cred", cred) in good_sigs:
-            hit = True
-        if host and "." in host:
-            dom = host.split(".")[-2] + "." + host.split(".")[-1]
-            if ("host", dom) in good_sigs:
-                hit = True
-        if not hit:
-            continue
-        ep = (str(q["server"]).lower(), int(q["port"]))
-        if ep in seen_fam:
-            continue
-        seen_fam.add(ep)
-        fam.append((u, q))
-    log("家族节点（其他协议）：%d 条" % len(fam))
-
-    cnt_f, out_f = {}, []
-    for u, q in fam:
-        cc = geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", "")))
-        rn = geo.CC_NAME.get(cc, "其他")
-        cnt_f[rn] = cnt_f.get(rn, 0) + 1
-        out_f.append(u.split("#")[0] + "#" + (NAME % (rn, cnt_f[rn])).replace(" ", "%20"))
-    if out_f:
-        open(os.path.join(OUT, "family.xyz"), "w", encoding="utf-8").write(
-            base64.b64encode("\n".join(out_f).encode()).decode())
-    log("写入 family.xyz：%d 条" % len(out_f))
+    log("写入 0070077.xyz：%d 条" % len(out))
 
     open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8").write(
         "更新 %s\n抓取 %d / 去重后 %d / 可用 %d / 输出 %d\n" % (
