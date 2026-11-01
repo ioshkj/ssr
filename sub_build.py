@@ -350,14 +350,14 @@ def main():
         log("  %-12s %d 条，%d 个地区" % (filename, len(out), len(cnt)))
         return len(out)
 
-    # ④ HTTP / HTTPS 一份，AnyTLS 一份
-    http_sub = [((u, q), cc) for (u, q), cc in zip(pool, ccs) if q.get("type") == "http"]
-    any_sub = [((u, q), cc) for (u, q), cc in zip(pool, ccs) if q.get("type") == "anytls"]
-    n_http = emit(http_sub, "ivapp.cn")
-    n_any = emit(any_sub, "anytls.cn")
+    # ④ 明文 HTTP 一份；HTTPS + AnyTLS 一份
+    plain_http = [((u, q), cc) for (u, q), cc in zip(pool, ccs) if u.startswith("http://")]
+    tls_any = [((u, q), cc) for (u, q), cc in zip(pool, ccs) if u.startswith("https://") or q.get("type") == "anytls"]
+    n_http = emit(plain_http, "ivapp.cn")
+    n_any = emit(tls_any, "ivapp2.cn")
 
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
-        f.write("更新 %s\n抓取 %d / 去重后 %d / 查到地区 %d / HTTP %d / AnyTLS %d\n"
+        f.write("更新 %s\n抓取 %d / 去重后 %d / 查到地区 %d / HTTP %d / HTTPS+AnyTLS %d\n"
                 % (time.strftime("%Y-%m-%d %H:%M:%S"), len(lines), len(pool), got, n_http, n_any))
 
 

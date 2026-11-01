@@ -2,14 +2,14 @@
 
 节点来源于公网获取，自动筛选生成。
 
-HTTP / HTTPS：
+HTTP（明文）：
 
 ```
 https://raw.githubusercontent.com/ioshkj/ssr/main/sub/ivapp.cn
 ```
 
-AnyTLS：
+HTTPS + AnyTLS：
 
 ```
-https://raw.githubusercontent.com/ioshkj/ssr/main/sub/anytls.cn
+https://raw.githubusercontent.com/ioshkj/ssr/main/sub/ivapp2.cn
 ```
