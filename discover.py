@@ -27,6 +27,31 @@ COMMON = ["sub", "sub.txt", "sub.yaml", "base64.txt", "clash.yaml", "all.yaml",
 BLOCKED = ("TheCrowCreature/v2rayExtractor",)
 
 
+
+NODE_SCHEMES = ("vmess://", "vless://", "trojan://", "ss://", "ssr://",
+                "hysteria2://", "hy2://", "tuic://", "anytls://",
+                "http://", "https://", "socks5://")
+
+
+def looks_like_nodes(raw, min_nodes=3):
+    """内容是不是真的节点订阅：base64 里或明文里含至少 N 条代理链接"""
+    if not raw or len(raw) < 80:
+        return False
+    text = raw.decode("utf-8", "ignore")
+    if "proxies:" in text:          # clash 配置
+        return text.count("- name") >= min_nodes or text.count("server:") >= min_nodes
+    if "://" in text:
+        n = sum(1 for line in text.splitlines() if line.strip().startswith(NODE_SCHEMES))
+        return n >= min_nodes
+    try:
+        import base64 as _b64
+        dec = _b64.b64decode(text + "=" * (-len(text) % 4)).decode("utf-8", "ignore")
+        n = sum(1 for line in dec.splitlines() if line.strip().startswith(NODE_SCHEMES))
+        return n >= min_nodes
+    except Exception:
+        return False
+
+
 def log(m):
     print(m, flush=True)
 
@@ -105,6 +130,8 @@ def main():
                         paths.append(p)
         for p in (paths or COMMON)[:5]:
             b = fetch(RAW + "%s/%s/%s" % (repo, branch, p))
+            if not looks_like_nodes(b):
+                continue
             if len(b) > 400 and b"<html" not in b[:200].lower():
                 found.append({"repo": repo, "branch": branch, "path": p,
                               "kind": "clash" if p.lower().endswith((".yaml", ".yml")) else "uri",
