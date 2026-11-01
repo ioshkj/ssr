@@ -236,6 +236,18 @@ def exit_cc(q, timeout=12):
             p.kill()
 
 
+
+def fix_http_auth(uri):
+    """QX/小火箭 对没有 user:pass 的 http(s) 链接会解析失败，补上 null:null"""
+    if not uri.startswith(("http://", "https://")):
+        return uri
+    head, _, tail = uri.partition("://")
+    hostpart = tail.split("?")[0].split("/")[0]
+    if "@" in hostpart:
+        return uri
+    return head + "://null:null@" + tail
+
+
 def real_speed(q, bytes_=300000, timeout=25):
     """单节点：起一个只含它的内核，用 curl 走本地代理下载，返回 KB/s"""
     import json as _json, socket as _sock, subprocess as _sp, tempfile as _tf, time as _t, urllib.request as _ur
@@ -765,7 +777,7 @@ document.querySelectorAll('#t th').forEach(function(th,i){
             cc = geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", "")))
             r = geo.CC_NAME.get(cc, "其他")
             cnt_h[r] = cnt_h.get(r, 0) + 1
-            out_h.append(u.split("#")[0] + "#" + (NAME % (r, cnt_h[r])).replace(" ", "%20"))
+            out_h.append(fix_http_auth(u.split("#")[0]) + "#" + (NAME % (r, cnt_h[r])).replace(" ", "%20"))
         with open(os.path.join(OUT, "final18.txt"), "w", encoding="utf-8") as f:
             f.write(base64.b64encode("\n".join(out_h).encode()).decode())
         log("  final18.txt：%d 条（HTTP + AnyTLS，未测速）" % len(out_h))
