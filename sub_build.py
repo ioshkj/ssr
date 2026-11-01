@@ -437,9 +437,24 @@ def main():
     asia_pool = [(u, q) for u, q in allpool if asia_region(q) in ASIA]
     log("亚太候选（全部协议）：%d 条" % len(asia_pool))
 
+    # 亚太这份同样剔除「查不到出口 IP」的
+    from concurrent.futures import ThreadPoolExecutor as _TPE_A
+    _need = [(u, q) for u, q in asia_pool
+             if (q["server"], int(q["port"])) not in cc_map]
+    if _need:
+        with _TPE_A(max_workers=16) as _exa:
+            _acc = list(_exa.map(lambda uq: exit_cc(uq[1]), _need))
+        for (u, q), cc in zip(_need, _acc):
+            cc_map[(q["server"], int(q["port"]))] = cc
+    before = len(asia_pool)
+    asia_pool = [(u, q) for u, q in asia_pool
+                 if cc_map.get((q["server"], int(q["port"])))]
+    log("亚太剔除无出口后：%d / %d 条" % (len(asia_pool), before))
+
     cnt2, out2 = {}, []
     for u, q in asia_pool:
-        r = asia_region(q)
+        cc = cc_map.get((q["server"], int(q["port"])))
+        r = geo.CC_NAME.get(cc, "其他") if cc else asia_region(q)
         cnt2[r] = cnt2.get(r, 0) + 1
         out2.append(fix_http_auth(u.split("#")[0]) + "#" + (NAME % (r, cnt2[r])).replace(" ", "%20"))
     if out2:
