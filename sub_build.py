@@ -347,7 +347,7 @@ def main():
         u, q = uq
         return exit_cc(q)
 
-    with _TPE_G(max_workers=16) as _exg:
+    with _TPE_G(max_workers=32) as _exg:
         _all_cc = list(_exg.map(_geo, items))
     log("地区检测完成，共 %d 个" % len(_all_cc))
 
@@ -412,7 +412,7 @@ def main():
         return (q["server"], int(q["port"])), real_speed(q)
 
     speed = {}
-    with _TPE_D(max_workers=10) as _exd:
+    with _TPE_D(max_workers=16) as _exd:
         for k, v in _exd.map(_dl, http_alive):
             if v:
                 speed[k] = v
