@@ -138,33 +138,39 @@ def exit_country(q, timeout=12):
             p.kill()
 
 
+def test_one(item):
+    idx, u = item
+    name = u.split("#")[-1].replace("%20", " ") if "#" in u else ""
+    q = nodeconv.to_clash(u, name)
+    if not q:
+        return idx, [name, "-", "-", "-", "-", "-", "-", "-"]
+    tcp = tcp_ms(q["server"], q["port"])
+    cf = via_node(q, CF) if tcp else None
+    dl = download_kbps(q) if cf else None
+    ip, cc = exit_country(q) if tcp else (None, None)
+    cc = cc or geo.guess_cc(name) or "-"
+    return idx, [name, q.get("type", "-"), cc, ip or "-",
+                 str(tcp) if tcp else "-", str(cf) if cf else "-",
+                 str(dl) if dl else "-", "OK" if dl else "X"]
+
+
 def main():
     raw = base64.b64decode(open(os.path.join(HERE, "sub", "ivapp.cn"), "rb").read()).decode()
     uris = [l.strip() for l in raw.splitlines() if l.strip()]
-    rows = []
-    print("共 %d 条，开始测试（保持原顺序）" % len(uris), flush=True)
-    for i, u in enumerate(uris, 1):
-        name = u.split("#")[-1].replace("%20", " ") if "#" in u else ""
-        q = nodeconv.to_clash(u, name)
-        if not q:
-            rows.append([name, "-", "-", "-", "-", "-", "-", "-"])
-            continue
-        tcp = tcp_ms(q["server"], q["port"])
-        cf = via_node(q, CF) if tcp else None
-        dl = download_kbps(q) if cf else None
-        ip, cc = exit_country(q) if tcp else (None, None)
-        cc = cc or geo.guess_cc(name) or "-"
-        rows.append([name, q.get("type", "-"), cc, ip or "-",
-                     str(tcp) if tcp else "-", str(cf) if cf else "-",
-                     str(dl) if dl else "-", "✓" if dl else "✗"])
-        print("%3d/%d %-22s %-8s %-3s tcp=%-6s cf=%-6s dl=%-6s" % (
-            i, len(uris), name[:22], q.get("type", ""), cc,
-            tcp or "-", cf or "-", dl or "-"), flush=True)
-
+    print("共 %d 条，并行测试（保持原顺序）" % len(uris), flush=True)
+    from concurrent.futures import ThreadPoolExecutor
+    res = {}
+    with ThreadPoolExecutor(max_workers=8) as ex:
+        for idx, row in ex.map(test_one, list(enumerate(uris))):
+            res[idx] = row
+            print("%3d/%d %-22s %-8s %s tcp=%s cf=%s dl=%s" % (
+                idx + 1, len(uris), row[0][:22], row[1], row[2], row[4], row[5], row[6]), flush=True)
+    rows = [res[i] for i in range(len(uris))]
     hdr = ["名称", "协议", "地区", "出口IP", "TCP(ms)", "CF(ms)", "下载(KB/s)", "可用"]
     out = ["\t".join(hdr)] + ["\t".join(map(str, r)) for r in rows]
     open(os.path.join(HERE, "sub", "probe.txt"), "w", encoding="utf-8").write("\n".join(out) + "\n")
-    print("写入 sub/probe.txt", flush=True)
+    ok = sum(1 for r in rows if r[7] == "OK")
+    print("完成：%d 条，可用 %d 条" % (len(rows), ok), flush=True)
 
 
 if __name__ == "__main__":
