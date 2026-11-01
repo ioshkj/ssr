@@ -155,8 +155,16 @@ def test_one(item):
 
 
 def main():
-    raw = base64.b64decode(open(os.path.join(HERE, "sub", "ivapp.cn"), "rb").read()).decode()
-    uris = [l.strip() for l in raw.splitlines() if l.strip()]
+    uris = []
+    for fn in ("ivapp.cn", "ivapp2.cn"):
+        p = os.path.join(HERE, "sub", fn)
+        if not os.path.exists(p):
+            continue
+        try:
+            raw = base64.b64decode(open(p, "rb").read()).decode()
+        except Exception:
+            continue
+        uris += [l.strip() for l in raw.splitlines() if l.strip()]
     print("共 %d 条，并行测试（保持原顺序）" % len(uris), flush=True)
     from concurrent.futures import ThreadPoolExecutor
     res = {}
