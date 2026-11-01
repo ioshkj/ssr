@@ -4,7 +4,7 @@
    规则：节点链接一个字都不改，只替换 # 后面的名称"""
 import base64, os, re, subprocess, time
 import urllib.parse as up
-import verify, nodeconv, geo
+import nodeconv, geo
 from concurrent.futures import ThreadPoolExecutor
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -23,6 +23,7 @@ SRC = [
     "shaoyouvip/free/main/all.yaml",
     "zhulinghuanyu/BestSub/main/clash.yaml",
 ]
+BIN = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bin", "mihomo")
 NAME = "%s-%02d 0070077.xyz"   # 名字里不要出现冒号和全角符号，QX 会整行丢弃
 
 
@@ -142,7 +143,7 @@ def udp_ok(q, timeout=8):
            "proxies": [dict(q, name="p")], "rules": ["MATCH,p"]}
     path = wd + "/c.yaml"
     open(path, "w").write(_json.dumps(cfg, ensure_ascii=False))
-    p = _sp.Popen([verify.BIN, "-d", wd, "-f", path], stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
+    p = _sp.Popen([BIN, "-d", wd, "-f", path], stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
     s = None
     try:
         for _ in range(40):
@@ -209,7 +210,7 @@ def exit_cc(q, timeout=12):
            "proxies": [dict(q, name="p")], "rules": ["MATCH,p"]}
     path = wd + "/c.yaml"
     open(path, "w").write(_json.dumps(cfg, ensure_ascii=False))
-    p = _sp.Popen([verify.BIN, "-d", wd, "-f", path], stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
+    p = _sp.Popen([BIN, "-d", wd, "-f", path], stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
     try:
         for _ in range(40):
             _t.sleep(0.2)
@@ -262,7 +263,7 @@ def real_speed(q, bytes_=300000, timeout=25):
            "proxies": [dict(q, name="p")], "rules": ["MATCH,p"]}
     path = wd + "/c.yaml"
     open(path, "w").write(_json.dumps(cfg, ensure_ascii=False))
-    p = _sp.Popen([verify.BIN, "-d", wd, "-f", path],
+    p = _sp.Popen([BIN, "-d", wd, "-f", path],
                   stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
     try:
         for _ in range(40):
