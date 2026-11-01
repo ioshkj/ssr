@@ -369,6 +369,10 @@ def main():
     tls_any = [((u, q), cc) for (u, q), cc in zip(pool, ccs)
                if u.startswith("https://") or q.get("type") == "anytls"]
     plain_http = [((u, q), cc) for (u, q), cc in zip(pool, ccs) if u.startswith("http://")]
+    # 明文 HTTP 那份在开头补一条 https，让 QX 能识别整份
+    https_head = [((u, q), cc) for (u, q), cc in zip(pool, ccs) if u.startswith("https://")][:1]
+    if https_head:
+        plain_http = https_head + plain_http
     n_any = emit(tls_any, "ivapp.cn")
     n_http = emit(plain_http, "ivapp2.cn")
 
