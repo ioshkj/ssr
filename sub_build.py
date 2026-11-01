@@ -15,6 +15,8 @@ GOOGLE = "https://www.gstatic.com/generate_204"
 YT = "https://i.ytimg.com/generate_204"
 DL = "https://speed.cloudflare.com/__down?bytes=300000"
 
+BLOCKED = ("TheCrowCreature/v2rayExtractor",)
+
 SRC = [
     "Pawdroid/Free-servers/main/sub",
     "mfuu/FreeProxies/master/sub",
@@ -330,6 +332,9 @@ def main():
     # ① 抓源
     seen, uris = set(), []
     for p in SRC + discovered():
+        if any(p.startswith(b) for b in BLOCKED):
+            log("  [跳过] %s（已拉黑）" % p)
+            continue
         if not is_fresh(p):
             continue
         n = 0

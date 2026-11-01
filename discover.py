@@ -20,6 +20,9 @@ COMMON = ["sub", "sub.txt", "sub.yaml", "base64.txt", "clash.yaml", "all.yaml",
           "nodes.txt", "list.yml", "list.txt", "output/clash.yaml"]
 
 
+BLOCKED = ("TheCrowCreature/v2rayExtractor",)
+
+
 def log(m):
     print(m, flush=True)
 
@@ -81,6 +84,8 @@ def main():
 
     found = []
     for repo, meta in sorted(repos.items(), key=lambda kv: -kv[1]["stars"])[:120]:
+        if repo in BLOCKED:
+            continue
         branch = meta["branch"]
         paths = []
         body = fetch(RAW + "%s/%s/README.md" % (repo, branch))
