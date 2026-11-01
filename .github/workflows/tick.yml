@@ -1,0 +1,13 @@
+name: tick
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  t:
+    runs-on: ubuntu-latest
+    steps:
+      - name: beat
+        run: echo "tick $(date -u +%Y-%m-%dT%H:%M:%SZ)"
