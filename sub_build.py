@@ -318,6 +318,7 @@ def main():
     # ② 只保留 http / https / anytls
     import urllib.parse as _up
     pool, seen_ep, types = [], set(), {}
+    allpool, seen_all = [], set()
     for u in lines:
         nm = _up.unquote(u.split("#")[-1]) if "#" in u else ""
         q = nodeconv.to_clash(u, nm)
@@ -325,13 +326,17 @@ def main():
             continue
         t = q.get("type")
         types[t] = types.get(t, 0) + 1
+        ep = (str(q["server"]).lower(), int(q["port"]))
+        if ep not in seen_all:
+            seen_all.add(ep)
+            allpool.append((u, q))
         if t not in ("http", "anytls"):
             continue
-        ep = (str(q["server"]).lower(), int(q["port"]))
         if ep in seen_ep:
             continue
         seen_ep.add(ep)
         pool.append((u, q))
+    log("全部协议去重后 %d 条" % len(allpool))
     log("全部节点类型：" + "  ".join("%s %d" % (k, v) for k, v in sorted(types.items(), key=lambda kv: -kv[1])[:8]))
     log("http/anytls 去重后 %d 条" % len(pool))
 
@@ -408,16 +413,33 @@ def main():
             f.write(base64.b64encode("\n".join(out).encode()).decode())
     log("写入 0070077.xyz：%d 条，%d 个地区" % (len(out), len(cnt)))
 
-    # 亚太近距离地区单独一份
+    # 亚太近距离地区：从「全部协议」里挑（名字/域名能看出是亚太的）
     ASIA = {"香港", "台湾", "日本", "韩国", "新加坡", "马来西亚", "泰国",
             "菲律宾", "越南", "印度尼西亚", "印度", "澳门", "柬埔寨", "澳大利亚"}
+    ASIA_WORDS = ["香港", "台湾", "台北", "日本", "东京", "大阪", "韩国", "首尔",
+                  "新加坡", "狮城", "马来", "吉隆坡", "泰国", "曼谷", "越南",
+                  "印尼", "菲律宾", "马尼拉", "印度", "澳门", "柬埔寨", "东京"]
+    EN2CC = {"hk": "HK", "jp": "JP", "sg": "SG", "tw": "TW", "kr": "KR",
+             "my": "MY", "th": "TH", "vn": "VN", "id": "ID", "ph": "PH",
+             "mo": "MO", "kh": "KH"}
+
+    def asia_region(q):
+        text = ("%s %s" % (q.get("name", ""), q.get("server", ""))).lower()
+        import re as _re
+        for code, cc in EN2CC.items():
+            if _re.search(r"(^|[\s\-_|\[（(])%s(\d|[\s\-_|\]）)]|$)" % code, text):
+                return geo.CC_NAME.get(cc, "其他")
+        for w in ASIA_WORDS:
+            if w in text:
+                return geo.CC_NAME.get(geo.guess_cc(w), "其他")
+        return None
+
+    asia_pool = [(u, q) for u, q in allpool if asia_region(q) in ASIA]
+    log("亚太候选（全部协议）：%d 条" % len(asia_pool))
+
     cnt2, out2 = {}, []
-    for u, q in ordered:
-        cc = cc_map.get((q["server"], int(q["port"])))
-        r = geo.CC_NAME.get(cc, "其他") if cc else geo.CC_NAME.get(
-            geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", ""))), "其他")
-        if r not in ASIA:
-            continue
+    for u, q in asia_pool:
+        r = asia_region(q)
         cnt2[r] = cnt2.get(r, 0) + 1
         out2.append(fix_http_auth(u.split("#")[0]) + "#" + (NAME % (r, cnt2[r])).replace(" ", "%20"))
     if out2:
