@@ -341,10 +341,17 @@ def main():
     def region_rank(r):
         return (PREFER.index(r) if r in PREFER else 99, r)
 
+    def scheme_rank(u):
+        if u.startswith("https://"): return 0
+        if u.startswith("anytls://"): return 1
+        if u.startswith("http://"): return 2
+        return 3
+
     def emit(subset, filename):
         cnt, out = {}, []
-        ordered = sorted(subset, key=lambda x: region_rank(
-            geo.CC_NAME.get(x[1], "其他") if x[1] else "其他"))
+        ordered = sorted(subset, key=lambda x: (
+            scheme_rank(x[0][0]),
+            region_rank(geo.CC_NAME.get(x[1], "其他") if x[1] else "其他")))
         for (u, q), cc in ordered:
             if cc:
                 r = geo.CC_NAME.get(cc, "其他")
@@ -358,11 +365,13 @@ def main():
         log("  %-12s %d 条，%d 个地区" % (filename, len(out), len(cnt)))
         return len(out)
 
-    # ④ 明文 HTTP 一份；HTTPS + AnyTLS 一份
-    plain_http = [((u, q), cc) for (u, q), cc in zip(pool, ccs) if u.startswith("http://")]
-    tls_any = [((u, q), cc) for (u, q), cc in zip(pool, ccs) if u.startswith("https://") or q.get("type") == "anytls"]
-    n_http = emit(plain_http, "ivapp.cn")
-    n_any = emit(tls_any, "ivapp2.cn")
+    # ④ 两份：都保证首条是 QX 能识别的 https
+    http_mix = [((u, q), cc) for (u, q), cc in zip(pool, ccs)
+                if u.startswith("http://") or u.startswith("https://")]
+    any_mix = [((u, q), cc) for (u, q), cc in zip(pool, ccs)
+               if u.startswith("https://") or q.get("type") == "anytls"]
+    n_http = emit(http_mix, "ivapp.cn")
+    n_any = emit(any_mix, "ivapp2.cn")
 
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n抓取 %d / 去重后 %d / 查到地区 %d / HTTP %d / HTTPS+AnyTLS %d\n"
