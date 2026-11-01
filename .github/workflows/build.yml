@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: upd
@@ -41,6 +42,16 @@ jobs:
         run: python -u sub_build.py 2>&1 | tee build.log || true
       - name: probe
         run: python -u probe_sub.py 2>&1 | tee probe.log || true
+      - name: next
+        if: success()
+        env:
+          PAT: ${{ secrets.PAT_TOKEN }}
+        run: |
+          TOKEN="${PAT:-$GITHUB_TOKEN}"
+          sleep 5
+          code=$(curl -s -o /tmp/resp.txt -w "%{http_code}" -X POST             -H "Authorization: Bearer $TOKEN"             -H "Accept: application/vnd.github+json"             "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/build.yml/dispatches"             -d '{"ref":"main"}')
+          echo "dispatch http=$code"
+          cat /tmp/resp.txt || true
       - name: save
         run: |
           git config user.name "bot"
