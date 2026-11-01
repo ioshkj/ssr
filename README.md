@@ -5,5 +5,5 @@
 订阅地址：
 
 ```
-https://raw.githubusercontent.com/ioshkj/ssr/main/sub/final18.txt
+https://raw.githubusercontent.com/ioshkj/ssr/main/sub/ivapp.cn
 ```

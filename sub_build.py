@@ -24,7 +24,7 @@ SRC = [
     "zhulinghuanyu/BestSub/main/clash.yaml",
 ]
 BIN = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bin", "mihomo")
-NAME = "%s-%02d ivapp.cn"   # 名字里不要出现冒号和全角符号，QX 会整行丢弃
+NAME = "%s-%02d 0070077.xyz"   # 名字里不要出现冒号和全角符号，QX 会整行丢弃
 
 
 def repo_pushed(repo, cache={}):
@@ -346,9 +346,9 @@ def main():
         out.append(fix_http_auth(u.split("#")[0]) + "#" + (NAME % (r, cnt[r])).replace(" ", "%20"))
 
     if out:
-        with open(os.path.join(OUT, "final18.txt"), "w", encoding="utf-8") as f:
+        with open(os.path.join(OUT, "ivapp.cn"), "w", encoding="utf-8") as f:
             f.write(base64.b64encode("\n".join(out).encode()).decode())
-    log("写入 final18.txt：%d 条，%d 个地区" % (len(out), len(cnt)))
+    log("写入 ivapp.cn：%d 条，%d 个地区" % (len(out), len(cnt)))
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n抓取 %d / 去重后 %d / 查到地区 %d / 输出 %d\n"
                 % (time.strftime("%Y-%m-%d %H:%M:%S"), len(lines), len(pool), got, len(out)))
