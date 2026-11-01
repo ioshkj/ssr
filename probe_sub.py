@@ -8,6 +8,8 @@ import geo
 HERE = os.path.dirname(os.path.abspath(__file__))
 BIN = os.path.join(HERE, "bin", "mihomo")
 CF = "http://cp.cloudflare.com/generate_204"
+GOOGLE = "https://www.gstatic.com/generate_204"
+YT = "https://i.ytimg.com/generate_204"
 
 
 def tcp_ms(host, port, n=2, timeout=2.5):
@@ -146,12 +148,21 @@ def test_one(item):
         return idx, [name, "-", "-", "-", "-", "-", "-", "-"]
     tcp = tcp_ms(q["server"], q["port"])
     cf = via_node(q, CF) if tcp else None
+    cf2 = via_node(q, CF) if cf else None
+    gg = via_node(q, GOOGLE) if cf else None
+    yt = via_node(q, YT) if cf else None
     dl = download_kbps(q) if cf else None
     ip, cc = exit_country(q) if tcp else (None, None)
     cc = cc or geo.guess_cc(name) or "-"
+    jit = abs(cf2 - cf) if (cf and cf2) else None
     return idx, [name, q.get("type", "-"), cc, ip or "-",
-                 str(tcp) if tcp else "-", str(cf) if cf else "-",
-                 str(dl) if dl else "-", "OK" if dl else "X"]
+                 str(tcp) if tcp else "-",
+                 str(cf) if cf else "-",
+                 str(gg) if gg else "-",
+                 str(yt) if yt else "-",
+                 str(jit) if jit is not None else "-",
+                 str(dl) if dl else "-",
+                 "OK" if dl else "X"]
 
 
 def main():
@@ -171,13 +182,14 @@ def main():
     with ThreadPoolExecutor(max_workers=8) as ex:
         for idx, row in ex.map(test_one, list(enumerate(uris))):
             res[idx] = row
-            print("%3d/%d %-22s %-8s %s tcp=%s cf=%s dl=%s" % (
-                idx + 1, len(uris), row[0][:22], row[1], row[2], row[4], row[5], row[6]), flush=True)
+            print("%3d/%d %-20s %-7s %s tcp=%s cf=%s g=%s dl=%s" % (
+                idx + 1, len(uris), row[0][:20], row[1], row[2],
+                row[4], row[5], row[6], row[9]), flush=True)
     rows = [res[i] for i in range(len(uris))]
-    hdr = ["名称", "协议", "地区", "出口IP", "TCP(ms)", "CF(ms)", "下载(KB/s)", "可用"]
+    hdr = ["名称", "协议", "地区", "出口IP", "TCP(ms)", "CF(ms)", "Google(ms)", "YouTube(ms)", "抖动(ms)", "下载(KB/s)", "可用"]
     out = ["\t".join(hdr)] + ["\t".join(map(str, r)) for r in rows]
     open(os.path.join(HERE, "sub", "probe.txt"), "w", encoding="utf-8").write("\n".join(out) + "\n")
-    ok = sum(1 for r in rows if r[7] == "OK")
+    ok = sum(1 for r in rows if r[10] == "OK")
     print("完成：%d 条，可用 %d 条" % (len(rows), ok), flush=True)
 
 
