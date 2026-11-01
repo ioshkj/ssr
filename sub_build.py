@@ -24,7 +24,7 @@ SRC = [
     "zhulinghuanyu/BestSub/main/clash.yaml",
 ]
 BIN = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bin", "mihomo")
-NAME = "%s-%02d 0070077.xyz"   # 名字里不要出现冒号和全角符号，QX 会整行丢弃
+NAME = "%s-%02d ivapp.cn"   # 名字里不要出现冒号和全角符号，QX 会整行丢弃
 
 
 def repo_pushed(repo, cache={}):
