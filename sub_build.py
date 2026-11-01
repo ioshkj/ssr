@@ -213,6 +213,29 @@ def curl_ip(port, timeout=12):
         return None, None
 
 
+
+def exit_cc(q, timeout=12):
+    """通过节点查真实出口国家码；先 2 秒 TCP 探测"""
+    if not tcp_ms(q["server"], q["port"]):
+        return None
+    p, port = start_kernel(q)
+    if port is None:
+        try:
+            p.terminate()
+        except Exception:
+            pass
+        return None
+    try:
+        _, cc = curl_ip(port, timeout)
+        return cc
+    finally:
+        p.terminate()
+        try:
+            p.wait(3)
+        except Exception:
+            p.kill()
+
+
 def udp_via(port, timeout=8):
     import struct
     s = None
