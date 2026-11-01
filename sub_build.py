@@ -306,7 +306,7 @@ def main():
         raw_types[_t0] = raw_types.get(_t0, 0) + 1
         # 去重阶段就剔除美国节点（测速在境外，美国节点会天然占优）
         _cc0 = geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", "")))
-        if _cc0 in ("US", "CA") and q.get("type") != "anytls":
+        if _cc0 in ("US", "CA") and q.get("type") not in ("anytls", "http"):
             us_skip += 1
             continue
         seen_ep.add(ep)
@@ -318,6 +318,7 @@ def main():
     for _k, _v in sorted(raw_types.items(), key=lambda kv: -kv[1]):
         log("    %-10s %d" % (_k, _v))
     anytls_pool = [(u, q) for u, q in items if q.get("type") == "anytls"]
+    http_pool = [(u, q) for u, q in items if q.get("type") in ("http", "anytls")]
     log("  AnyTLS 原始 %d 条" % len(anytls_pool))
     ps = [q for _, q in items]
 
@@ -748,6 +749,22 @@ def main():
             with open(os.path.join(OUT, "final17.txt"), "w", encoding="utf-8") as f:
                 f.write(base64.b64encode("\n".join(out_d).encode()).decode())
         log("  final17.txt：%d 条（下载 100~300KB/s）" % len(out_d))
+
+    # HTTP + AnyTLS 合并（不测速，直接输出）
+    if http_pool:
+        cnt_h, out_h, seen_h = {}, [], set()
+        for u, q in http_pool:
+            ep_h = (str(q["server"]).lower(), int(q["port"]))
+            if ep_h in seen_h:
+                continue
+            seen_h.add(ep_h)
+            cc = geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", "")))
+            r = geo.CC_NAME.get(cc, "其他")
+            cnt_h[r] = cnt_h.get(r, 0) + 1
+            out_h.append(u.split("#")[0] + "#" + (NAME % (r, cnt_h[r])).replace(" ", "%20"))
+        with open(os.path.join(OUT, "final18.txt"), "w", encoding="utf-8") as f:
+            f.write(base64.b64encode("\n".join(out_h).encode()).decode())
+        log("  final18.txt：%d 条（HTTP + AnyTLS，未测速）" % len(out_h))
 
     # ⑯ 全部 AnyTLS：只查真实出口 IP（不测速），查不到的不收
     if anytls_pool:
