@@ -191,7 +191,12 @@ def udp_ok(q, timeout=8):
 
 
 def exit_cc(q, timeout=12):
-    """通过节点查询真实出口国家码：起单节点内核 + curl 走本地代理问 ip-api"""
+    """通过节点查询真实出口国家码：先 2 秒 TCP 探测，再起单节点内核问 ip-api"""
+    try:
+        import socket as _s0
+        _s0.create_connection((q["server"], int(q["port"])), timeout=2).close()
+    except Exception:
+        return None
     import json as _json, socket as _sock, subprocess as _sp, tempfile as _tf, time as _t, urllib.request as _ur
 
     wd = _tf.mkdtemp(prefix="geo-")
@@ -335,146 +340,103 @@ def main():
                 pass
         return best
 
-    # ① TCP 初筛：3 次取最小，>500ms 淘汰（只做粗筛）
-    def tcp_ms(q):
-        import socket, time as _t
-        best = None
-        for _ in range(3):
-            t0 = _t.time()
-            try:
-                socket.create_connection((q["server"], int(q["port"])), timeout=2).close()
-                v = int((_t.time() - t0) * 1000)
-                best = v if best is None else min(best, v)
-            except Exception:
-                pass
-        return best
+    # ④ 地区检测（先于测速）：逐个查真实出口 IP
+    from concurrent.futures import ThreadPoolExecutor as _TPE_G
 
-    with ThreadPoolExecutor(max_workers=256) as ex:
-        lat = list(ex.map(tcp_ms, ps))
-    pairs = [(l, q) for q, l in zip(ps, lat) if l is not None and l <= 1500]
-    tcp_of = {(q["server"], int(q["port"])): l for l, q in pairs}
-    pairs.sort(key=lambda x: x[0])
-    ps = [q for _, q in pairs]
-    log("TCP ≤1500ms 的 %d 条，进入端到端测试" % len(ps))
+    def _geo(uq):
+        u, q = uq
+        return exit_cc(q)
 
-    # ② 端到端延迟：并发 32，测 2 次取最小值；抖动 = 两次差值
+    with _TPE_G(max_workers=16) as _exg:
+        _all_cc = list(_exg.map(_geo, items))
+    log("地区检测完成，共 %d 个" % len(_all_cc))
+
+    # ⑤ 剔除真实出口在美加的（anytls / http 两类特殊订阅除外）
+    keep_geo, regs_geo = [], []
+    unverified_raw = []
+    for (u, q), cc in zip(items, _all_cc):
+        if not cc:
+            unverified_raw.append((u, q))
+            continue
+        if cc in ("US", "CA") and q.get("type") not in ("anytls", "http"):
+            continue
+        keep_geo.append((u, q))
+        regs_geo.append(geo.CC_NAME.get(cc, "其他"))
+    log("剔除美加后 %d 条，未查到出口 %d 条" % (len(keep_geo), len(unverified_raw)))
+
+    # ⑥ 改名：地区-序号 0070077.xyz
+    cnt_name = {}
+    renamed = []
+    for (u, q), r in zip(keep_geo, regs_geo):
+        cnt_name[r] = cnt_name.get(r, 0) + 1
+        nm = NAME % (r, cnt_name[r])
+        uri = u.split("#")[0] + "#" + nm.replace(" ", "%20")
+        renamed.append((uri, dict(q, name=nm), r))
+    log("改名完成，示例：%s" % (renamed[0][1]["name"] if renamed else "无"))
+
+    # ⑦ 测速：TCP（全部）
+    ps = [q for _, q, _ in renamed]
+    lat = []
+    from concurrent.futures import ThreadPoolExecutor as _TPE_T
+    with _TPE_T(max_workers=32) as _ext:
+        lat = list(_ext.map(lambda q: tcp_ms(q), ps))
+    tcp_of = {}
+    alive = []
+    for (uri, q, r), l in zip(renamed, lat):
+        if l is not None:
+            tcp_of[(q["server"], int(q["port"]))] = l
+            alive.append((uri, q, r))
+    log("TCP 连通 %d / %d" % (len(alive), len(renamed)))
+
+    # ⑦ 测速：HTTP（全部连通节点，两轮取最小）
     samples = {}
     for rnd in range(2):
-        r = verify.verify([dict(p) for p in ps], workers=32, timeout=8000,
-                          url="http://www.gstatic.com/generate_204", log=lambda m: None)
-        for p, d in r:
+        r_ = verify.verify([dict(q) for _, q, _ in alive], workers=32, timeout=8000,
+                           url="http://www.gstatic.com/generate_204", log=lambda m: None)
+        for p, d in r_:
             samples.setdefault((p["server"], int(p["port"])), []).append(d)
-        log("  第 %d 次采样成功 %d" % (rnd + 1, len(r)))
-
+        log("  HTTP 第 %d 次成功 %d" % (rnd + 1, len(r_)))
     stats = {}
     for k, ds in samples.items():
-        if not ds:
-            continue
         med = min(ds)
         jit = (max(ds) - min(ds)) if len(ds) > 1 else 0
-        if med > 2500 or jit > 600:
-            continue
         stats[k] = (med, jit)
-    log("端到端达标（≤2500ms，抖动≤600ms）%d 条" % len(stats))
+    log("HTTP 通 %d 条" % len(stats))
 
-    # ③ 真实带宽：全部达标节点，6 路并行，每路单独内核 + curl 下载 300KB
+    # ⑦ 测速：下载（全部 HTTP 通过节点，10 路并行）
+    http_alive = [(uri, q, r) for uri, q, r in alive if (q["server"], int(q["port"])) in stats]
+    from concurrent.futures import ThreadPoolExecutor as _TPE_D
+
+    def _dl(item):
+        uri, q, r = item
+        return (q["server"], int(q["port"])), real_speed(q)
+
     speed = {}
-    top_keys = [k for k, _ in sorted(stats.items(), key=lambda kv: kv[1][0])]  # 全部测，不设名额
-
-    def _one(k):
-        q = next((x for _, x in items if (x["server"], int(x["port"])) == k), None)
-        return k, (real_speed(q) if q else None)
-
-    from concurrent.futures import ThreadPoolExecutor as _TPE
-    with _TPE(max_workers=10) as _ex:
-        for k, v in _ex.map(_one, top_keys):
+    with _TPE_D(max_workers=10) as _exd:
+        for k, v in _exd.map(_dl, http_alive):
             if v:
                 speed[k] = v
-    log("真实带宽达标 %d 条" % len(speed))
+    log("下载成功 %d 条" % len(speed))
 
-    # ④ 记录两条延迟指标
-    keep = []
-    for u, q in items:
+    # ⑧ 组装 keep（tcp, http, jitter, 速度, 综合分, uri, proxy）
+    keep, regs = [], []
+    for uri, q, r in http_alive:
         k = (q["server"], int(q["port"]))
-        if k not in speed or k not in stats:
+        if k not in speed:
             continue
         med, jit = stats[k]
-        if speed[k] < 30:
-            continue
-        sc = 100.0 * (0.50 * min(speed[k] / 2000.0, 1.0)
+        sp_kb = speed[k]
+        sc = 100.0 * (0.50 * min(sp_kb / 2000.0, 1.0)
                       + 0.35 * (1 - min(med / 1000.0, 1.0))
                       + 0.15 * (1 - min(jit / 300.0, 1.0)))
-        keep.append((tcp_of.get(k, 9999), med, jit, speed[k], sc, u, q))
-    keep.sort(key=lambda x: x[0])
+        keep.append((tcp_of[k], med, jit, sp_kb, sc, uri, q))
+        regs.append(r)
     log("通过全部测试 %d 条" % len(keep))
-
-    # 同网段最多 12 个
-    lim, seen_net, dedup = 12, {}, []
-    import ipaddress
-    for tcp, med, jit, sp, sc, u, q in keep:
-        try:
-            net = str(ipaddress.ip_network(q["server"] + "/24", strict=False))
-        except Exception:
-            net = q["server"]
-        if seen_net.get(net, 0) >= lim:
-            continue
-        seen_net[net] = seen_net.get(net, 0) + 1
-        dedup.append((tcp, med, jit, sp, sc, u, q))
-    keep = dedup
-    log("同网段去重后 %d" % len(keep))
-
-    # 稳定性（known.json）
-    import json as _j, time as _tm
-    kp = os.path.join(HERE, "known.json")
-    try:
-        known = _j.load(open(kp, encoding="utf-8"))
-    except Exception:
-        known = {}
-    now = _tm.time()
-    cur = {"%s:%d" % (q["server"], int(q["port"])) for *_, q in keep}
-    for k in list(known):
-        if k not in cur:
-            known[k]["s"] = known[k].get("s", 0) - 1
-            if known[k]["s"] <= 0:
-                del known[k]
-    for *_, u, q in keep:
-        k = "%s:%d" % (q["server"], int(q["port"]))
-        rec = known.get(k, {"s": 0})
-        rec["s"] = rec.get("s", 0) + 1
-        rec["t"] = now
-        rec["u"] = u
-        known[k] = rec
-    known = dict(sorted(known.items(), key=lambda kv: -kv[1].get("t", 0))[:1200])
-    try:
-        _j.dump(known, open(kp, "w", encoding="utf-8"), ensure_ascii=False)
-    except Exception:
-        pass
-    stable = [x for x in keep
-              if known.get("%s:%d" % (x[6]["server"], int(x[6]["port"])), {}).get("s", 0) >= 3]
-    log("连续 3 轮通过 %d 条，本轮通过 %d 条" % (len(stable), len(keep)))
-    keep = stable if len(stable) >= 10 else keep   # 不截断：本轮通过多少就留多少
-
-    # 地区判定：通过节点查真实出口 IP（名字/域名判断不可靠，CF 节点会被误判）
-    from concurrent.futures import ThreadPoolExecutor as _TPE_R
-
-    def _lookup(row):
-        return exit_cc(row[6])
-
-    with _TPE_R(max_workers=6) as _exr:
-        _ccs = list(_exr.map(_lookup, keep[:250]))
-    _rows = keep
-    keep, regs, unverified = [], [], []
-    for row, cc in zip(_rows, _ccs):
-        if not cc:
-            unverified.append(row)          # 拿不到地区 → 单独一份
-            continue
-        if cc in ("US", "CA"):
-            continue                        # 真实出口在美国/加拿大 → 剔除
-        keep.append(row)
-        regs.append(geo.CC_NAME.get(cc, "其他"))
-    log("真实出口非美加：%d 条，未验证：%d 条" % (len(keep), len(unverified)))
-    unverified_rows = [(row, geo.CC_NAME.get(geo.guess_cc(row[6].get("name", "")), "其他"))
-                       for row in unverified]
+    _rows = [(t, m, j, s, sc, u, q) for (t, m, j, s, sc, u, q) in keep]
+    _ccs = [None] * len(keep)
+    unverified_rows = [((0, 0, 0, 0.0, 0.0, u, q),
+                        geo.CC_NAME.get(geo.guess_cc(q.get("name", "")), "其他"))
+                       for u, q in unverified_raw]
 
     def emit(filename, order):
         PER_REGION = 7
@@ -501,16 +463,10 @@ def main():
     n_speed = emit("final4.txt", 2)  # 按下载速度
     n_score = emit("final5.txt", 3)  # 综合评分
 
-    # ⑤ 真实出口地区（逐个查出口 IP，剔除真实在美加的）
+    # ⑤ 真实出口地区（复用前面查好的结果）
     if keep:
-        from concurrent.futures import ThreadPoolExecutor as _TPE0
-        with _TPE0(max_workers=6) as _ex0:
-            _ccs = list(_ex0.map(lambda row: exit_cc(row[6]), keep[:120]))
-        _real = [(row, geo.CC_NAME.get(cc, "其他")) for row, cc in zip(keep, _ccs)
-                 if cc and cc not in ("US", "CA")]
-        log("真实出口非美加：%d 条" % len(_real))
         cnt_e, out_e = {}, []
-        for row, r in sorted(_real, key=lambda z: -z[0][4]):
+        for row, r in sorted(zip(keep, regs), key=lambda z: -z[0][4]):
             if cnt_e.get(r, 0) >= 7:
                 continue
             cnt_e[r] = cnt_e.get(r, 0) + 1
@@ -790,7 +746,7 @@ def main():
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n合并 %d / 通过 %d / 稳定 %d / TCP版 %d / HTTP版 %d / 速度版 %d / 综合版 %d\n"
                 % (time.strftime("%Y-%m-%d %H:%M:%S"), len(lines), len(keep),
-                   len(stable), n_tcp, n_http, n_speed, n_score))
+                   len(keep), n_tcp, n_http, n_speed, n_score))
 
 
 if __name__ == "__main__":
