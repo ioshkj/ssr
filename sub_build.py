@@ -408,6 +408,17 @@ def main():
             f.write(base64.b64encode("\n".join(out).encode()).decode())
     log("写入 0070077.xyz：%d 条，%d 个地区" % (len(out), len(cnt)))
 
+    # 输出全部去重节点（压缩），供其他仓库复用，不参与订阅
+    try:
+        import gzip
+        all_uris = [u.split("#")[0] for u in lines if "://" in u]
+        blob = ("\n".join(all_uris)).encode()
+        with gzip.open(os.path.join(OUT, "all_nodes.txt.gz"), "wb") as f:
+            f.write(blob)
+        log("  全部节点：%d 条 → all_nodes.txt.gz（%.0fKB）" % (len(all_uris), len(gzip.compress(blob)) / 1024))
+    except Exception as e:
+        log("  写 all_nodes 失败：%s" % e)
+
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n抓取 %d / 去重后 %d / 查到地区 %d / 下载通过 %d / 输出 %d\n"
                 % (time.strftime("%Y-%m-%d %H:%M:%S"), len(lines), len(pool), got, len(kept), len(out)))
