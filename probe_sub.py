@@ -211,13 +211,20 @@ def main():
 
     write_html(rows)
 
-    # 只保留 OK 的节点，回写订阅（表里画 X 的直接剔除）
-    keep_uris = [u for u, r in zip(uris, rows) if r[11] == "OK"]
-    if keep_uris:
-        sub_path = os.path.join(HERE, "sub", "0070077.xyz")
-        open(sub_path, "w", encoding="utf-8").write(
-            base64.b64encode("\n".join(keep_uris).encode()).decode())
-        print("回写订阅：保留 %d 条（剔除 X %d 条）" % (len(keep_uris), len(uris) - len(keep_uris)), flush=True)
+    # 回写两份订阅：只保留 OK 的（X 的全部剔除）
+    keep_set = {u for u, r in zip(uris, rows) if r[11] == "OK"}
+    for fn in ("0070077.xyz", "asia.xyz"):
+        p = os.path.join(HERE, "sub", fn)
+        if not os.path.exists(p):
+            continue
+        try:
+            raw = base64.b64decode(open(p, "rb").read()).decode()
+        except Exception:
+            continue
+        old = [l.strip() for l in raw.splitlines() if l.strip()]
+        new = [l for l in old if l in keep_set]
+        open(p, "w", encoding="utf-8").write(base64.b64encode("\n".join(new).encode()).decode())
+        print("回写 %s：%d → %d 条（剔除 X）" % (fn, len(old), len(new)), flush=True)
 
 def write_html(rows):
     # 网页版表格

@@ -413,48 +413,41 @@ def main():
             f.write(base64.b64encode("\n".join(out).encode()).decode())
     log("写入 0070077.xyz：%d 条，%d 个地区" % (len(out), len(cnt)))
 
-    # 亚太近距离地区：从「全部协议」里挑（名字/域名能看出是亚太的）
+    # 亚太近距离地区：按「测出来的真实出口」判断（不靠名字）
     ASIA = {"香港", "台湾", "日本", "韩国", "新加坡", "马来西亚", "泰国",
             "菲律宾", "越南", "印度尼西亚", "印度", "澳门", "柬埔寨", "澳大利亚"}
-    ASIA_WORDS = ["香港", "台湾", "台北", "日本", "东京", "大阪", "韩国", "首尔",
-                  "新加坡", "狮城", "马来", "吉隆坡", "泰国", "曼谷", "越南",
-                  "印尼", "菲律宾", "马尼拉", "印度", "澳门", "柬埔寨", "东京"]
-    EN2CC = {"hk": "HK", "jp": "JP", "sg": "SG", "tw": "TW", "kr": "KR",
-             "my": "MY", "th": "TH", "vn": "VN", "id": "ID", "ph": "PH",
-             "mo": "MO", "kh": "KH"}
 
-    def asia_region(q):
-        text = ("%s %s" % (q.get("name", ""), q.get("server", ""))).lower()
-        import re as _re
-        for code, cc in EN2CC.items():
-            if _re.search(r"(^|[\s\-_|\[（(])%s(\d|[\s\-_|\]）)]|$)" % code, text):
-                return geo.CC_NAME.get(cc, "其他")
-        for w in ASIA_WORDS:
-            if w in text:
-                return geo.CC_NAME.get(geo.guess_cc(w), "其他")
-        return None
+    def _tcp_quick(uq):
+        q = uq[1]
+        try:
+            import socket as _s
+            _s.create_connection((q["server"], int(q["port"])), timeout=2).close()
+            return True
+        except Exception:
+            return False
 
-    asia_pool = [(u, q) for u, q in allpool if asia_region(q) in ASIA]
-    log("亚太候选（全部协议）：%d 条" % len(asia_pool))
-
-    # 亚太这份同样剔除「查不到出口 IP」的
     from concurrent.futures import ThreadPoolExecutor as _TPE_A
-    _need = [(u, q) for u, q in asia_pool
-             if (q["server"], int(q["port"])) not in cc_map]
+    with _TPE_A(max_workers=48) as _exa:
+        _flags = list(_exa.map(_tcp_quick, allpool))
+    _alive_all = [uq for uq, ok in zip(allpool, _flags) if ok]
+    log("全部协议 TCP 通：%d / %d" % (len(_alive_all), len(allpool)))
+
+    _need = [uq for uq in _alive_all if (uq[1]["server"], int(uq[1]["port"])) not in cc_map]
     if _need:
-        with _TPE_A(max_workers=16) as _exa:
-            _acc = list(_exa.map(lambda uq: exit_cc(uq[1]), _need))
+        with _TPE_A(max_workers=24) as _exa2:
+            _acc = list(_exa2.map(lambda uq: exit_cc(uq[1]), _need))
         for (u, q), cc in zip(_need, _acc):
             cc_map[(q["server"], int(q["port"]))] = cc
-    before = len(asia_pool)
-    asia_pool = [(u, q) for u, q in asia_pool
-                 if cc_map.get((q["server"], int(q["port"])))]
-    log("亚太剔除无出口后：%d / %d 条" % (len(asia_pool), before))
+
+    asia_pool = []
+    for u, q in _alive_all:
+        cc = cc_map.get((q["server"], int(q["port"])))
+        if cc and geo.CC_NAME.get(cc, "其他") in ASIA:
+            asia_pool.append((u, q, geo.CC_NAME.get(cc, "其他")))
+    log("亚太（按真实出口）：%d 条" % len(asia_pool))
 
     cnt2, out2 = {}, []
-    for u, q in asia_pool:
-        cc = cc_map.get((q["server"], int(q["port"])))
-        r = geo.CC_NAME.get(cc, "其他") if cc else asia_region(q)
+    for u, q, r in asia_pool:
         cnt2[r] = cnt2.get(r, 0) + 1
         out2.append(fix_http_auth(u.split("#")[0]) + "#" + (NAME % (r, cnt2[r])).replace(" ", "%20"))
     if out2:
