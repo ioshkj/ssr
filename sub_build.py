@@ -766,21 +766,22 @@ document.querySelectorAll('#t th').forEach(function(th,i){
                 f.write(base64.b64encode("\n".join(out_d).encode()).decode())
         log("  final17.txt：%d 条（下载 100~300KB/s）" % len(out_d))
 
-    # HTTP + AnyTLS 合并（不测速，直接输出）
+    # HTTP + AnyTLS：全部保留，只做地区检测用于命名（不删减）
     if http_pool:
-        cnt_h, out_h, seen_h = {}, [], set()
-        for u, q in http_pool:
-            ep_h = (str(q["server"]).lower(), int(q["port"]))
-            if ep_h in seen_h:
-                continue
-            seen_h.add(ep_h)
-            cc = geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", "")))
-            r = geo.CC_NAME.get(cc, "其他")
+        from concurrent.futures import ThreadPoolExecutor as _TPE_H
+        with _TPE_H(max_workers=16) as _exh:
+            _hcc = list(_exh.map(lambda uq: exit_cc(uq[1]), http_pool))
+        cnt_h, out_h = {}, []
+        for (u, q), cc in zip(http_pool, _hcc):
+            if cc:
+                r = geo.CC_NAME.get(cc, "其他")
+            else:                       # 查不到出口 → 用名字猜，实在没有就「其他」
+                r = geo.CC_NAME.get(geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", ""))), "其他")
             cnt_h[r] = cnt_h.get(r, 0) + 1
             out_h.append(fix_http_auth(u.split("#")[0]) + "#" + (NAME % (r, cnt_h[r])).replace(" ", "%20"))
         with open(os.path.join(OUT, "final18.txt"), "w", encoding="utf-8") as f:
             f.write(base64.b64encode("\n".join(out_h).encode()).decode())
-        log("  final18.txt：%d 条（HTTP + AnyTLS，未测速）" % len(out_h))
+        log("  final18.txt：%d 条（HTTP + AnyTLS，地区仅用于命名）" % len(out_h))
 
     # ⑯ 全部 AnyTLS：只查真实出口 IP（不测速），查不到的不收
     if anytls_pool:
