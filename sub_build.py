@@ -299,6 +299,18 @@ def main():
     log("抓取 %d 条" % len(uris))
 
     # ② 去重 + 筛类型
+    allpool_uris, seen_all = [], set()
+    for u in uris:
+        nm = up.unquote(u.split("#")[-1]) if "#" in u else ""
+        q = nodeconv.to_clash(u, nm)
+        if not q:
+            continue
+        ep = (str(q["server"]).lower(), int(q["port"]))
+        if ep in seen_all:
+            continue
+        seen_all.add(ep)
+        allpool_uris.append((u, q))
+
     pool, seen_ep = [], set()
     for u in uris:
         nm = up.unquote(u.split("#")[-1]) if "#" in u else ""
@@ -385,6 +397,53 @@ def main():
         open(os.path.join(OUT, "0070077.xyz"), "w", encoding="utf-8").write(
             base64.b64encode("\n".join(out).encode()).decode())
     log("写入 0070077.xyz：%d 条，%d 个地区" % (len(out), len(cnt)))
+
+    # ⑦ 家族订阅：同凭据/同 SNI 的其他协议节点（不测试，只去重）
+    def sig_of(q):
+        cred = (q.get("password") or q.get("uuid") or "").strip()
+        sni = (q.get("sni") or q.get("servername") or "").strip().lower()
+        host = (q.get("ws-opts") or {}).get("headers", {}).get("Host", "").lower()
+        return cred, sni or host
+
+    good_sigs = set()
+    for row in keeps:
+        cred, host = sig_of(row["q"])
+        if cred and len(cred) >= 6:
+            good_sigs.add(("cred", cred))
+        if host and "." in host:
+            good_sigs.add(("host", host.split(".")[-2] + "." + host.split(".")[-1]))
+
+    fam, seen_fam = [], set()
+    for u, q in allpool_uris:
+        if q.get("type") in KEEP_TYPES:
+            continue
+        cred, host = sig_of(q)
+        hit = False
+        if cred and ("cred", cred) in good_sigs:
+            hit = True
+        if host and "." in host:
+            dom = host.split(".")[-2] + "." + host.split(".")[-1]
+            if ("host", dom) in good_sigs:
+                hit = True
+        if not hit:
+            continue
+        ep = (str(q["server"]).lower(), int(q["port"]))
+        if ep in seen_fam:
+            continue
+        seen_fam.add(ep)
+        fam.append((u, q))
+    log("家族节点（其他协议）：%d 条" % len(fam))
+
+    cnt_f, out_f = {}, []
+    for u, q in fam:
+        cc = geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", "")))
+        rn = geo.CC_NAME.get(cc, "其他")
+        cnt_f[rn] = cnt_f.get(rn, 0) + 1
+        out_f.append(u.split("#")[0] + "#" + (NAME % (rn, cnt_f[rn])).replace(" ", "%20"))
+    if out_f:
+        open(os.path.join(OUT, "family.xyz"), "w", encoding="utf-8").write(
+            base64.b64encode("\n".join(out_f).encode()).decode())
+    log("写入 family.xyz：%d 条" % len(out_f))
 
     open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8").write(
         "更新 %s\n抓取 %d / 去重后 %d / 可用 %d / 输出 %d\n" % (
