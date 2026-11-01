@@ -196,7 +196,7 @@ def main():
     print("共 %d 条，并行测试（保持原顺序）" % len(uris), flush=True)
     from concurrent.futures import ThreadPoolExecutor
     res = {}
-    with ThreadPoolExecutor(max_workers=4) as ex:
+    with ThreadPoolExecutor(max_workers=2) as ex:
         for idx, row in ex.map(test_one, list(enumerate(uris))):
             res[idx] = row
             print("%3d/%d %-20s %-7s %s tcp=%s cf=%s g=%s dl=%s" % (
