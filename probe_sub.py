@@ -152,11 +152,18 @@ def test_one(item):
     cf2 = via_node(q, CF) if cf else None
     gg = via_node(q, GOOGLE) if cf else None
     yt = via_node(q, YT) if cf else None
-    dl = sub_build.real_speed(q) if cf else None
+    dl = None
+    if cf:
+        for _ in range(2):
+            v = sub_build.real_speed(q)
+            if v:
+                dl = max(dl or 0, v)
     ip, cc = exit_country(q) if tcp else (None, None)
+    udp = sub_build.udp_ok(q) if tcp else False
     cc = cc or geo.guess_cc(name) or "-"
     jit = abs(cf2 - cf) if (cf and cf2) else None
     return idx, [name, q.get("type", "-"), cc, ip or "-",
+                 "UDP" if udp else "-",
                  str(tcp) if tcp else "-",
                  str(cf) if cf else "-",
                  str(gg) if gg else "-",
@@ -180,21 +187,21 @@ def main():
     print("共 %d 条，并行测试（保持原顺序）" % len(uris), flush=True)
     from concurrent.futures import ThreadPoolExecutor
     res = {}
-    with ThreadPoolExecutor(max_workers=8) as ex:
+    with ThreadPoolExecutor(max_workers=4) as ex:
         for idx, row in ex.map(test_one, list(enumerate(uris))):
             res[idx] = row
             print("%3d/%d %-20s %-7s %s tcp=%s cf=%s g=%s dl=%s" % (
                 idx + 1, len(uris), row[0][:20], row[1], row[2],
                 row[4], row[5], row[6], row[9]), flush=True)
     rows = [res[i] for i in range(len(uris))]
-    hdr = ["名称", "协议", "地区", "出口IP", "TCP(ms)", "CF(ms)", "Google(ms)", "YouTube(ms)", "抖动(ms)", "下载(KB/s)", "可用"]
+    hdr = ["名称", "协议", "地区", "出口IP", "UDP", "TCP(ms)", "CF(ms)", "Google(ms)", "YouTube(ms)", "抖动(ms)", "下载(KB/s)", "可用"]
     out = ["\t".join(hdr)] + ["\t".join(map(str, r)) for r in rows]
     open(os.path.join(HERE, "sub", "probe.txt"), "w", encoding="utf-8").write("\n".join(out) + "\n")
 
     write_html(rows)
 
     # 只保留 OK 的节点，回写订阅（表里画 X 的直接剔除）
-    keep_uris = [u for u, r in zip(uris, rows) if r[10] == "OK"]
+    keep_uris = [u for u, r in zip(uris, rows) if r[11] == "OK"]
     if keep_uris:
         sub_path = os.path.join(HERE, "sub", "0070077.xyz")
         open(sub_path, "w", encoding="utf-8").write(
@@ -205,18 +212,18 @@ def write_html(rows):
     # 网页版表格
     trs = []
     for r in rows:
-        name, proto, region, ip, tcp, cf, gg, yt, jit, dl, ok = r
+        name, proto, region, ip, udp, tcp, cf, gg, yt, jit, dl, ok = r
         cls = "ok" if ok == "OK" else "bad"
         trs.append(
             '<tr class="' + cls + '"><td class="nm">' + name.replace(" 0070077.xyz", "") + '</td>'
             '<td><span class="tag t-' + proto + '">' + proto + '</span></td>'
             '<td>' + region + '</td><td class="mono">' + str(ip) + '</td>'
-            '<td class="num">' + str(tcp) + '</td><td class="num">' + str(cf) + '</td>'
+            '<td class="num">' + str(udp) + '</td><td class="num">' + str(tcp) + '</td><td class="num">' + str(cf) + '</td>'
             '<td class="num">' + str(gg) + '</td><td class="num">' + str(yt) + '</td>'
             '<td class="num">' + str(jit) + '</td><td class="num dl">' + str(dl) + '</td>'
             '<td class="res">' + ("✔" if ok == "OK" else "✘") + '</td></tr>')
 
-    okn = sum(1 for r in rows if r[10] == "OK")
+    okn = sum(1 for r in rows if r[11] == "OK")
     html = """<!doctype html><html lang="zh"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>节点测速表</title>
@@ -251,7 +258,7 @@ tr.ok .res{color:#4ade80}
 <h1>节点测速表</h1>
 <div class="meta">共 @N@ 条 · 可用 <b>@OK@</b> 条 · 顺序与订阅一致 · 点击表头排序</div>
 <table id="t"><thead><tr>
-<th>名称</th><th>协议</th><th>地区</th><th>出口IP</th>
+<th>名称</th><th>协议</th><th>地区</th><th>出口IP</th><th>UDP</th>
 <th>TCP(ms)</th><th>CF(ms)</th><th>Google(ms)</th><th>YouTube(ms)</th><th>抖动(ms)</th><th>下载(KB/s)</th><th>可用</th>
 </tr></thead><tbody>@ROWS@</tbody></table>
 <script>
