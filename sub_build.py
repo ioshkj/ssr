@@ -347,38 +347,55 @@ def main():
         if u.startswith("http://"): return 2
         return 3
 
-    def emit(subset, filename):
-        cnt, out = {}, []
-        ordered = sorted(subset, key=lambda x: (
-            scheme_rank(x[0][0]),
-            region_rank(geo.CC_NAME.get(x[1], "其他") if x[1] else "其他")))
-        for (u, q), cc in ordered:
-            if cc:
-                r = geo.CC_NAME.get(cc, "其他")
-            else:
-                r = geo.CC_NAME.get(geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", ""))), "其他")
-            cnt[r] = cnt.get(r, 0) + 1
-            out.append(fix_http_auth(u.split("#")[0]) + "#" + (NAME % (r, cnt[r])).replace(" ", "%20"))
-        if out:
-            with open(os.path.join(OUT, filename), "w", encoding="utf-8") as f:
-                f.write(base64.b64encode("\n".join(out).encode()).decode())
-        log("  %-12s %d 条，%d 个地区" % (filename, len(out), len(cnt)))
-        return len(out)
+    # ④ 下载测试（多次尝试，失败剔除）
+    from concurrent.futures import ThreadPoolExecutor as _TPE_D
 
-    # ④ ivapp.cn = HTTPS + AnyTLS；ivapp2.cn = 明文 HTTP
-    tls_any = [((u, q), cc) for (u, q), cc in zip(pool, ccs)
-               if u.startswith("https://") or q.get("type") == "anytls"]
-    plain_http = [((u, q), cc) for (u, q), cc in zip(pool, ccs) if u.startswith("http://")]
-    # 明文 HTTP 那份在开头补一条 https，让 QX 能识别整份
-    https_head = [((u, q), cc) for (u, q), cc in zip(pool, ccs) if u.startswith("https://")][:1]
-    if https_head:
-        plain_http = https_head + plain_http
-    n_any = emit(tls_any, "ivapp.cn")
-    n_http = emit(plain_http, "ivapp2.cn")
+    def _dl_try(uq):
+        u, q = uq
+        for _ in range(3):
+            v = real_speed(q)
+            if v and v > 20:
+                return uq, v
+        return uq, None
+
+    with _TPE_D(max_workers=8) as _exd:
+        _res = list(_exd.map(_dl_try, pool))
+    kept, dropped = [], 0
+    speed_of = {}
+    for (u, q), v in _res:
+        if v:
+            kept.append((u, q))
+            speed_of[(q["server"], int(q["port"]))] = v
+        else:
+            dropped += 1
+    log("下载测试：通过 %d 条，剔除 %d 条" % (len(kept), dropped))
+
+    # ⑤ 按 协议优先级 → 地区 排序后输出唯一订阅
+    cc_map = {}
+    for (u, q), cc in zip(pool, ccs):
+        cc_map[(q["server"], int(q["port"]))] = cc
+    rows = []
+    cnt = {}
+    ordered = sorted(kept, key=lambda uq: (scheme_rank(uq[0]), region_rank(
+        geo.CC_NAME.get(cc_map.get((uq[1]["server"], int(uq[1]["port"]))), "其他")
+        if cc_map.get((uq[1]["server"], int(uq[1]["port"]))) else
+        geo.CC_NAME.get(geo.guess_cc("%s %s" % (uq[1].get("name", ""), uq[1]["server"])), "其他"))))
+    out = []
+    for u, q in ordered:
+        cc = cc_map.get((q["server"], int(q["port"])))
+        r = geo.CC_NAME.get(cc, "其他") if cc else geo.CC_NAME.get(
+            geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", ""))), "其他")
+        cnt[r] = cnt.get(r, 0) + 1
+        out.append(fix_http_auth(u.split("#")[0]) + "#" + (NAME % (r, cnt[r])).replace(" ", "%20"))
+
+    if out:
+        with open(os.path.join(OUT, "ivapp.cn"), "w", encoding="utf-8") as f:
+            f.write(base64.b64encode("\n".join(out).encode()).decode())
+    log("写入 ivapp.cn：%d 条，%d 个地区" % (len(out), len(cnt)))
 
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
-        f.write("更新 %s\n抓取 %d / 去重后 %d / 查到地区 %d / HTTP %d / HTTPS+AnyTLS %d\n"
-                % (time.strftime("%Y-%m-%d %H:%M:%S"), len(lines), len(pool), got, n_http, n_any))
+        f.write("更新 %s\n抓取 %d / 去重后 %d / 查到地区 %d / 下载通过 %d / 输出 %d\n"
+                % (time.strftime("%Y-%m-%d %H:%M:%S"), len(lines), len(pool), got, len(kept), len(out)))
 
 
 if __name__ == "__main__":
