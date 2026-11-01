@@ -690,6 +690,54 @@ def main():
             f.write("\n".join(lines_s) + "\n")
         log("  table_speed.txt：%d 行（按下载速度）" % (len(lines_s) - 1))
 
+    # 网页版报表（可用浏览器直接看，支持点表头排序）
+    if keep:
+        import html as _html
+        rows_html = []
+        for (tcp, med, jit, sp, sc, u, q), r in sorted(zip(keep, regs), key=lambda z: -z[0][3]):
+            sp_ = float(sp)
+            cls = "fast" if sp_ >= 500 else ("mid" if sp_ >= 150 else "slow")
+            rows_html.append(
+                '<tr class="%s"><td>%s</td><td>%s</td><td>%s</td><td>%d</td><td>%d</td><td>%d</td><td>%.0f</td></tr>'
+                % (cls, _html.escape(q.get("name", "")[:40]), _html.escape(q.get("type", "")),
+                   _html.escape(r), tcp, med, jit, sp_))
+        stats_html = ""
+        page = """<!doctype html><html lang="zh"><head><meta charset="utf-8">
+<title>节点测速表</title>
+<style>
+body{font-family:-apple-system,"PingFang SC",sans-serif;background:#0f1115;color:#e6e6e6;margin:24px}
+h1{font-size:18px;margin:0 0 4px}.sub{color:#8b93a1;font-size:12px;margin-bottom:16px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:6px 10px;border-bottom:1px solid #23262e;text-align:left;white-space:nowrap}
+th{position:sticky;top:0;background:#161a21;cursor:pointer;user-select:none;color:#9aa4b2;font-weight:500}
+tr.fast td:nth-child(7){color:#4ade80}tr.mid td:nth-child(7){color:#fbbf24}tr.slow td:nth-child(7){color:#f87171}
+tr:hover{background:#171b22}
+</style></head><body>
+<h1>节点测速表</h1>
+<div class="sub">共 @N@ 条 · 已剔除美国/加拿大 · 点击表头排序</div>
+<table id="t"><thead><tr><th>名称</th><th>协议</th><th>地区</th><th>TCP(ms)</th><th>HTTP(ms)</th><th>抖动(ms)</th><th>下载(KB/s)</th></tr></thead>
+<tbody>@ROWS@</tbody></table>
+<script>
+document.querySelectorAll('#t th').forEach(function(th,i){
+  var asc=false;
+  th.onclick=function(){
+    asc=!asc;
+    var tb=document.querySelector('#t tbody');
+    var rows=Array.prototype.slice.call(tb.rows);
+    rows.sort(function(a,b){
+      var x=a.cells[i].innerText, y=b.cells[i].innerText;
+      var nx=parseFloat(x), ny=parseFloat(y);
+      if(!isNaN(nx)&&!isNaN(ny)) return asc?nx-ny:ny-nx;
+      return asc? x.localeCompare(y) : y.localeCompare(x);
+    });
+    rows.forEach(function(r){tb.appendChild(r)});
+  };
+});
+</script></body></html>""".replace("@N@", str(len(rows_html))).replace("@ROWS@", "\n".join(rows_html))
+        with open(os.path.join(OUT, "report.html"), "w", encoding="utf-8") as f:
+            f.write(page)
+        log("  report.html：%d 行（网页版）" % len(rows_html))
+
     # 中速段：下载 100~300 KB/s
     mid_rows = [(row, r) for row, r in zip(keep, regs) if 100 <= row[3] <= 300]
     if mid_rows:
