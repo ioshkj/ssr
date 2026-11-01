@@ -193,6 +193,14 @@ def main():
 
     write_html(rows)
 
+    # 只保留 OK 的节点，回写订阅（表里画 X 的直接剔除）
+    keep_uris = [u for u, r in zip(uris, rows) if r[10] == "OK"]
+    if keep_uris:
+        sub_path = os.path.join(HERE, "sub", "0070077.xyz")
+        open(sub_path, "w", encoding="utf-8").write(
+            base64.b64encode("\n".join(keep_uris).encode()).decode())
+        print("回写订阅：保留 %d 条（剔除 X %d 条）" % (len(keep_uris), len(uris) - len(keep_uris)), flush=True)
+
 def write_html(rows):
     # 网页版表格
     trs = []
