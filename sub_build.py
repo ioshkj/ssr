@@ -408,6 +408,23 @@ def main():
             f.write(base64.b64encode("\n".join(out).encode()).decode())
     log("写入 0070077.xyz：%d 条，%d 个地区" % (len(out), len(cnt)))
 
+    # 亚太近距离地区单独一份
+    ASIA = {"香港", "台湾", "日本", "韩国", "新加坡", "马来西亚", "泰国",
+            "菲律宾", "越南", "印度尼西亚", "印度", "澳门", "柬埔寨", "澳大利亚"}
+    cnt2, out2 = {}, []
+    for u, q in ordered:
+        cc = cc_map.get((q["server"], int(q["port"])))
+        r = geo.CC_NAME.get(cc, "其他") if cc else geo.CC_NAME.get(
+            geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", ""))), "其他")
+        if r not in ASIA:
+            continue
+        cnt2[r] = cnt2.get(r, 0) + 1
+        out2.append(fix_http_auth(u.split("#")[0]) + "#" + (NAME % (r, cnt2[r])).replace(" ", "%20"))
+    if out2:
+        with open(os.path.join(OUT, "asia.xyz"), "w", encoding="utf-8") as f:
+            f.write(base64.b64encode("\n".join(out2).encode()).decode())
+    log("写入 asia.xyz：%d 条，%d 个地区" % (len(out2), len(cnt2)))
+
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
         f.write("更新 %s\n抓取 %d / 去重后 %d / 查到地区 %d / 下载通过 %d / 输出 %d\n"
                 % (time.strftime("%Y-%m-%d %H:%M:%S"), len(lines), len(pool), got, len(kept), len(out)))
