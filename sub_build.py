@@ -355,6 +355,12 @@ def main():
         if u.startswith("http://"): return 2
         return 3
 
+    # 先剔除「查不到出口 IP」的节点（实测这类 100% 不可用）
+    _with_cc = [((u, q), cc) for (u, q), cc in zip(pool, ccs) if cc]
+    log("查到出口 IP 的节点：%d / %d" % (len(_with_cc), len(pool)))
+    pool = [x for x, _ in _with_cc]
+    ccs = [cc for _, cc in _with_cc]
+
     # ④ 下载测试（多次尝试，失败剔除）
     from concurrent.futures import ThreadPoolExecutor as _TPE_D
 
