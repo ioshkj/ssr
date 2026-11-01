@@ -40,6 +40,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python -u sub_build.py 2>&1 | tee build.log || true
+      - name: probe
+        run: python -u probe_sub.py 2>&1 | tee probe.log || true
       - name: next
         if: success()
         env:
@@ -54,7 +56,7 @@ jobs:
         run: |
           git config user.name "bot"
           git config user.email "bot@users.noreply.github.com"
-          git add -f build.log 2>/dev/null || true
+          git add -f build.log probe.log 2>/dev/null || true
           git add -A sub/ 2>/dev/null || true
           git add -f sources.json 2>/dev/null || true
           git commit -q -m "update" 2>/dev/null || true
