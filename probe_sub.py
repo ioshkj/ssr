@@ -148,13 +148,19 @@ def test_one(item):
     if not q:
         return idx, [name, "-", "-", "-", "-", "-", "-", "-"]
     tcp = tcp_ms(q["server"], q["port"])
-    cf = via_node(q, CF) if tcp else None
-    cf2 = via_node(q, CF) if cf else None
+    cf_samples = []
+    if tcp:
+        for _ in range(3):
+            v = via_node(q, CF)
+            if v:
+                cf_samples.append(v)
+    cf = min(cf_samples) if cf_samples else None
+    cf2 = max(cf_samples) if len(cf_samples) > 1 else None
     gg = via_node(q, GOOGLE) if cf else None
     yt = via_node(q, YT) if cf else None
     dl = None
     if cf:
-        for _ in range(2):
+        for _ in range(3):
             v = sub_build.real_speed(q)
             if v:
                 dl = max(dl or 0, v)
