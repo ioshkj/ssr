@@ -335,9 +335,17 @@ def main():
     got = sum(1 for c in ccs if c)
     log("查到出口地区 %d / %d" % (got, len(pool)))
 
+    PREFER = ["香港", "台湾", "日本", "韩国", "新加坡", "马来西亚", "泰国",
+              "菲律宾", "越南", "印度尼西亚", "印度", "澳大利亚", "美国", "加拿大"]
+
+    def region_rank(r):
+        return (PREFER.index(r) if r in PREFER else 99, r)
+
     def emit(subset, filename):
         cnt, out = {}, []
-        for (u, q), cc in subset:
+        ordered = sorted(subset, key=lambda x: region_rank(
+            geo.CC_NAME.get(x[1], "其他") if x[1] else "其他"))
+        for (u, q), cc in ordered:
             if cc:
                 r = geo.CC_NAME.get(cc, "其他")
             else:
