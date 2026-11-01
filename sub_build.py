@@ -111,6 +111,28 @@ def discovered():
     return out
 
 
+
+ASIA_WORDS = ["香港", "台湾", "台北", "日本", "东京", "大阪", "韩国", "首尔",
+              "新加坡", "狮城", "马来", "吉隆坡", "泰国", "曼谷", "越南",
+              "印尼", "菲律宾", "马尼拉", "印度", "澳门", "柬埔寨"]
+EN2CC = {"hk": "HK", "jp": "JP", "sg": "SG", "tw": "TW", "kr": "KR",
+         "my": "MY", "th": "TH", "vn": "VN", "id": "ID", "ph": "PH",
+         "mo": "MO", "kh": "KH"}
+
+
+def asia_marker(name, server):
+    """名字或域名里能不能看出是亚太"""
+    import re as _re
+    text = ("%s %s" % (name or "", server or "")).lower()
+    for code in EN2CC:
+        if _re.search(r"(^|[\s\-_|\[（(])%s(\d|[\s\-_|\]）)]|$)" % code, text):
+            return True
+    for w in ASIA_WORDS:
+        if w in text:
+            return True
+    return False
+
+
 def fix_http_auth(uri):
     if not uri.startswith(("http://", "https://")):
         return uri
@@ -320,6 +342,8 @@ def main():
         ep = (str(q["server"]).lower(), int(q["port"]))
         if ep in seen_ep:
             continue
+        if q.get("type") == "trojan" and not asia_marker(q.get("name", ""), q.get("server", "")):
+            continue          # trojan 只收名字/域名能看出是亚太的
         seen_ep.add(ep)
         pool.append((u, q))
     log("去重后目标类型 %d 条" % len(pool))
