@@ -275,10 +275,18 @@ def real_speed(q, bytes_=300000, timeout=25):
                 if p.poll() is not None:
                     return None
         r = _sp.run(["curl", "-s", "-o", "/dev/null", "-x", "http://127.0.0.1:%d" % mix_p,
-                     "--max-time", str(timeout), "-w", "%{speed_download}",
+                     "--max-time", str(timeout),
+                     "-w", "%{http_code} %{size_download} %{speed_download}",
                      "https://speed.cloudflare.com/__down?bytes=%d" % bytes_],
                     capture_output=True, text=True)
-        speed = float(r.stdout.strip() or 0) / 1024.0
+        parts = (r.stdout or "").split()
+        if len(parts) < 3:
+            return None
+        code, size, sp = parts[0], float(parts[1] or 0), float(parts[2] or 0)
+        # 必须真的下到 90% 以上，才算成功
+        if code != "200" or size < bytes_ * 0.9:
+            return None
+        speed = sp / 1024.0
         return speed if speed > 1 else None
     finally:
         p.terminate()
