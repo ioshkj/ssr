@@ -335,23 +335,30 @@ def main():
     got = sum(1 for c in ccs if c)
     log("查到出口地区 %d / %d" % (got, len(pool)))
 
-    # ④ 命名并输出唯一订阅
-    cnt, out = {}, []
-    for (u, q), cc in zip(pool, ccs):
-        if cc:
-            r = geo.CC_NAME.get(cc, "其他")
-        else:
-            r = geo.CC_NAME.get(geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", ""))), "其他")
-        cnt[r] = cnt.get(r, 0) + 1
-        out.append(fix_http_auth(u.split("#")[0]) + "#" + (NAME % (r, cnt[r])).replace(" ", "%20"))
+    def emit(subset, filename):
+        cnt, out = {}, []
+        for (u, q), cc in subset:
+            if cc:
+                r = geo.CC_NAME.get(cc, "其他")
+            else:
+                r = geo.CC_NAME.get(geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", ""))), "其他")
+            cnt[r] = cnt.get(r, 0) + 1
+            out.append(fix_http_auth(u.split("#")[0]) + "#" + (NAME % (r, cnt[r])).replace(" ", "%20"))
+        if out:
+            with open(os.path.join(OUT, filename), "w", encoding="utf-8") as f:
+                f.write(base64.b64encode("\n".join(out).encode()).decode())
+        log("  %-12s %d 条，%d 个地区" % (filename, len(out), len(cnt)))
+        return len(out)
 
-    if out:
-        with open(os.path.join(OUT, "ivapp.cn"), "w", encoding="utf-8") as f:
-            f.write(base64.b64encode("\n".join(out).encode()).decode())
-    log("写入 ivapp.cn：%d 条，%d 个地区" % (len(out), len(cnt)))
+    # ④ HTTP / HTTPS 一份，AnyTLS 一份
+    http_sub = [((u, q), cc) for (u, q), cc in zip(pool, ccs) if q.get("type") == "http"]
+    any_sub = [((u, q), cc) for (u, q), cc in zip(pool, ccs) if q.get("type") == "anytls"]
+    n_http = emit(http_sub, "ivapp.cn")
+    n_any = emit(any_sub, "anytls.cn")
+
     with open(os.path.join(OUT, "report.txt"), "w", encoding="utf-8") as f:
-        f.write("更新 %s\n抓取 %d / 去重后 %d / 查到地区 %d / 输出 %d\n"
-                % (time.strftime("%Y-%m-%d %H:%M:%S"), len(lines), len(pool), got, len(out)))
+        f.write("更新 %s\n抓取 %d / 去重后 %d / 查到地区 %d / HTTP %d / AnyTLS %d\n"
+                % (time.strftime("%Y-%m-%d %H:%M:%S"), len(lines), len(pool), got, n_http, n_any))
 
 
 if __name__ == "__main__":

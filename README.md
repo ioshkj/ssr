@@ -2,8 +2,14 @@
 
 节点来源于公网获取，自动筛选生成。
 
-订阅地址：
+HTTP / HTTPS：
 
 ```
 https://raw.githubusercontent.com/ioshkj/ssr/main/sub/ivapp.cn
+```
+
+AnyTLS：
+
+```
+https://raw.githubusercontent.com/ioshkj/ssr/main/sub/anytls.cn
 ```
