@@ -48,17 +48,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python -u sub_build.py 2>&1 | tee build.log || true
-      - name: next
-        if: success()
-        env:
-          PAT: ${{ secrets.PAT_TOKEN }}
-        run: |
-          TOKEN="${PAT:-$GITHUB_TOKEN}"
-          echo "等待 40 分钟后触发下一轮"
-          sleep 2400
-          code=$(curl -s -o /tmp/r.txt -w "%{http_code}" -X POST             -H "Authorization: Bearer $TOKEN"             -H "Accept: application/vnd.github+json"             "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/build.yml/dispatches"             -d '{"ref":"main"}')
-          echo "dispatch http=$code"
-          cat /tmp/r.txt || true
       - name: save
         if: always()
         run: |
@@ -69,3 +58,14 @@ jobs:
           git add -f sources.json 2>/dev/null || true
           git commit -q -m "update" 2>/dev/null || true
           for i in 1 2 3; do git push -q && break; sleep 5; done
+      - name: next
+        if: success()
+        env:
+          PAT: ${{ secrets.PAT_TOKEN }}
+        run: |
+          TOKEN="${PAT:-$GITHUB_TOKEN}"
+          echo "等待 15 分钟后触发下一轮"
+          sleep 900
+          code=$(curl -s -o /tmp/r.txt -w "%{http_code}" -X POST             -H "Authorization: Bearer $TOKEN"             -H "Accept: application/vnd.github+json"             "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/build.yml/dispatches"             -d '{"ref":"main"}')
+          echo "dispatch http=$code"
+          cat /tmp/r.txt || true

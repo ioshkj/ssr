@@ -304,8 +304,9 @@ def profile(q):
                 if v:
                     best = max(best or 0, v)
             out["dl"] = best
-            out["ip"], out["cc"] = curl_ip(port)
-            out["udp"] = udp_via(port)
+            if best:                       # 能下载才继续查 IP / UDP
+                out["ip"], out["cc"] = curl_ip(port)
+                out["udp"] = udp_via(port)
     finally:
         p.terminate()
         try:
