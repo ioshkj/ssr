@@ -384,22 +384,6 @@ def main():
         pool = pool[:1200]
     log("去重后目标类型 %d 条" % len(pool))
 
-    # ③ 先查 IP 地区 + 取名（地区+后戳）
-    from concurrent.futures import ThreadPoolExecutor as _TPE_R
-    log("查 IP 地区…")
-    with _TPE_R(max_workers=32) as _exr:
-        _ccs = list(_exr.map(lambda uq: exit_cc(uq[1]), pool))
-    named, cnt_pre = [], {}
-    for (u, q), cc in zip(pool, _ccs):
-        rn = geo.CC_NAME.get(cc, "其他") if cc else geo.CC_NAME.get(
-            geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", ""))), "其他")
-        cnt_pre[rn] = cnt_pre.get(rn, 0) + 1
-        nm = NAME % (rn, cnt_pre[rn])
-        named.append((u, dict(q, name=nm), rn, cc))
-    pool = [(u, q) for u, q, _, _ in named]
-    regs = [rn for _, _, rn, _ in named]
-    log("取好名字 %d 条" % len(pool))
-
     # ④ 测试（一次内核测全部指标）
     from concurrent.futures import ThreadPoolExecutor
     log("开始测试，6 并发…")
@@ -413,13 +397,19 @@ def main():
                 "OK" if r["dl"] else "X"))
 
     # ④ 表格
-    rows = []
+    # ⑤ 纠正名字：用测出来的真实出口地区命名
+    rows, cnt_nm = [], {}
     for i, (u, q) in enumerate(pool):
         r = results[i]
+        cc = r["cc"] or geo.guess_cc("%s %s" % (q.get("name", ""), q.get("server", "")))
+        rn = geo.CC_NAME.get(cc, "其他") if cc else "其他"
+        cnt_nm[rn] = cnt_nm.get(rn, 0) + 1
+        nm = NAME % (rn, cnt_nm[rn])
         rows.append({
-            "uri": u, "q": q, "r": r, "cc": r["cc"] or "-", "region": regs[i],
+            "uri": u, "q": dict(q, name=nm), "r": r, "cc": cc or "-", "region": rn,
             "ok": bool(r["dl"]),
         })
+    log("名字已按真实地区纠正")
 
     hdr = ["名称", "协议", "地区", "出口IP", "UDP", "TCP(ms)", "CF(ms)",
            "Google(ms)", "YouTube(ms)", "抖动(ms)", "下载(KB/s)", "可用"]
