@@ -302,12 +302,7 @@ def profile(q):
             out["jit"] = max(samples) - min(samples) if len(samples) > 1 else 0
             out["gg"] = curl_ms(port, GOOGLE)
             out["yt"] = curl_ms(port, YT)
-            best = None
-            for _ in range(3):
-                v = curl_dl(port)
-                if v:
-                    best = max(best or 0, v)
-            out["dl"] = best
+            out["dl"] = curl_dl(port)      # 下载只测一次，测不到就算失败
             out["udp"] = udp_via(port)
     finally:
         p.terminate()
