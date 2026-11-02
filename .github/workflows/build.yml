@@ -28,9 +28,17 @@ jobs:
           python-version: "3.12"
       - name: deps
         run: |
-          pip install -q pyyaml
+          set -x
+          pip install -q pyyaml || echo "pyyaml 装失败，继续"
           mkdir -p bin
-          curl -sL --retry 3 -o bin/mihomo.gz https://github.com/MetaCubeX/mihomo/releases/download/v1.19.33/mihomo-linux-amd64-v1.19.33.gz
+          URL1="https://gh-proxy.org/https://github.com/MetaCubeX/mihomo/releases/download/v1.19.33/mihomo-linux-amd64-v1.19.33.gz"
+          URL2="https://github.com/MetaCubeX/mihomo/releases/download/v1.19.33/mihomo-linux-amd64-v1.19.33.gz"
+          for u in "$URL1" "$URL2"; do
+            echo "尝试下载 $u"
+            curl -sL --retry 2 --max-time 120 -o bin/mihomo.gz "$u" && [ -s bin/mihomo.gz ] && break
+            sleep 3
+          done
+          ls -la bin/ || true
           gunzip -f bin/mihomo.gz && chmod +x bin/mihomo && ./bin/mihomo -v
       - name: discover
         env:
@@ -41,6 +49,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python -u sub_build.py 2>&1 | tee build.log || true
       - name: save
+        if: always()
         run: |
           git config user.name "bot"
           git config user.email "bot@users.noreply.github.com"
