@@ -395,7 +395,7 @@ def main():
         nm = NAME % (rn, cnt_nm[rn])
         rows.append({
             "uri": u, "q": dict(q, name=nm), "r": r, "cc": cc or "-", "region": rn,
-            "ok": bool(r["dl"]),
+            "ok": bool(r["dl"]) and bool(r["cc"]),
         })
     log("名字已按真实地区纠正")
 
