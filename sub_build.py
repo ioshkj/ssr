@@ -117,23 +117,28 @@ def discovered():
 ASIA_WORDS = ["香港", "台湾", "台北", "日本", "东京", "大阪", "韩国", "首尔",
               "新加坡", "狮城", "马来", "吉隆坡", "泰国", "曼谷", "越南",
               "印尼", "菲律宾", "马尼拉", "印度", "澳门", "柬埔寨"]
-EN2CC = {"hk": "HK", "jp": "JP", "sg": "SG", "tw": "TW", "kr": "KR",
-         "my": "MY", "th": "TH", "vn": "VN", "id": "ID", "ph": "PH",
-         "mo": "MO", "kh": "KH"}
+EN2CC = {"HK": "HK", "JP": "JP", "SG": "SG", "TW": "TW", "KR": "KR",
+         "MO": "MO", "KH": "KH"}
 
 
 def asia_marker(name, server):
-    """名字或域名里能不能看出是亚太"""
+    """名字里出现中文地区词，或大写地区码；域名前缀是地区码"""
     import re as _re
-    text = ("%s %s" % (name or "", server or "")).lower()
-    for code in EN2CC:
-        if _re.search(r"(^|[\s\-_|\[（(])%s(\d|[\s\-_|\]）)]|$)" % code, text):
-            return True
+    nm = name or ""
     for w in ASIA_WORDS:
-        if w in text:
+        if w in nm:
+            return True
+    # 大写地区码（HK-01、JP 02、SG|03）
+    for code in EN2CC:
+        if _re.search(r"(^|[\s\-_|\[（(])%s(\d|[\s\-_|\]）)]|$)" % code, nm):
+            return True
+    # 域名前缀：hk1. jp2. sg3.
+    host = (server or "").lower()
+    first = host.split(".")[0] if "." in host else host
+    for code in EN2CC:
+        if first.startswith(code.lower()):
             return True
     return False
-
 
 def fix_http_auth(uri):
     if not uri.startswith(("http://", "https://")):
@@ -374,12 +379,15 @@ def main():
             continue          # trojan 只收名字/域名能看出是亚太的
         seen_ep.add(ep)
         pool.append((u, q))
+    if len(pool) > 1200:
+        log("节点过多（%d），只取前 1200 条" % len(pool))
+        pool = pool[:1200]
     log("去重后目标类型 %d 条" % len(pool))
 
     # ③ 先查 IP 地区 + 取名（地区+后戳）
     from concurrent.futures import ThreadPoolExecutor as _TPE_R
     log("查 IP 地区…")
-    with _TPE_R(max_workers=16) as _exr:
+    with _TPE_R(max_workers=32) as _exr:
         _ccs = list(_exr.map(lambda uq: exit_cc(uq[1]), pool))
     named, cnt_pre = [], {}
     for (u, q), cc in zip(pool, _ccs):
@@ -396,7 +404,7 @@ def main():
     from concurrent.futures import ThreadPoolExecutor
     log("开始测试，6 并发…")
     results = {}
-    with ThreadPoolExecutor(max_workers=6) as ex:
+    with ThreadPoolExecutor(max_workers=12) as ex:
         for idx, r in zip(range(len(pool)), ex.map(lambda uq: profile(uq[1]), pool)):
             results[idx] = r
             log("  %3d/%d %-20s %-7s cf=%-6s dl=%-6s %s" % (
