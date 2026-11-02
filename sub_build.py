@@ -402,8 +402,9 @@ def main():
         })
     log("名字已按真实地区纠正")
 
-    # 表格只保留进入订阅的节点（与订阅完全一致）
+    # 表格只保留进入订阅的节点，并按订阅同样的规则排序
     rows = [row for row in rows if row["ok"]]
+    rows.sort(key=lambda x: (region_rank(x["region"]), x["q"].get("name", "")))
 
     # ⑤ 网页表格
     trs = []
@@ -429,8 +430,7 @@ def main():
     log("写入 report.html（%d 条，可用 %d）" % (len(rows), okn))
 
     # ⑥ 去 X → 命名 → 排序 → 订阅
-    keeps = [row for row in rows if row["ok"]]
-    keeps.sort(key=lambda x: (region_rank(x["region"]), x["q"].get("name", "")))
+    keeps = rows   # 已按同样规则排好序
     out = []
     for row in keeps:
         out.append(fix_http_auth(row["uri"].split("#")[0]) + "#" +
