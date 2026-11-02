@@ -152,7 +152,7 @@ def main():
         if x["fails"] >= 3:
             continue
         merged[k] = x
-    # 独立的新鲜度检测：超过 30 小时没更新的源直接丢弃
+    # 独立的新鲜度检测：超过 24 小时没更新的源直接丢弃
     import datetime as _dt
     cutoff = _dt.datetime.now(_dt.timezone.utc) - _dt.timedelta(hours=24)
     keep, dropped = [], 0
@@ -166,7 +166,7 @@ def main():
             keep.append(x)
         else:
             dropped += 1
-    log("新鲜度检测：丢弃 %d 个超过 30 小时未更新的源" % dropped)
+    log("新鲜度检测：丢弃 %d 个超过 24 小时未更新的源" % dropped)
     # 备份一份，防止意外清空
     try:
         import shutil as _sh
