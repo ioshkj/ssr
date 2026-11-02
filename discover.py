@@ -78,7 +78,7 @@ def fetch(url, timeout=12):
 
 
 def main():
-    since = (datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=30))
+    since = (datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=24))
     q_since = since.strftime("%Y-%m-%dT%H:%M:%SZ")
     repos = {}
     for q in QUERIES:
@@ -154,7 +154,7 @@ def main():
         merged[k] = x
     # 独立的新鲜度检测：超过 30 小时没更新的源直接丢弃
     import datetime as _dt
-    cutoff = _dt.datetime.now(_dt.timezone.utc) - _dt.timedelta(hours=30)
+    cutoff = _dt.datetime.now(_dt.timezone.utc) - _dt.timedelta(hours=24)
     keep, dropped = [], 0
     for x in merged.values():
         try:

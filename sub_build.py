@@ -56,7 +56,7 @@ def fetch(path, tries=3):
     return b""
 
 
-def is_fresh(path, hours=30):
+def is_fresh(path, hours=24):
     import datetime as dt
     repo = "/".join(path.split("/")[:2])
     try:
@@ -340,7 +340,7 @@ def main():
         if any(p.startswith(b) for b in BLOCKED):
             log("  [跳过] %s（已拉黑）" % p)
             continue
-        if not is_fresh(p):
+        if not is_fresh(p, 24):
             continue
         n = 0
         for u in lines_of(fetch(p)):
@@ -354,18 +354,6 @@ def main():
     log("抓取 %d 条" % len(uris))
 
     # ② 去重 + 筛类型
-    allpool_uris, seen_all = [], set()
-    for u in uris:
-        nm = up.unquote(u.split("#")[-1]) if "#" in u else ""
-        q = nodeconv.to_clash(u, nm)
-        if not q:
-            continue
-        ep = (str(q["server"]).lower(), int(q["port"]))
-        if ep in seen_all:
-            continue
-        seen_all.add(ep)
-        allpool_uris.append((u, q))
-
     pool, seen_ep = [], set()
     for u in uris:
         nm = up.unquote(u.split("#")[-1]) if "#" in u else ""
