@@ -370,9 +370,12 @@ def main():
             continue          # trojan 只收名字/域名能看出是亚太的
         seen_ep.add(ep)
         pool.append((u, q))
-    # http/https/anytls 在前，trojan 在后（不再限制数量）
+    # http/https/anytls 全部保留；trojan 最多 2000 条兜底
     pri = [x for x in pool if x[1].get("type") in ("http", "anytls")]
     tro = [x for x in pool if x[1].get("type") == "trojan"]
+    if len(tro) > 2000:
+        log("trojan 过多（%d），只取前 2000 条" % len(tro))
+        tro = tro[:2000]
     pool = pri + tro
     log("去重后目标类型 %d 条" % len(pool))
 
