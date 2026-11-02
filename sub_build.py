@@ -405,20 +405,6 @@ def main():
     # 表格只保留进入订阅的节点（与订阅完全一致）
     rows = [row for row in rows if row["ok"]]
 
-    hdr = ["名称", "协议", "地区", "出口IP", "UDP", "TCP(ms)", "CF(ms)",
-           "Google(ms)", "YouTube(ms)", "抖动(ms)", "下载(KB/s)", "可用"]
-    lines = ["\t".join(hdr)]
-    for row in rows:
-        q, r = row["q"], row["r"]
-        lines.append("\t".join([
-            q.get("name", "")[:40], q.get("type", "-"), row["region"],
-            r["ip"] or "-", "UDP" if r["udp"] else "-",
-            str(r["tcp"] or "-"), str(r["cf"] or "-"), str(r["gg"] or "-"),
-            str(r["yt"] or "-"), str(r["jit"] if r["jit"] is not None else "-"),
-            str(r["dl"] or "-"), "OK" if row["ok"] else "X"]))
-    open(os.path.join(OUT, "probe.txt"), "w", encoding="utf-8").write("\n".join(lines) + "\n")
-    log("写入 probe.txt")
-
     # ⑤ 网页表格
     trs = []
     for row in rows:
