@@ -292,6 +292,10 @@ def profile(q):
             pass
         return out
     try:
+        # 先查出口 IP：查不到直接放弃，后面的测试都不做
+        out["ip"], out["cc"] = curl_ip(port)
+        if not out["cc"]:
+            return out
         samples = [v for v in (curl_ms(port, CF) for _ in range(3)) if v]
         if samples:
             out["cf"] = min(samples)
@@ -304,9 +308,7 @@ def profile(q):
                 if v:
                     best = max(best or 0, v)
             out["dl"] = best
-            if best:                       # 能下载才继续查 IP / UDP
-                out["ip"], out["cc"] = curl_ip(port)
-                out["udp"] = udp_via(port)
+            out["udp"] = udp_via(port)
     finally:
         p.terminate()
         try:
