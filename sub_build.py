@@ -402,6 +402,9 @@ def main():
         })
     log("名字已按真实地区纠正")
 
+    # 表格只保留进入订阅的节点（与订阅完全一致）
+    rows = [row for row in rows if row["ok"]]
+
     hdr = ["名称", "协议", "地区", "出口IP", "UDP", "TCP(ms)", "CF(ms)",
            "Google(ms)", "YouTube(ms)", "抖动(ms)", "下载(KB/s)", "可用"]
     lines = ["\t".join(hdr)]
