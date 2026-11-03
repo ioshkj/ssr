@@ -321,7 +321,8 @@ def profile(q):
             res = [v for v in (curl_dl(port) for _ in range(3)) if v]
             if len(res) >= 2:
                 res.sort()
-                out["dl"] = res[len(res) // 2]
+                # 3 次成功取中间；2 次成功取较小的（保守）
+                out["dl"] = res[1] if len(res) >= 3 else res[0]
             else:
                 out["dl"] = None
             out["udp"] = udp_via(port)
