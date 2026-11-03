@@ -304,8 +304,11 @@ def profile(q):
             pass
         return out
     try:
-        # 先查出口 IP：查不到直接放弃，后面的测试都不做
-        out["ip"], out["cc"] = curl_ip(port)
+        # 先查出口 IP：最多试 2 次，都查不到就放弃
+        for _ in range(2):
+            out["ip"], out["cc"] = curl_ip(port)
+            if out["cc"]:
+                break
         if not out["cc"]:
             return out
         samples = [v for v in (curl_ms(port, CF) for _ in range(3)) if v]
@@ -314,9 +317,13 @@ def profile(q):
             out["jit"] = max(samples) - min(samples) if len(samples) > 1 else 0
             out["gg"] = curl_ms(port, GOOGLE)
             out["yt"] = curl_ms(port, YT)
-            # 下载测 3 次，取最差的一次（任一次失败即算失败）
-            res = [curl_dl(port) for _ in range(3)]
-            out["dl"] = min(res) if all(res) else None
+            # 下载测 3 次：至少 2 次成功，取成功值的中位数
+            res = [v for v in (curl_dl(port) for _ in range(3)) if v]
+            if len(res) >= 2:
+                res.sort()
+                out["dl"] = res[len(res) // 2]
+            else:
+                out["dl"] = None
             out["udp"] = udp_via(port)
     finally:
         p.terminate()
