@@ -140,6 +140,18 @@ def asia_marker(name, server):
             return True
     return False
 
+
+JUNK_HOSTS = ("t.me", "telegram.me", "telegram.org", "localhost", "127.0.0.1",
+              "0.0.0.0", "example.com", "example.org", "test.com")
+
+
+def junk_host(server):
+    h = str(server or "").strip().lower()
+    if not h or " " in h or "://" in h:
+        return True
+    return h in JUNK_HOSTS
+
+
 def fix_http_auth(uri):
     if not uri.startswith(("http://", "https://")):
         return uri
@@ -357,6 +369,8 @@ def main():
         nm = up.unquote(u.split("#")[-1]) if "#" in u else ""
         q = nodeconv.to_clash(u, nm)
         if not q or q.get("type") not in KEEP_TYPES:
+            continue
+        if junk_host(q.get("server")):
             continue
         ep = (str(q["server"]).lower(), int(q["port"]))
         if ep in seen_ep:
