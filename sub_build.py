@@ -314,7 +314,9 @@ def profile(q):
             out["jit"] = max(samples) - min(samples) if len(samples) > 1 else 0
             out["gg"] = curl_ms(port, GOOGLE)
             out["yt"] = curl_ms(port, YT)
-            out["dl"] = curl_dl(port)      # 下载只测一次，测不到就算失败
+            # 下载测 3 次，取最差的一次（任一次失败即算失败）
+            res = [curl_dl(port) for _ in range(3)]
+            out["dl"] = min(res) if all(res) else None
             out["udp"] = udp_via(port)
     finally:
         p.terminate()
