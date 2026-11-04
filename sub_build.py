@@ -114,32 +114,6 @@ def discovered():
 
 
 
-ASIA_WORDS = ["香港", "台湾", "台北", "日本", "东京", "大阪", "韩国", "首尔",
-              "新加坡", "狮城", "马来", "吉隆坡", "泰国", "曼谷", "越南",
-              "印尼", "菲律宾", "马尼拉", "印度", "澳门", "柬埔寨"]
-EN2CC = {"HK": "HK", "JP": "JP", "SG": "SG", "TW": "TW", "KR": "KR",
-         "MO": "MO", "KH": "KH"}
-
-
-def asia_marker(name, server):
-    """名字里出现中文地区词，或大写地区码；域名前缀是地区码"""
-    import re as _re
-    nm = name or ""
-    for w in ASIA_WORDS:
-        if w in nm:
-            return True
-    # 大写地区码（HK-01、JP 02、SG|03）
-    for code in EN2CC:
-        if _re.search(r"(^|[\s\-_|\[（(])%s(\d|[\s\-_|\]）)]|$)" % code, nm):
-            return True
-    # 域名前缀：hk1. jp2. sg3.
-    host = (server or "").lower()
-    first = host.split(".")[0] if "." in host else host
-    for code in EN2CC:
-        if first.startswith(code.lower()):
-            return True
-    return False
-
 
 JUNK_HOSTS = ("t.me", "telegram.me", "telegram.org", "localhost", "127.0.0.1",
               "0.0.0.0", "example.com", "example.org", "test.com")
@@ -387,14 +361,6 @@ def main():
             continue
         seen_ep.add(ep)
         pool.append((u, q))
-    # http/https/anytls 全部保留；trojan 补位，总数不超过 2000
-    pri = [x for x in pool if x[1].get("type") in ("http", "anytls")]
-    tro = [x for x in pool if x[1].get("type") == "trojan"]
-    room = max(0, 2000 - len(pri))
-    if len(tro) > room:
-        log("总数限 2000：http/anytls %d 条，trojan 从 %d 切到 %d 条" % (len(pri), len(tro), room))
-        tro = tro[:room]
-    pool = pri + tro
     log("去重后目标类型 %d 条" % len(pool))
 
     # ④ 测试（一次内核测全部指标）
