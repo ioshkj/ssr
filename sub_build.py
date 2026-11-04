@@ -9,7 +9,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "sub")
 BIN = os.path.join(HERE, "bin", "mihomo")
 NAME = "%s-%02d 0070077.xyz"
-KEEP_TYPES = ("http", "anytls", "trojan")
+KEEP_TYPES = ("http", "anytls")
 CF = "http://cp.cloudflare.com/generate_204"
 GOOGLE = "https://www.gstatic.com/generate_204"
 YT = "https://i.ytimg.com/generate_204"
@@ -385,8 +385,6 @@ def main():
         ep = (str(q["server"]).lower(), int(q["port"]))
         if ep in seen_ep:
             continue
-        if q.get("type") == "trojan" and not asia_marker(q.get("name", ""), q.get("server", "")):
-            continue          # trojan 只收名字/域名能看出是亚太的
         seen_ep.add(ep)
         pool.append((u, q))
     # http/https/anytls 全部保留；trojan 补位，总数不超过 2000
