@@ -317,12 +317,12 @@ def profile(q):
             out["jit"] = max(samples) - min(samples) if len(samples) > 1 else 0
             out["gg"] = curl_ms(port, GOOGLE)
             out["yt"] = curl_ms(port, YT)
-            # 下载测 3 次：至少 2 次成功，取成功值的中位数
+            # 下载测 3 次：成功 1 次即通过
             res = [v for v in (curl_dl(port) for _ in range(3)) if v]
-            if len(res) >= 2:
+            if res:
                 res.sort()
-                # 3 次成功取中间；2 次成功取较小的（保守）
-                out["dl"] = res[1] if len(res) >= 3 else res[0]
+                # 1 次用该值；2 次取较小；3 次取中间
+                out["dl"] = res[0] if len(res) <= 2 else res[1]
             else:
                 out["dl"] = None
             out["udp"] = udp_via(port)
