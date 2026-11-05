@@ -293,13 +293,9 @@ def profile(q):
                 return out
             out["gg"] = curl_ms(port, GOOGLE)
             out["yt"] = curl_ms(port, YT)
-            # 下载测 3 次：必须 3 次全成功，取中间值
-            res = [curl_dl(port) for _ in range(3)]
-            if all(res):
-                res.sort()
-                out["dl"] = res[1]
-            else:
-                out["dl"] = None
+            # 下载测 3 次：3 次全失败才淘汰，否则取成功值里最小的
+            res = [v for v in (curl_dl(port) for _ in range(3)) if v]
+            out["dl"] = min(res) if res else None
             out["udp"] = udp_via(port)
     finally:
         p.terminate()
