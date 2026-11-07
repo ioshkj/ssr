@@ -24,7 +24,7 @@ COMMON = ["sub", "sub.txt", "sub.yaml", "base64.txt", "clash.yaml", "all.yaml",
           "nodes.txt", "list.yml", "list.txt", "output/clash.yaml"]
 
 
-BLOCKED = ("TheCrowCreature/v2rayExtractor", "nyeinkokoaung404/V2ray-Configs")
+BLOCKED = ()
 
 
 

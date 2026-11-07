@@ -15,7 +15,7 @@ GOOGLE = "https://www.gstatic.com/generate_204"
 YT = "https://i.ytimg.com/generate_204"
 DL = "https://speed.cloudflare.com/__down?bytes=300000"
 
-BLOCKED = ("TheCrowCreature/v2rayExtractor", "nyeinkokoaung404/V2ray-Configs")
+BLOCKED = ()
 
 SRC = [
     "Pawdroid/Free-servers/main/sub",
