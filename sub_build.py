@@ -293,13 +293,16 @@ def profile(q):
                 return out
             out["gg"] = curl_ms(port, GOOGLE)
             out["yt"] = curl_ms(port, YT)
-            # 下载测 3 次：取中间值（成功 1~3 次都算过，0 次淘汰）
-            res = [v for v in (curl_dl(port) for _ in range(3)) if v]
-            if res:
-                res.sort()
-                out["dl"] = res[0] if len(res) == 1 else (res[0] if len(res) == 2 else res[1])
-            else:
-                out["dl"] = None
+            # 下载最多测 3 次：成功 2 次即通过，通过后不再测第 3 次
+            vals, ok = [], 0
+            for _ in range(3):
+                v = curl_dl(port)
+                if v:
+                    ok += 1
+                    vals.append(v)
+                    if ok >= 2:
+                        break
+            out["dl"] = min(vals) if ok >= 2 else None
             out["udp"] = udp_via(port)
     finally:
         p.terminate()
