@@ -1,5 +1,5 @@
   sub                                            +20
-  sub                                            +98
+  sub                                            +99
   nodes.txt                                      +27
   cfmem.txt                                      +12
   base64.txt                                     +23
@@ -17,7 +17,7 @@
   clash.config.yaml                              +2595
   list.txt                                       +0
   clashmeta.txt                                  +2335
-  All_Configs_Sub.txt                            +5400
+  All_Configs_Sub.txt                            +5401
   clash-meta-2.yaml                              +32
   argox.sh                                       +132
   all.txt                                        +967
@@ -25,14 +25,14 @@
   all.yaml                                       +0
   1.1.txt                                        +258
   clash.yml                                      +0
-  top100.txt                                     +81
+  top100.txt                                     +58
   v2                                             +201
-  all_sub.txt                                    +3709
+  all_sub.txt                                    +3713
   end-gfw-free                                   +6
   ss.txt                                         +1007
-  alive-fast                                     +14
+  alive-fast                                     +16
   nodes.txt                                      +0
-  Z.txt                                          +1010
+  Z.txt                                          +1009
   sub.txt                                        +2433
   proxies.txt                                    +72
   clash.yaml                                     +61
@@ -44,183 +44,183 @@
   All-DukeMehdi-Configs.txt                      +475
   All_Configs_Sub.txt                            +362
   mix.txt                                        +212
-  v2ray-20261110.txt                             +175
-  AllConfigsSub.txt                              +229
+  v2ray-20261110.txt                             +174
+  AllConfigsSub.txt                              +224
   subscription-1.txt                             +6
-  port_80.txt                                    +217
+  port_80.txt                                    +216
   clash_config.yaml                              +0
   mix.txt                                        +660
-  top.txt                                        +753
+  top.txt                                        +755
   vless.txt                                      +0
-  mix-base64.txt                                 +9588
-  all_servers.txt                                +954
+  mix-base64.txt                                 +9593
+  all_servers.txt                                +955
   rasool083-sub.yaml                             +9
-抓取 36215 条
+抓取 36200 条
 去重后目标类型 932 条
 开始测试，6 并发…
-    1/932 US - zhuhai.uk       http    cf=414    dl=299    OK
-    2/932 AU - zhuhai.uk       http    cf=888    dl=141    OK
-    3/932 US - zhuhai.uk 02    http    cf=167    dl=725    OK
-    4/932 NL - zhuhai.uk       http    cf=450    dl=278    OK
-    5/932 IT - zhuhai.uk       http    cf=679    dl=210    OK
-    6/932 BE - zhuhai.uk       http    cf=434    dl=257    OK
-    7/932 FR - zhuhai.uk       http    cf=520    dl=184    OK
-    8/932 IE - zhuhai.uk       http    cf=417    dl=121    OK
-    9/932 US - zhuhai.uk 03    http    cf=161    dl=752    OK
-   10/932 US - zhuhai.uk 04    http    cf=165    dl=645    OK
-   11/932 FR - zhuhai.uk 02    http    cf=505    dl=65     OK
-   12/932 IT - zhuhai.uk 03    http    cf=884    dl=49     OK
-   13/932 NL - zhuhai.uk 02    http    cf=459    dl=270    OK
-   14/932 JP - zhuhai.uk 02    http    cf=555    dl=92     OK
-   15/932 FR - zhuhai.uk 04    http    cf=781    dl=165    OK
-   16/932 NL - zhuhai.uk 04    http    cf=439    dl=256    OK
-   17/932 NL - zhuhai.uk 05    http    cf=423    dl=276    OK
-   18/932 🇹🇼_TW_台湾->🇺🇸_US_美国_I anytls  cf=315    dl=93     OK
-   19/932 🇬🇧GB_1|1020KB/s      http    cf=431    dl=46     OK
-   20/932 🇧🇪BE_1|1.6MB/s       http    cf=458    dl=284    OK
-   21/932 🇳🇱NL_6|3.2MB/s       http    cf=491    dl=241    OK
-   22/932 🇬🇧GB_2|1.9MB/s       http    cf=421    dl=114    OK
-   23/932 🇨🇭CH_3|1.9MB/s       http    cf=503    dl=234    OK
-   24/932 🇺🇸US_2|1.3MB/s       http    cf=161    dl=713    OK
-   25/932 🇺🇸US_3|1.1MB/s       http    cf=61     dl=834    OK
-   26/932 🇦🇹AT_1|1.5MB/s       http    cf=509    dl=240    OK
-   27/932 🇮🇹IT_4|1.0MB/s       http    cf=509    dl=224    OK
-   28/932 🇩🇪DE_3|3.1MB/s       http    cf=489    dl=244    OK
-   29/932 🇸🇪SE_1|1.3MB/s       http    cf=512    dl=229    OK
-   30/932 🇺🇸US_4|1.1MB/s       http    cf=133    dl=814    OK
-   31/932 🇳🇴NO_1|1.3MB/s       http    cf=594    dl=199    OK
-   32/932 🇬🇧GB_3|1.2MB/s       http    cf=454    dl=287    OK
-   33/932 🇺🇸US_5|1.3MB/s       http    cf=56     dl=1401   OK
-   34/932 🇩🇪DE_4|1.0MB/s       http    cf=41     dl=1524   OK
-   35/932 🇺🇸US_6|1.4MB/s       http    cf=115    dl=995    OK
-   36/932 🇷🇴RO_1|2.3MB/s       http    cf=594    dl=201    OK
-   37/932 🇩🇪DE_6|2.2MB/s       http    cf=473    dl=266    OK
-   38/932 🇫🇷FR_3|1.6MB/s       http    cf=440    dl=240    OK
-   39/932 🇺🇸US_7|2.2MB/s       http    cf=165    dl=720    OK
-   40/932 🇳🇱NL_8|2.0MB/s       http    cf=454    dl=261    OK
-   41/932 🇫🇷FR_4|2.7MB/s       http    cf=441    dl=276    OK
-   42/932 🇮🇪IE_1|2.8MB/s       http    cf=464    dl=83     OK
-   43/932 🇩🇪DE_7|3.2MB/s       http    cf=518    dl=259    OK
-   44/932 🇩🇪DE_8|1.0MB/s       http    cf=470    dl=261    OK
-   45/932 🇳🇱NL_9|1.1MB/s       http    cf=510    dl=248    OK
-   46/932 🇩🇪DE_9|2.2MB/s       http    cf=484    dl=277    OK
-   47/932 🇦🇱AL_1|2.2MB/s       http    cf=713    dl=175    OK
+    1/932 US - zhuhai.uk       http    cf=331    dl=368    OK
+    2/932 AU - zhuhai.uk       http    cf=893    dl=119    OK
+    3/932 US - zhuhai.uk 02    http    cf=210    dl=545    OK
+    4/932 NL - zhuhai.uk       http    cf=391    dl=257    OK
+    5/932 IT - zhuhai.uk       http    cf=620    dl=231    OK
+    6/932 BE - zhuhai.uk       http    cf=421    dl=305    OK
+    7/932 FR - zhuhai.uk       http    cf=485    dl=241    OK
+    8/932 IE - zhuhai.uk       http    cf=360    dl=283    OK
+    9/932 US - zhuhai.uk 03    http    cf=204    dl=581    OK
+   10/932 US - zhuhai.uk 04    http    cf=208    dl=531    OK
+   11/932 FR - zhuhai.uk 02    http    cf=427    dl=66     OK
+   12/932 IT - zhuhai.uk 03    http    cf=708    dl=62     OK
+   13/932 NL - zhuhai.uk 02    http    cf=411    dl=277    OK
+   14/932 JP - zhuhai.uk 02    http    cf=577    dl=97     OK
+   15/932 FR - zhuhai.uk 04    http    cf=691    dl=202    OK
+   16/932 NL - zhuhai.uk 04    http    cf=421    dl=305    OK
+   17/932 NL - zhuhai.uk 05    http    cf=406    dl=303    OK
+   18/932 🇹🇼_TW_台湾->🇺🇸_US_美国_I anytls  cf=327    dl=87     OK
+   19/932 🇬🇧GB_1|1020KB/s      http    cf=388    dl=336    OK
+   20/932 🇧🇪BE_1|1.6MB/s       http    cf=426    dl=308    OK
+   21/932 🇳🇱NL_6|3.2MB/s       http    cf=406    dl=257    OK
+   22/932 🇬🇧GB_2|1.9MB/s       http    cf=392    dl=325    OK
+   23/932 🇨🇭CH_3|1.9MB/s       http    cf=445    dl=211    OK
+   24/932 🇺🇸US_2|1.3MB/s       http    cf=208    dl=549    OK
+   25/932 🇺🇸US_3|1.1MB/s       http    cf=34     dl=2545   OK
+   26/932 🇦🇹AT_1|1.5MB/s       http    cf=490    dl=257    OK
+   27/932 🇮🇹IT_4|1.0MB/s       http    cf=508    dl=239    OK
+   28/932 🇩🇪DE_3|3.1MB/s       http    cf=450    dl=232    OK
+   29/932 🇸🇪SE_1|1.3MB/s       http    cf=470    dl=270    OK
+   30/932 🇺🇸US_4|1.1MB/s       http    cf=48     dl=2042   OK
+   31/932 🇳🇴NO_1|1.3MB/s       http    cf=548    dl=237    OK
+   32/932 🇬🇧GB_3|1.2MB/s       http    cf=402    dl=312    OK
+   33/932 🇺🇸US_5|1.3MB/s       http    cf=17     dl=772    OK
+   34/932 🇩🇪DE_4|1.0MB/s       http    cf=25     dl=2369   OK
+   35/932 🇺🇸US_6|1.4MB/s       http    cf=88     dl=110    OK
+   36/932 🇷🇴RO_1|2.3MB/s       http    cf=569    dl=213    OK
+   37/932 🇩🇪DE_6|2.2MB/s       http    cf=439    dl=289    OK
+   38/932 🇫🇷FR_3|1.6MB/s       http    cf=392    dl=257    OK
+   39/932 🇺🇸US_7|2.2MB/s       http    cf=205    dl=592    OK
+   40/932 🇳🇱NL_8|2.0MB/s       http    cf=397    dl=288    OK
+   41/932 🇫🇷FR_4|2.7MB/s       http    cf=391    dl=314    OK
+   42/932 🇮🇪IE_1|2.8MB/s       http    cf=425    dl=293    OK
+   43/932 🇩🇪DE_7|3.2MB/s       http    cf=468    dl=253    OK
+   44/932 🇩🇪DE_8|1.0MB/s       http    cf=435    dl=286    OK
+   45/932 🇳🇱NL_9|1.1MB/s       http    cf=421    dl=296    OK
+   46/932 🇩🇪DE_9|2.2MB/s       http    cf=444    dl=287    OK
+   47/932 🇦🇱AL_1|2.2MB/s       http    cf=665    dl=198    OK
    48/932 🇳🇱NL_10|1.6MB/s      http    cf=-      dl=-      X
-   49/932 🇷🇴RO_2|2.2MB/s       http    cf=613    dl=219    OK
-   50/932 🇨🇦CA_1|1.1MB/s       http    cf=153    dl=771    OK
-   51/932 🇩🇪DE_10|1.4MB/s      http    cf=36     dl=700    OK
-   52/932 🇱🇺LU_1|3.3MB/s       http    cf=481    dl=244    OK
-   53/932 🇺🇸US_10|1.8MB/s      http    cf=121    dl=612    OK
-   54/932 🇬🇧GB_4|1.9MB/s       http    cf=407    dl=300    OK
-   55/932 🇷🇴RO_3|3.2MB/s       http    cf=582    dl=219    OK
-   56/932 🇩🇪DE_11|1.7MB/s      http    cf=463    dl=158    OK
-   57/932 🇱🇻LV_1|2.3MB/s       http    cf=532    dl=219    OK
-   58/932 🇬🇧GB_5|2.1MB/s       http    cf=428    dl=301    OK
-   59/932 🇺🇸US_11|1.1MB/s      http    cf=117    dl=874    OK
-   60/932 🇪🇪EE_1|1.7MB/s       http    cf=531    dl=232    OK
-   61/932 🇺🇸US_12|3.8MB/s      http    cf=214    dl=601    OK
-   62/932 🇩🇪DE_13|1.6MB/s      http    cf=459    dl=185    OK
-   63/932 🇨🇿CZ_1|1.3MB/s       http    cf=544    dl=225    OK
-   64/932 🇺🇸US_13|2.4MB/s      http    cf=238    dl=622    OK
-   65/932 🇨🇦CA_2|1.0MB/s       http    cf=116    dl=1047   OK
-   66/932 🇬🇧GB_6|1.6MB/s       http    cf=464    dl=271    OK
-   67/932 🇭🇷HR_1|2.8MB/s|K001- http    cf=517    dl=246    OK
-   68/932 🇷🇴RO_4|1.6MB/s       http    cf=593    dl=219    OK
-   69/932 🇷🇴RO_5|3.6MB/s       http    cf=597    dl=206    OK
-   70/932 🇩🇰DK_1|1.0MB/s       http    cf=445    dl=231    OK
-   71/932 🇷🇴RO_6|2.8MB/s       http    cf=620    dl=196    OK
-   72/932 🇧🇬BG_1|1.1MB/s       http    cf=580    dl=220    OK
-   73/932 🇵🇱PL_1|1.3MB/s       http    cf=501    dl=232    OK
-   74/932 🇫🇷FR_5|1.1MB/s       http    cf=465    dl=267    OK
-   75/932 🇮🇪IE_2|2.6MB/s       http    cf=396    dl=300    OK
+   49/932 🇷🇴RO_2|2.2MB/s       http    cf=548    dl=206    OK
+   50/932 🇨🇦CA_1|1.1MB/s       http    cf=76     dl=1530   OK
+   51/932 🇩🇪DE_10|1.4MB/s      http    cf=35     dl=1718   OK
+   52/932 🇱🇺LU_1|3.3MB/s       http    cf=447    dl=273    OK
+   53/932 🇺🇸US_10|1.8MB/s      http    cf=91     dl=1387   OK
+   54/932 🇬🇧GB_4|1.9MB/s       http    cf=370    dl=331    OK
+   55/932 🇷🇴RO_3|3.2MB/s       http    cf=567    dl=222    OK
+   56/932 🇩🇪DE_11|1.7MB/s      http    cf=437    dl=268    OK
+   57/932 🇱🇻LV_1|2.3MB/s       http    cf=493    dl=258    OK
+   58/932 🇬🇧GB_5|2.1MB/s       http    cf=390    dl=331    OK
+   59/932 🇺🇸US_11|1.1MB/s      http    cf=89     dl=970    OK
+   60/932 🇪🇪EE_1|1.7MB/s       http    cf=475    dl=270    OK
+   61/932 🇺🇸US_12|3.8MB/s      http    cf=221    dl=577    OK
+   62/932 🇩🇪DE_13|1.6MB/s      http    cf=427    dl=242    OK
+   63/932 🇨🇿CZ_1|1.3MB/s       http    cf=497    dl=246    OK
+   64/932 🇺🇸US_13|2.4MB/s      http    cf=119    dl=94     OK
+   65/932 🇨🇦CA_2|1.0MB/s       http    cf=91     dl=783    OK
+   66/932 🇬🇧GB_6|1.6MB/s       http    cf=383    dl=320    OK
+   67/932 🇭🇷HR_1|2.8MB/s|K001- http    cf=474    dl=267    OK
+   68/932 🇷🇴RO_4|1.6MB/s       http    cf=542    dl=233    OK
+   69/932 🇷🇴RO_5|3.6MB/s       http    cf=552    dl=224    OK
+   70/932 🇩🇰DK_1|1.0MB/s       http    cf=412    dl=282    OK
+   71/932 🇷🇴RO_6|2.8MB/s       http    cf=548    dl=219    OK
+   72/932 🇧🇬BG_1|1.1MB/s       http    cf=513    dl=250    OK
+   73/932 🇵🇱PL_1|1.3MB/s       http    cf=463    dl=261    OK
+   74/932 🇫🇷FR_5|1.1MB/s       http    cf=445    dl=282    OK
+   75/932 🇮🇪IE_2|2.6MB/s       http    cf=346    dl=329    OK
    76/932 🇫🇷FR_6|3.1MB/s       http    cf=-      dl=-      X
-   77/932 🇱🇻LV_2|1.8MB/s       http    cf=556    dl=216    OK
-   78/932 🇷🇸RS_1|1.5MB/s       http    cf=573    dl=216    OK
-   79/932 🇨🇦CA_3|1.1MB/s       http    cf=99     dl=552    OK
-   80/932 🇨🇦CA_4|1.9MB/s       http    cf=124    dl=1004   OK
-   81/932 🇷🇴RO_7|1.2MB/s       http    cf=595    dl=221    OK
-   82/932 🇸🇪SE_2|1.2MB/s       http    cf=515    dl=246    OK
-   83/932 🇷🇴RO_8|3.2MB/s       http    cf=606    dl=213    OK
-   84/932 🇷🇴RO_9|1.4MB/s       http    cf=600    dl=210    OK
-   85/932 🇳🇱NL_12|1.2MB/s      http    cf=488    dl=204    OK
-   86/932 🇷🇴RO_10|3.2MB/s      http    cf=637    dl=206    OK
-   87/932                      http    cf=448    dl=279    OK
-   88/932                      http    cf=121    dl=210    OK
-   89/932                      http    cf=159    dl=659    OK
-   90/932                      http    cf=163    dl=699    OK
-   91/932                      http    cf=162    dl=698    OK
-   92/932                      http    cf=485    dl=251    OK
-   93/932                      http    cf=163    dl=710    OK
-   94/932                      http    cf=234    dl=488    OK
-   95/932                      http    cf=1203   dl=50     OK
-   96/932                      http    cf=165    dl=709    OK
-   97/932                      http    cf=484    dl=229    OK
-   98/932                      http    cf=462    dl=273    OK
-   99/932                      http    cf=406    dl=305    OK
-  100/932                      http    cf=709    dl=180    OK
-  101/932                      http    cf=647    dl=204    OK
-  102/932                      http    cf=466    dl=232    OK
-  103/932                      http    cf=616    dl=210    OK
-  104/932                      http    cf=598    dl=93     OK
-  105/932                      http    cf=468    dl=270    OK
-  106/932                      http    cf=593    dl=209    OK
-  107/932                      http    cf=502    dl=149    OK
-  108/932                      http    cf=429    dl=301    OK
-  109/932                      http    cf=81     dl=820    OK
-  110/932                      http    cf=554    dl=224    OK
-  111/932                      http    cf=642    dl=187    OK
-  112/932                      http    cf=520    dl=250    OK
-  113/932                      http    cf=497    dl=252    OK
-  114/932                      http    cf=532    dl=226    OK
-  115/932                      http    cf=570    dl=217    OK
-  116/932                      http    cf=655    dl=188    OK
-  117/932                      http    cf=523    dl=253    OK
-  118/932                      http    cf=545    dl=262    OK
-  119/932                      http    cf=576    dl=215    OK
-  120/932                      http    cf=575    dl=213    OK
-  121/932                      http    cf=493    dl=261    OK
-  122/932                      http    cf=604    dl=222    OK
-  123/932                      http    cf=570    dl=217    OK
-  124/932                      http    cf=535    dl=217    OK
-  125/932                      http    cf=487    dl=264    OK
-  126/932                      http    cf=788    dl=160    OK
-  127/932                      http    cf=128    dl=597    OK
-  128/932                      http    cf=-      dl=-      X
+   77/932 🇱🇻LV_2|1.8MB/s       http    cf=491    dl=232    OK
+   78/932 🇷🇸RS_1|1.5MB/s       http    cf=547    dl=236    OK
+   79/932 🇨🇦CA_3|1.1MB/s       http    cf=62     dl=422    OK
+   80/932 🇨🇦CA_4|1.9MB/s       http    cf=93     dl=561    OK
+   81/932 🇷🇴RO_7|1.2MB/s       http    cf=519    dl=234    OK
+   82/932 🇸🇪SE_2|1.2MB/s       http    cf=469    dl=255    OK
+   83/932 🇷🇴RO_8|3.2MB/s       http    cf=564    dl=222    OK
+   84/932 🇷🇴RO_9|1.4MB/s       http    cf=563    dl=229    OK
+   85/932 🇳🇱NL_12|1.2MB/s      http    cf=3173   dl=-      X
+   86/932 🇷🇴RO_10|3.2MB/s      http    cf=568    dl=223    OK
+   87/932                      http    cf=402    dl=270    OK
+   88/932                      http    cf=112    dl=20     OK
+   89/932                      http    cf=206    dl=592    OK
+   90/932                      http    cf=203    dl=600    OK
+   91/932                      http    cf=208    dl=599    OK
+   92/932                      http    cf=466    dl=276    OK
+   93/932                      http    cf=205    dl=591    OK
+   94/932                      http    cf=240    dl=519    OK
+   95/932                      http    cf=-      dl=-      X
+   96/932                      http    cf=210    dl=582    OK
+   97/932                      http    cf=447    dl=277    OK
+   98/932                      http    cf=418    dl=269    OK
+   99/932                      http    cf=363    dl=272    OK
+  100/932                      http    cf=688    dl=187    OK
+  101/932                      http    cf=593    dl=216    OK
+  102/932                      http    cf=447    dl=272    OK
+  103/932                      http    cf=553    dl=219    OK
+  104/932                      http    cf=623    dl=167    OK
+  105/932                      http    cf=433    dl=303    OK
+  106/932                      http    cf=559    dl=226    OK
+  107/932                      http    cf=446    dl=228    OK
+  108/932                      http    cf=377    dl=266    OK
+  109/932                      http    cf=41     dl=201    OK
+  110/932                      http    cf=515    dl=241    OK
+  111/932                      http    cf=588    dl=217    OK
+  112/932                      http    cf=464    dl=283    OK
+  113/932                      http    cf=447    dl=193    OK
+  114/932                      http    cf=491    dl=261    OK
+  115/932                      http    cf=477    dl=267    OK
+  116/932                      http    cf=593    dl=212    OK
+  117/932                      http    cf=468    dl=264    OK
+  118/932                      http    cf=505    dl=289    OK
+  119/932                      http    cf=542    dl=226    OK
+  120/932                      http    cf=532    dl=227    OK
+  121/932                      http    cf=417    dl=301    OK
+  122/932                      http    cf=792    dl=162    OK
+  123/932                      http    cf=523    dl=236    OK
+  124/932                      http    cf=507    dl=217    OK
+  125/932                      http    cf=432    dl=288    OK
+  126/932                      http    cf=748    dl=158    OK
+  127/932                      http    cf=91     dl=1162   OK
+  128/932                      http    cf=660    dl=206    OK
   129/932                      http    cf=-      dl=-      X
-  130/932                      http    cf=438    dl=275    OK
-  131/932                      http    cf=493    dl=255    OK
-  132/932                      http    cf=481    dl=240    OK
-  133/932                      http    cf=483    dl=252    OK
-  134/932                      http    cf=502    dl=264    OK
-  135/932                      http    cf=598    dl=203    OK
+  130/932                      http    cf=410    dl=298    OK
+  131/932                      http    cf=459    dl=280    OK
+  132/932                      http    cf=431    dl=272    OK
+  133/932                      http    cf=467    dl=281    OK
+  134/932                      http    cf=442    dl=287    OK
+  135/932                      http    cf=692    dl=199    OK
   136/932                      http    cf=-      dl=-      X
-  137/932                      http    cf=541    dl=221    OK
-  138/932                      http    cf=572    dl=223    OK
-  139/932                      http    cf=439    dl=187    OK
-  140/932                      http    cf=445    dl=270    OK
-  141/932                      http    cf=464    dl=264    OK
-  142/932                      http    cf=460    dl=277    OK
+  137/932                      http    cf=508    dl=252    OK
+  138/932                      http    cf=511    dl=253    OK
+  139/932                      http    cf=403    dl=304    OK
+  140/932                      http    cf=408    dl=296    OK
+  141/932                      http    cf=410    dl=308    OK
+  142/932                      http    cf=423    dl=299    OK
   143/932                      http    cf=-      dl=-      X
-  144/932                      http    cf=242    dl=529    OK
+  144/932                      http    cf=757    dl=67     OK
   145/932                      http    cf=-      dl=-      X
-  146/932 AL - zhuhai.uk [bff3 http    cf=498    dl=261    OK
-  147/932 BR - zhuhai.uk [5164 http    cf=589    dl=217    OK
-  148/932 FR - zhuhai.uk 02 [9 http    cf=510    dl=251    OK
-  149/932 HK - zhuhai.uk 02 [c http    cf=741    dl=177    OK
-  150/932 ID - zhuhai.uk 02 [a http    cf=-      dl=-      X
-  151/932 ID - zhuhai.uk [b428 http    cf=861    dl=133    OK
-  152/932 KR - zhuhai.uk 02 [e http    cf=1587   dl=73     OK
-  153/932 NL - zhuhai.uk 05 [6 http    cf=436    dl=280    OK
-  154/932 RU - zhuhai.uk [ddfb http    cf=730    dl=191    OK
+  146/932 AL - zhuhai.uk [bff3 http    cf=452    dl=259    OK
+  147/932 BR - zhuhai.uk [5164 http    cf=555    dl=227    OK
+  148/932 FR - zhuhai.uk 02 [9 http    cf=455    dl=266    OK
+  149/932 HK - zhuhai.uk 02 [c http    cf=825    dl=153    OK
+  150/932 ID - zhuhai.uk 02 [a http    cf=899    dl=127    OK
+  151/932 ID - zhuhai.uk [b428 http    cf=904    dl=143    OK
+  152/932 KR - zhuhai.uk 02 [e http    cf=664    dl=192    OK
+  153/932 NL - zhuhai.uk 05 [6 http    cf=389    dl=316    OK
+  154/932 RU - zhuhai.uk [ddfb http    cf=691    dl=209    OK
   155/932 TW - zhuhai.uk [70aa http    cf=-      dl=-      X
-  156/932 US - zhuhai.uk 02 [6 http    cf=180    dl=641    OK
-  157/932 US - zhuhai.uk 03 [3 http    cf=458    dl=23     OK
-  158/932 US - zhuhai.uk 05 [3 http    cf=172    dl=712    OK
-  159/932 US - zhuhai.uk 06 [d http    cf=391    dl=349    OK
-  160/932 US - zhuhai.uk [71ca http    cf=182    dl=422    OK
+  156/932 US - zhuhai.uk 02 [6 http    cf=268    dl=450    OK
+  157/932 US - zhuhai.uk 03 [3 http    cf=620    dl=20     OK
+  158/932 US - zhuhai.uk 05 [3 http    cf=206    dl=509    OK
+  159/932 US - zhuhai.uk 06 [d http    cf=449    dl=250    OK
+  160/932 US - zhuhai.uk [71ca http    cf=273    dl=411    OK
   161/932 🇭🇰HK_1|1.1MB/s [dfb2 http    cf=-      dl=-      X
   162/932 🇹🇼 台湾｜02｜HiNet [d59b anytls  cf=-      dl=-      X
-  163/932 🇯🇵JP_36|724KB/s|M003 anytls  cf=-      dl=-      X
+  163/932 🇯🇵JP_36|724KB/s|M003 anytls  cf=149    dl=330    OK
   164/932 🇯🇵_JP_日本_IPV4        anytls  cf=-      dl=-      X
   165/932 🇹🇼_TW_台湾_IPV4        anytls  cf=-      dl=-      X
   166/932                      http    cf=-      dl=-      X
@@ -229,37 +229,37 @@
   169/932                      http    cf=-      dl=-      X
   170/932                      http    cf=-      dl=-      X
   171/932                      http    cf=-      dl=-      X
-  172/932                      http    cf=402    dl=266    OK
-  173/932                      http    cf=-      dl=-      X
+  172/932                      http    cf=388    dl=268    OK
+  173/932                      http    cf=496    dl=-      X
   174/932                      http    cf=-      dl=-      X
   175/932                      http    cf=-      dl=-      X
   176/932                      http    cf=-      dl=-      X
-  177/932                      http    cf=111    dl=556    OK
-  178/932                      http    cf=117    dl=677    OK
+  177/932                      http    cf=77     dl=28     OK
+  178/932                      http    cf=81     dl=908    OK
   179/932                      http    cf=-      dl=-      X
   180/932                      http    cf=-      dl=-      X
   181/932                      http    cf=-      dl=-      X
   182/932                      http    cf=-      dl=-      X
   183/932                      http    cf=-      dl=-      X
   184/932                      http    cf=-      dl=-      X
-  185/932                      http    cf=665    dl=-      X
+  185/932                      http    cf=695    dl=-      X
   186/932                      http    cf=-      dl=-      X
   187/932                      http    cf=-      dl=-      X
   188/932                      http    cf=-      dl=-      X
   189/932                      http    cf=-      dl=-      X
   190/932                      http    cf=-      dl=-      X
-  191/932                      http    cf=289    dl=54     OK
+  191/932                      http    cf=-      dl=-      X
   192/932                      http    cf=-      dl=-      X
   193/932                      http    cf=-      dl=-      X
   194/932                      http    cf=-      dl=-      X
-  195/932                      http    cf=15001  dl=-      X
+  195/932                      http    cf=15002  dl=-      X
   196/932                      http    cf=-      dl=-      X
   197/932                      http    cf=-      dl=-      X
   198/932                      http    cf=-      dl=-      X
-  199/932                      http    cf=547    dl=93     OK
-  200/932                      http    cf=1741   dl=-      X
-  201/932                      http    cf=3422   dl=-      X
-  202/932                      http    cf=1237   dl=-      X
+  199/932                      http    cf=-      dl=-      X
+  200/932                      http    cf=-      dl=-      X
+  201/932                      http    cf=-      dl=-      X
+  202/932                      http    cf=1212   dl=-      X
   203/932                      http    cf=-      dl=-      X
   204/932                      http    cf=-      dl=-      X
   205/932                      http    cf=-      dl=-      X
@@ -267,15 +267,15 @@
   207/932                      http    cf=-      dl=-      X
   208/932                      http    cf=-      dl=-      X
   209/932                      http    cf=-      dl=-      X
-  210/932                      http    cf=-      dl=-      X
-  211/932                      http    cf=-      dl=-      X
+  210/932                      http    cf=3875   dl=-      X
+  211/932                      http    cf=630    dl=123    OK
   212/932                      http    cf=-      dl=-      X
   213/932                      http    cf=-      dl=-      X
-  214/932                      http    cf=-      dl=-      X
-  215/932                      http    cf=559    dl=27     OK
+  214/932                      http    cf=362    dl=540    OK
+  215/932                      http    cf=5702   dl=-      X
   216/932                      http    cf=-      dl=-      X
-  217/932                      http    cf=355    dl=85     OK
-  218/932                      http    cf=597    dl=158    OK
+  217/932                      http    cf=-      dl=-      X
+  218/932                      http    cf=-      dl=-      X
   219/932                      http    cf=-      dl=-      X
   220/932                      http    cf=-      dl=-      X
   221/932                      http    cf=-      dl=-      X
@@ -286,14 +286,14 @@
   226/932                      http    cf=-      dl=-      X
   227/932                      http    cf=-      dl=-      X
   228/932                      http    cf=-      dl=-      X
-  229/932                      http    cf=-      dl=-      X
+  229/932                      http    cf=3306   dl=-      X
   230/932                      http    cf=-      dl=-      X
   231/932                      http    cf=-      dl=-      X
   232/932                      http    cf=-      dl=-      X
   233/932                      http    cf=-      dl=-      X
   234/932                      http    cf=-      dl=-      X
   235/932                      http    cf=-      dl=-      X
-  236/932                      http    cf=597    dl=175    OK
+  236/932                      http    cf=629    dl=168    OK
   237/932                      http    cf=-      dl=-      X
   238/932                      http    cf=-      dl=-      X
   239/932                      http    cf=-      dl=-      X
@@ -301,7 +301,7 @@
   241/932                      http    cf=-      dl=-      X
   242/932                      http    cf=-      dl=-      X
   243/932                      http    cf=-      dl=-      X
-  244/932                      http    cf=713    dl=-      X
+  244/932                      http    cf=-      dl=-      X
   245/932                      http    cf=-      dl=-      X
   246/932                      http    cf=-      dl=-      X
   247/932                      http    cf=-      dl=-      X
@@ -331,25 +331,25 @@
   271/932                      http    cf=-      dl=-      X
   272/932                      http    cf=-      dl=-      X
   273/932                      http    cf=-      dl=-      X
-  274/932                      http    cf=2496   dl=45     OK
+  274/932                      http    cf=-      dl=-      X
   275/932                      http    cf=-      dl=-      X
   276/932                      http    cf=-      dl=-      X
   277/932                      http    cf=-      dl=-      X
   278/932                      http    cf=-      dl=-      X
-  279/932                      http    cf=-      dl=-      X
-  280/932                      http    cf=1459   dl=-      X
-  281/932                      http    cf=1297   dl=-      X
+  279/932                      http    cf=2622   dl=-      X
+  280/932                      http    cf=-      dl=-      X
+  281/932                      http    cf=1331   dl=-      X
   282/932                      http    cf=-      dl=-      X
-  283/932                      http    cf=5001   dl=-      X
+  283/932                      http    cf=2325   dl=-      X
   284/932                      http    cf=-      dl=-      X
   285/932                      http    cf=-      dl=-      X
-  286/932                      http    cf=5001   dl=-      X
+  286/932                      http    cf=3294   dl=-      X
   287/932                      http    cf=-      dl=-      X
   288/932                      http    cf=-      dl=-      X
   289/932                      http    cf=-      dl=-      X
   290/932                      http    cf=-      dl=-      X
   291/932                      http    cf=-      dl=-      X
-  292/932                      http    cf=852    dl=-      X
+  292/932                      http    cf=667    dl=-      X
   293/932                      http    cf=-      dl=-      X
   294/932                      http    cf=-      dl=-      X
   295/932                      http    cf=-      dl=-      X
@@ -362,20 +362,20 @@
   302/932                      http    cf=-      dl=-      X
   303/932                      http    cf=-      dl=-      X
   304/932                      http    cf=-      dl=-      X
-  305/932                      http    cf=-      dl=-      X
+  305/932                      http    cf=1044   dl=50     OK
   306/932                      http    cf=-      dl=-      X
   307/932                      http    cf=-      dl=-      X
   308/932                      http    cf=-      dl=-      X
   309/932                      http    cf=-      dl=-      X
   310/932                      http    cf=-      dl=-      X
   311/932                      http    cf=-      dl=-      X
-  312/932                      http    cf=-      dl=-      X
+  312/932                      http    cf=182    dl=529    OK
   313/932                      http    cf=-      dl=-      X
   314/932                      http    cf=-      dl=-      X
   315/932                      http    cf=-      dl=-      X
-  316/932                      http    cf=-      dl=-      X
+  316/932                      http    cf=2776   dl=91     OK
   317/932                      http    cf=-      dl=-      X
-  318/932                      http    cf=1992   dl=53     OK
+  318/932                      http    cf=626    dl=51     OK
   319/932                      http    cf=-      dl=-      X
   320/932                      http    cf=-      dl=-      X
   321/932                      http    cf=-      dl=-      X
@@ -383,8 +383,8 @@
   323/932                      http    cf=-      dl=-      X
   324/932                      http    cf=-      dl=-      X
   325/932                      http    cf=-      dl=-      X
-  326/932                      http    cf=2646   dl=-      X
-  327/932                      http    cf=2615   dl=-      X
+  326/932                      http    cf=5001   dl=-      X
+  327/932                      http    cf=1889   dl=63     OK
   328/932                      http    cf=-      dl=-      X
   329/932                      http    cf=-      dl=-      X
   330/932                      http    cf=-      dl=-      X
@@ -393,20 +393,20 @@
   333/932                      http    cf=-      dl=-      X
   334/932                      http    cf=-      dl=-      X
   335/932                      http    cf=-      dl=-      X
-  336/932                      http    cf=5000   dl=-      X
+  336/932                      http    cf=-      dl=-      X
   337/932                      http    cf=-      dl=-      X
   338/932                      http    cf=-      dl=-      X
   339/932                      http    cf=-      dl=-      X
   340/932                      http    cf=-      dl=-      X
-  341/932                      http    cf=1730   dl=-      X
+  341/932                      http    cf=-      dl=-      X
   342/932                      http    cf=-      dl=-      X
   343/932                      http    cf=-      dl=-      X
-  344/932                      http    cf=-      dl=-      X
+  344/932                      http    cf=4097   dl=-      X
   345/932                      http    cf=-      dl=-      X
   346/932                      http    cf=-      dl=-      X
   347/932                      http    cf=-      dl=-      X
   348/932                      http    cf=-      dl=-      X
-  349/932                      http    cf=-      dl=-      X
+  349/932                      http    cf=5000   dl=-      X
   350/932                      http    cf=-      dl=-      X
   351/932                      http    cf=-      dl=-      X
   352/932                      http    cf=-      dl=-      X
@@ -416,10 +416,10 @@
   356/932                      http    cf=-      dl=-      X
   357/932                      http    cf=-      dl=-      X
   358/932                      http    cf=-      dl=-      X
-  359/932                      http    cf=-      dl=-      X
+  359/932                      http    cf=2112   dl=-      X
   360/932                      http    cf=-      dl=-      X
   361/932                      http    cf=-      dl=-      X
-  362/932                      http    cf=-      dl=-      X
+  362/932                      http    cf=5001   dl=-      X
   363/932                      http    cf=-      dl=-      X
   364/932                      http    cf=-      dl=-      X
   365/932                      http    cf=-      dl=-      X
@@ -427,7 +427,7 @@
   367/932                      http    cf=-      dl=-      X
   368/932                      http    cf=-      dl=-      X
   369/932                      http    cf=-      dl=-      X
-  370/932                      http    cf=-      dl=-      X
+  370/932                      http    cf=1222   dl=46     OK
   371/932                      http    cf=-      dl=-      X
   372/932                      http    cf=-      dl=-      X
   373/932                      http    cf=-      dl=-      X
@@ -442,7 +442,7 @@
   382/932                      http    cf=-      dl=-      X
   383/932                      http    cf=-      dl=-      X
   384/932                      http    cf=-      dl=-      X
-  385/932                      http    cf=5000   dl=-      X
+  385/932                      http    cf=-      dl=-      X
   386/932                      http    cf=-      dl=-      X
   387/932                      http    cf=-      dl=-      X
   388/932                      http    cf=-      dl=-      X
@@ -452,17 +452,17 @@
   392/932                      http    cf=-      dl=-      X
   393/932                      http    cf=-      dl=-      X
   394/932                      http    cf=-      dl=-      X
-  395/932                      http    cf=-      dl=-      X
+  395/932                      http    cf=1783   dl=95     OK
   396/932                      http    cf=-      dl=-      X
   397/932                      http    cf=-      dl=-      X
   398/932                      http    cf=-      dl=-      X
   399/932                      http    cf=-      dl=-      X
-  400/932                      http    cf=-      dl=-      X
+  400/932                      http    cf=1576   dl=50     OK
   401/932                      http    cf=-      dl=-      X
   402/932                      http    cf=-      dl=-      X
   403/932                      http    cf=-      dl=-      X
   404/932                      http    cf=-      dl=-      X
-  405/932                      http    cf=-      dl=-      X
+  405/932                      http    cf=3459   dl=-      X
   406/932                      http    cf=-      dl=-      X
   407/932                      http    cf=-      dl=-      X
   408/932                      http    cf=-      dl=-      X
@@ -471,7 +471,7 @@
   411/932                      http    cf=-      dl=-      X
   412/932                      http    cf=-      dl=-      X
   413/932                      http    cf=-      dl=-      X
-  414/932                      http    cf=5000   dl=-      X
+  414/932                      http    cf=-      dl=-      X
   415/932                      http    cf=-      dl=-      X
   416/932                      http    cf=-      dl=-      X
   417/932                      http    cf=-      dl=-      X
@@ -485,7 +485,7 @@
   425/932                      http    cf=-      dl=-      X
   426/932                      http    cf=-      dl=-      X
   427/932                      http    cf=-      dl=-      X
-  428/932                      http    cf=1859   dl=-      X
+  428/932                      http    cf=-      dl=-      X
   429/932                      http    cf=-      dl=-      X
   430/932                      http    cf=-      dl=-      X
   431/932                      http    cf=-      dl=-      X
@@ -500,7 +500,7 @@
   440/932                      http    cf=-      dl=-      X
   441/932                      http    cf=-      dl=-      X
   442/932                      http    cf=-      dl=-      X
-  443/932                      http    cf=-      dl=-      X
+  443/932                      http    cf=3683   dl=-      X
   444/932                      http    cf=-      dl=-      X
   445/932                      http    cf=-      dl=-      X
   446/932                      http    cf=-      dl=-      X
@@ -524,17 +524,17 @@
   464/932                      http    cf=-      dl=-      X
   465/932                      http    cf=-      dl=-      X
   466/932                      http    cf=-      dl=-      X
-  467/932                      http    cf=2264   dl=13     OK
+  467/932                      http    cf=1871   dl=-      X
   468/932                      http    cf=-      dl=-      X
   469/932                      http    cf=-      dl=-      X
   470/932                      http    cf=-      dl=-      X
   471/932                      http    cf=-      dl=-      X
   472/932                      http    cf=-      dl=-      X
-  473/932                      http    cf=2404   dl=91     OK
+  473/932                      http    cf=890    dl=75     OK
   474/932                      http    cf=-      dl=-      X
   475/932                      http    cf=-      dl=-      X
-  476/932                      http    cf=-      dl=-      X
-  477/932                      http    cf=-      dl=-      X
+  476/932                      http    cf=1121   dl=-      X
+  477/932                      http    cf=2142   dl=-      X
   478/932                      http    cf=-      dl=-      X
   479/932                      http    cf=-      dl=-      X
   480/932                      http    cf=-      dl=-      X
@@ -549,19 +549,19 @@
   489/932                      http    cf=-      dl=-      X
   490/932                      http    cf=-      dl=-      X
   491/932                      http    cf=-      dl=-      X
-  492/932                      http    cf=2869   dl=36     OK
+  492/932                      http    cf=-      dl=-      X
   493/932                      http    cf=-      dl=-      X
   494/932                      http    cf=-      dl=-      X
   495/932                      http    cf=-      dl=-      X
   496/932                      http    cf=-      dl=-      X
   497/932                      http    cf=-      dl=-      X
   498/932                      http    cf=-      dl=-      X
-  499/932                      http    cf=2050   dl=-      X
-  500/932                      http    cf=3960   dl=-      X
+  499/932                      http    cf=-      dl=-      X
+  500/932                      http    cf=-      dl=-      X
   501/932                      http    cf=-      dl=-      X
   502/932                      http    cf=-      dl=-      X
   503/932                      http    cf=-      dl=-      X
-  504/932                      http    cf=-      dl=-      X
+  504/932                      http    cf=5001   dl=-      X
   505/932                      http    cf=-      dl=-      X
   506/932                      http    cf=-      dl=-      X
   507/932                      http    cf=-      dl=-      X
@@ -579,11 +579,11 @@
   519/932                      http    cf=-      dl=-      X
   520/932                      http    cf=-      dl=-      X
   521/932                      http    cf=-      dl=-      X
-  522/932                      http    cf=-      dl=-      X
+  522/932                      http    cf=5000   dl=-      X
   523/932                      http    cf=-      dl=-      X
   524/932                      http    cf=-      dl=-      X
   525/932                      http    cf=-      dl=-      X
-  526/932                      http    cf=3305   dl=-      X
+  526/932                      http    cf=-      dl=-      X
   527/932                      http    cf=-      dl=-      X
   528/932                      http    cf=-      dl=-      X
   529/932                      http    cf=-      dl=-      X
@@ -609,13 +609,13 @@
   549/932                      http    cf=-      dl=-      X
   550/932                      http    cf=-      dl=-      X
   551/932                      http    cf=-      dl=-      X
-  552/932                      http    cf=646    dl=64     OK
+  552/932                      http    cf=-      dl=-      X
   553/932                      http    cf=-      dl=-      X
   554/932                      http    cf=-      dl=-      X
   555/932                      http    cf=-      dl=-      X
   556/932                      http    cf=-      dl=-      X
   557/932                      http    cf=-      dl=-      X
-  558/932                      http    cf=-      dl=-      X
+  558/932                      http    cf=1053   dl=23     OK
   559/932                      http    cf=-      dl=-      X
   560/932                      http    cf=-      dl=-      X
   561/932                      http    cf=-      dl=-      X
@@ -626,12 +626,12 @@
   566/932                      http    cf=-      dl=-      X
   567/932                      http    cf=-      dl=-      X
   568/932                      http    cf=-      dl=-      X
-  569/932                      http    cf=-      dl=-      X
+  569/932                      http    cf=5001   dl=-      X
   570/932                      http    cf=-      dl=-      X
   571/932                      http    cf=-      dl=-      X
   572/932                      http    cf=-      dl=-      X
   573/932                      http    cf=-      dl=-      X
-  574/932                      http    cf=-      dl=-      X
+  574/932                      http    cf=5001   dl=-      X
   575/932                      http    cf=-      dl=-      X
   576/932                      http    cf=-      dl=-      X
   577/932                      http    cf=-      dl=-      X
@@ -650,9 +650,9 @@
   590/932                      http    cf=-      dl=-      X
   591/932                      http    cf=-      dl=-      X
   592/932                      http    cf=-      dl=-      X
-  593/932                      http    cf=5000   dl=-      X
+  593/932                      http    cf=-      dl=-      X
   594/932                      http    cf=-      dl=-      X
-  595/932                      http    cf=-      dl=-      X
+  595/932                      http    cf=5001   dl=-      X
   596/932                      http    cf=-      dl=-      X
   597/932                      http    cf=-      dl=-      X
   598/932                      http    cf=-      dl=-      X
@@ -669,7 +669,7 @@
   609/932                      http    cf=-      dl=-      X
   610/932                      http    cf=-      dl=-      X
   611/932                      http    cf=-      dl=-      X
-  612/932                      http    cf=-      dl=-      X
+  612/932                      http    cf=1891   dl=-      X
   613/932                      http    cf=-      dl=-      X
   614/932                      http    cf=-      dl=-      X
   615/932                      http    cf=-      dl=-      X
@@ -679,11 +679,11 @@
   619/932                      http    cf=-      dl=-      X
   620/932                      http    cf=-      dl=-      X
   621/932                      http    cf=-      dl=-      X
-  622/932                      http    cf=-      dl=-      X
+  622/932                      http    cf=2531   dl=76     OK
   623/932                      http    cf=-      dl=-      X
   624/932                      http    cf=-      dl=-      X
   625/932                      http    cf=-      dl=-      X
-  626/932                      http    cf=2169   dl=50     OK
+  626/932                      http    cf=1543   dl=61     OK
   627/932                      http    cf=-      dl=-      X
   628/932                      http    cf=-      dl=-      X
   629/932                      http    cf=-      dl=-      X
@@ -691,26 +691,26 @@
   631/932                      http    cf=-      dl=-      X
   632/932                      http    cf=-      dl=-      X
   633/932                      http    cf=-      dl=-      X
-  634/932                      http    cf=477    dl=76     OK
+  634/932                      http    cf=-      dl=-      X
   635/932                      http    cf=-      dl=-      X
   636/932                      http    cf=-      dl=-      X
   637/932                      http    cf=-      dl=-      X
   638/932                      http    cf=-      dl=-      X
   639/932                      http    cf=-      dl=-      X
   640/932                      http    cf=-      dl=-      X
-  641/932                      http    cf=5000   dl=-      X
+  641/932                      http    cf=-      dl=-      X
   642/932                      http    cf=-      dl=-      X
   643/932                      http    cf=-      dl=-      X
   644/932                      http    cf=-      dl=-      X
-  645/932                      http    cf=-      dl=-      X
+  645/932                      http    cf=5001   dl=-      X
   646/932                      http    cf=-      dl=-      X
   647/932                      http    cf=-      dl=-      X
-  648/932                      http    cf=4317   dl=-      X
-  649/932                      http    cf=-      dl=-      X
+  648/932                      http    cf=-      dl=-      X
+  649/932                      http    cf=2950   dl=-      X
   650/932                      http    cf=-      dl=-      X
   651/932                      http    cf=-      dl=-      X
   652/932                      http    cf=-      dl=-      X
-  653/932                      http    cf=3667   dl=-      X
+  653/932                      http    cf=-      dl=-      X
   654/932                      http    cf=-      dl=-      X
   655/932                      http    cf=-      dl=-      X
   656/932                      http    cf=-      dl=-      X
@@ -719,7 +719,7 @@
   659/932                      http    cf=-      dl=-      X
   660/932                      http    cf=-      dl=-      X
   661/932                      http    cf=-      dl=-      X
-  662/932 🇺🇸US_108|1.1MB/s|R00 anytls  cf=79     dl=146    OK
+  662/932 🇺🇸US_108|1.1MB/s|R00 anytls  cf=76     dl=634    OK
   663/932 阿联酋-01               http    cf=-      dl=-      X
   664/932 阿根廷-01               http    cf=-      dl=-      X
   665/932 阿根廷-02               http    cf=-      dl=-      X
@@ -748,7 +748,7 @@
   688/932 澳大利亚-11              http    cf=-      dl=-      X
   689/932 澳大利亚-12              http    cf=-      dl=-      X
   690/932 澳大利亚-13              http    cf=-      dl=-      X
-  691/932 澳大利亚-14              http    cf=604    dl=182    OK
+  691/932 澳大利亚-14              http    cf=-      dl=-      X
   692/932 保加利亚-01              http    cf=-      dl=-      X
   693/932 保加利亚-02              http    cf=-      dl=-      X
   694/932 比利时-02               http    cf=-      dl=-      X
@@ -757,7 +757,7 @@
   697/932 巴西-02                http    cf=-      dl=-      X
   698/932 保加利亚-03              http    cf=-      dl=-      X
   699/932 比利时-04               http    cf=-      dl=-      X
-  700/932 巴西-03                http    cf=444    dl=232    OK
+  700/932 巴西-03                http    cf=-      dl=-      X
   701/932 巴西-04                http    cf=-      dl=-      X
   702/932 玻利维亚-01              http    cf=-      dl=-      X
   703/932 巴西-05                http    cf=-      dl=-      X
@@ -789,7 +789,7 @@
   729/932 哥斯达黎加-01             http    cf=-      dl=-      X
   730/932 塞浦路斯-01              http    cf=-      dl=-      X
   731/932 哥斯达黎加-02             http    cf=-      dl=-      X
-  732/932 捷克-01                http    cf=415    dl=247    OK
+  732/932 捷克-01                http    cf=-      dl=-      X
   733/932 塞浦路斯-02              http    cf=-      dl=-      X
   734/932 捷克-02                http    cf=-      dl=-      X
   735/932 捷克-03                http    cf=-      dl=-      X
@@ -797,7 +797,7 @@
   737/932 德国-02                http    cf=-      dl=-      X
   738/932 德国-03                http    cf=-      dl=-      X
   739/932 德国-04                http    cf=-      dl=-      X
-  740/932 德国-05                http    cf=368    dl=272    OK
+  740/932 德国-05                http    cf=-      dl=-      X
   741/932 德国-06                http    cf=-      dl=-      X
   742/932 德国-07                http    cf=-      dl=-      X
   743/932 德国-08                http    cf=-      dl=-      X
@@ -807,7 +807,7 @@
   747/932 爱沙尼亚-02              http    cf=-      dl=-      X
   748/932 爱沙尼亚-03              http    cf=-      dl=-      X
   749/932 丹麦-01                http    cf=-      dl=-      X
-  750/932 德国-11                http    cf=313    dl=318    OK
+  750/932 德国-11                http    cf=-      dl=-      X
   751/932 德国-12                http    cf=-      dl=-      X
   752/932 丹麦-02                http    cf=-      dl=-      X
   753/932 丹麦-03                http    cf=-      dl=-      X
@@ -864,7 +864,7 @@
   804/932 以色列-02               http    cf=-      dl=-      X
   805/932 以色列-03               http    cf=-      dl=-      X
   806/932 印度-03                http    cf=-      dl=-      X
-  807/932 意大利-01               http    cf=422    dl=259    OK
+  807/932 意大利-01               http    cf=-      dl=-      X
   808/932 印度-04                http    cf=-      dl=-      X
   809/932 冰岛-01                http    cf=-      dl=-      X
   810/932 冰岛-02                http    cf=-      dl=-      X
@@ -906,90 +906,15 @@
   846/932 马耳他-02               http    cf=-      dl=-      X
   847/932 马来西亚-01              http    cf=-      dl=-      X
   848/932 荷兰-01                http    cf=-      dl=-      X
-  849/932 蒙古-02                http    cf=678    dl=127    OK
+  849/932 蒙古-02                http    cf=-      dl=-      X
   850/932 马来西亚-02              http    cf=-      dl=-      X
   851/932 荷兰-02                http    cf=-      dl=-      X
-  852/932 荷兰-03                http    cf=361    dl=287    OK
+  852/932 荷兰-03                http    cf=-      dl=-      X
   853/932 墨西哥-01               http    cf=-      dl=-      X
   854/932 墨西哥-02               http    cf=-      dl=-      X
   855/932 马来西亚-03              http    cf=-      dl=-      X
-  856/932 挪威-01                http    cf=363    dl=293    OK
+  856/932 挪威-01                http    cf=-      dl=-      X
   857/932 尼加拉瓜-01              http    cf=-      dl=-      X
   858/932 挪威-02                http    cf=-      dl=-      X
   859/932 挪威-03                http    cf=-      dl=-      X
   860/932 新西兰-01               http    cf=-      dl=-      X
-  861/932 新西兰-02               http    cf=-      dl=-      X
-  862/932 新西兰-03               http    cf=-      dl=-      X
-  863/932 新西兰-04               http    cf=-      dl=-      X
-  864/932 尼日利亚-01              http    cf=-      dl=-      X
-  865/932 巴拿马-01               http    cf=-      dl=-      X
-  866/932 秘鲁-01                http    cf=-      dl=-      X
-  867/932 菲律宾-01               http    cf=-      dl=-      X
-  868/932 菲律宾-02               http    cf=-      dl=-      X
-  869/932 菲律宾-03               http    cf=-      dl=-      X
-  870/932 巴基斯坦-01              http    cf=-      dl=-      X
-  871/932 秘鲁-02                http    cf=-      dl=-      X
-  872/932 巴拿马-02               http    cf=-      dl=-      X
-  873/932 波兰-01                http    cf=-      dl=-      X
-  874/932 巴拉圭-01               http    cf=-      dl=-      X
-  875/932 葡萄牙-01               http    cf=-      dl=-      X
-  876/932 巴拉圭-02               http    cf=-      dl=-      X
-  877/932 波兰-02                http    cf=-      dl=-      X
-  878/932 波兰-03                http    cf=-      dl=-      X
-  879/932 波多黎各-01              http    cf=-      dl=-      X
-  880/932 罗马尼亚-01              http    cf=-      dl=-      X
-  881/932 葡萄牙-02               http    cf=-      dl=-      X
-  882/932 波多黎各-02              http    cf=-      dl=-      X
-  883/932 葡萄牙-03               http    cf=-      dl=-      X
-  884/932 罗马尼亚-02              http    cf=-      dl=-      X
-  885/932 俄罗斯-01               http    cf=-      dl=-      X
-  886/932 新加坡-01               http    cf=-      dl=-      X
-  887/932 俄罗斯-02               http    cf=-      dl=-      X
-  888/932 新加坡-02               http    cf=-      dl=-      X
-  889/932 沙特阿拉伯-01             http    cf=-      dl=-      X
-  890/932 新加坡-03               http    cf=-      dl=-      X
-  891/932 俄罗斯-03               http    cf=-      dl=-      X
-  892/932 瑞典-01                http    cf=-      dl=-      X
-  893/932 俄罗斯-04               http    cf=-      dl=-      X
-  894/932 斯洛伐克-01              http    cf=-      dl=-      X
-  895/932 斯洛伐克-02              http    cf=-      dl=-      X
-  896/932 斯洛伐克-03              http    cf=-      dl=-      X
-  897/932 泰国-01                http    cf=-      dl=-      X
-  898/932 斯洛文尼亚-01             http    cf=-      dl=-      X
-  899/932 斯洛文尼亚-02             http    cf=-      dl=-      X
-  900/932 新加坡-04               http    cf=-      dl=-      X
-  901/932 泰国-02                http    cf=-      dl=-      X
-  902/932 土耳其-01               http    cf=-      dl=-      X
-  903/932 土耳其-02               http    cf=-      dl=-      X
-  904/932 土耳其-03               http    cf=-      dl=-      X
-  905/932 土耳其-04               http    cf=-      dl=-      X
-  906/932 美国-01                http    cf=-      dl=-      X
-  907/932 台湾-01                http    cf=-      dl=-      X
-  908/932 乌克兰-01               http    cf=-      dl=-      X
-  909/932 乌克兰-02               http    cf=-      dl=-      X
-  910/932 乌克兰-03               http    cf=-      dl=-      X
-  911/932 台湾-02                http    cf=602    dl=146    OK
-  912/932 乌克兰-04               http    cf=-      dl=-      X
-  913/932 美国-02                http    cf=-      dl=-      X
-  914/932 美国-03                http    cf=123    dl=490    OK
-  915/932 美国-04                http    cf=-      dl=-      X
-  916/932 美国-05                http    cf=-      dl=-      X
-  917/932 美国-06                http    cf=-      dl=-      X
-  918/932 美国-07                http    cf=-      dl=-      X
-  919/932 美国-08                http    cf=-      dl=-      X
-  920/932 美国-09                http    cf=-      dl=-      X
-  921/932 美国-10                http    cf=-      dl=-      X
-  922/932 美国-11                http    cf=-      dl=-      X
-  923/932 美国-12                http    cf=-      dl=-      X
-  924/932 美国-13                http    cf=106    dl=681    OK
-  925/932 美国-14                http    cf=-      dl=-      X
-  926/932 越南-01                http    cf=-      dl=-      X
-  927/932 乌拉圭-01               http    cf=-      dl=-      X
-  928/932 乌拉圭-02               http    cf=-      dl=-      X
-  929/932 南非-01                http    cf=-      dl=-      X
-  930/932 南非-02                http    cf=-      dl=-      X
-  931/932 越南-02                http    cf=-      dl=-      X
-  932/932 github-anytls-1      anytls  cf=122    dl=416    OK
-名字已按真实地区纠正
-写入 report.html（182 条，可用 182）
-写入 0070077.xyz：182 条
