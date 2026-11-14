@@ -1,11 +1,11 @@
-  sub                                            +16
-  sub                                            +97
+  sub                                            +12
+  sub                                            +95
   nodes.txt                                      +23
-  cfmem.txt                                      +14
+  cfmem.txt                                      +13
   base64.txt                                     +16
   v2ray.txt                                      +12
-  v2ray-2.txt                                    +51
-  v2ray                                          +74
+  v2ray-2.txt                                    +48
+  v2ray                                          +72
   sub.yaml                                       +0
   mihomo.yaml                                    +60
   all.yaml                                       +0
@@ -13,25 +13,25 @@
   sub                                            +0
   list.txt                                       +492
   clash.yaml                                     +36
-  v.txt                                          +427
+  v.txt                                          +426
   clash.config.yaml                              +2853
   list.txt                                       +110
-  clashmeta.txt                                  +2358
-  All_Configs_Sub.txt                            +5747
+  clashmeta.txt                                  +2365
+  All_Configs_Sub.txt                            +5750
   clash-meta-2.yaml                              +43
-  all.txt                                        +835
+  all.txt                                        +1279
   SSTime                                         +23
   all.yaml                                       +0
-  top100.txt                                     +54
+  top100.txt                                     +63
   clash.yml                                      +4
   v2                                             +201
-  all_sub.txt                                    +3719
+  all_sub.txt                                    +3729
   end-gfw-free                                   +6
-  ss.txt                                         +979
+  ss.txt                                         +978
   alive-fast                                     +17
   nodes.txt                                      +0
   Z.txt                                          +166
-  sub.txt                                        +2532
+  sub.txt                                        +2534
   proxies.txt                                    +45
   clash.yaml                                     +64
   vless                                          +533
@@ -49,839 +49,1239 @@
   port_80.txt                                    +194
   clash_config.yaml                              +0
   mix.txt                                        +670
-  top.txt                                        +765
+  top.txt                                        +763
   vless.txt                                      +0
-  all_servers.txt                                +386
-  mix-base64.txt                                 +9267
-抓取 34476 条
-去重后目标类型 826 条
+  all_servers.txt                                +231
+  mix-base64.txt                                 +9287
+抓取 34800 条
+去重后目标类型 1226 条
 开始测试，6 并发…
-    1/826 HK - zhuhai.uk       http    cf=730    dl=154    OK
-    2/826 US - zhuhai.uk       http    cf=162    dl=601    OK
-    3/826 KR - zhuhai.uk       http    cf=682    dl=71     OK
-    4/826 US - zhuhai.uk 02    http    cf=165    dl=404    OK
-    5/826 AU - zhuhai.uk       http    cf=775    dl=165    OK
-    6/826 CZ - zhuhai.uk       http    cf=505    dl=249    OK
-    7/826 RS - zhuhai.uk       http    cf=575    dl=226    OK
-    8/826 US - zhuhai.uk 06    http    cf=143    dl=457    OK
-    9/826 JP - zhuhai.uk 02    http    cf=558    dl=188    OK
-   10/826 NL - zhuhai.uk       http    cf=428    dl=285    OK
-   11/826 GB - zhuhai.uk       http    cf=415    dl=299    OK
-   12/826 PT - zhuhai.uk       http    cf=778    dl=132    OK
-   13/826 US - zhuhai.uk 08    http    cf=160    dl=724    OK
-   14/826 CZ - zhuhai.uk 02    http    cf=513    dl=249    OK
-   15/826 GB - zhuhai.uk 02    http    cf=410    dl=295    OK
-   16/826 🇹🇼_TW_台湾->🇺🇸_US_美国_I anytls  cf=314    dl=68     OK
-   17/826 🇩🇪 机场推荐:dafei.de 德国  anytls  cf=467    dl=21     OK
-   18/826 🇲🇾 机场推荐:dafei.de 马来  anytls  cf=266    dl=21     OK
-   19/826 🇩🇪DE_1|2.0MB/s       http    cf=36     dl=463    OK
-   20/826 🇨🇭CH_1|2.5MB/s       http    cf=490    dl=249    OK
-   21/826 🇪🇪EE_1|1.4MB/s       http    cf=533    dl=238    OK
-   22/826 🇵🇱PL_1|1.4MB/s       http    cf=514    dl=251    OK
-   23/826 🇧🇬BG_1|2.0MB/s|R002- http    cf=636    dl=209    OK
-   24/826 🇵🇱PL_2|2.4MB/s|R002- http    cf=513    dl=250    OK
-   25/826 🇭🇺HU_1|2.0MB/s       http    cf=512    dl=252    OK
-   26/826 🇺🇸US_2|3.3MB/s|P002- http    cf=158    dl=722    OK
-   27/826 🇬🇧GB_1|2.0MB/s|R002- http    cf=420    dl=312    OK
-   28/826 🇷🇺RU_2|1.5MB/s       http    cf=717    dl=185    OK
-   29/826 🇩🇪DE_2|3.5MB/s       http    cf=39     dl=2045   OK
-   30/826 🇮🇹IT_8|2.5MB/s|R002- http    cf=509    dl=229    OK
-   31/826 🇨🇦CA_1|1.2MB/s|K001- http    cf=126    dl=920    OK
-   32/826 🇳🇱NL_1|2.5MB/s       http    cf=442    dl=280    OK
-   33/826 🇺🇸US_3|1.4MB/s|P002- http    cf=160    dl=729    OK
-   34/826 🇩🇪DE_3|2.1MB/s       http    cf=479    dl=59     OK
-   35/826 🇬🇧GB_2|1.7MB/s|R002- http    cf=434    dl=278    OK
-   36/826 🇺🇸US_4|1.2MB/s|R002- http    cf=217    dl=508    OK
-   37/826 🇸🇬SG_2|2.8MB/s       http    cf=795    dl=163    OK
-   38/826 🇺🇸US_5|3.6MB/s       http    cf=1351   dl=75     OK
-   39/826 🇳🇱NL_2|2.0MB/s       http    cf=462    dl=283    OK
-   40/826 🇨🇿CZ_2|1.5MB/s       http    cf=509    dl=248    OK
-   41/826 🇺🇸US_6|2.9MB/s       http    cf=163    dl=613    OK
-   42/826 🇺🇸US_7|2.6MB/s|R002- http    cf=168    dl=756    OK
-   43/826 🇺🇸US_8|1.5MB/s       http    cf=171    dl=751    OK
-   44/826 🇸🇪SE_2|2.8MB/s|R002- http    cf=519    dl=248    OK
-   45/826 🇩🇰DK_1|2.1MB/s|R002- http    cf=454    dl=280    OK
-   46/826 🇺🇸US_9|2.4MB/s       http    cf=159    dl=745    OK
-   47/826 🇮🇪IE_1|1.7MB/s|P002- http    cf=467    dl=275    OK
-   48/826 🇷🇴RO_1|2.6MB/s       http    cf=589    dl=217    OK
-   49/826 🇬🇧GB_4|1.3MB/s|P002- http    cf=409    dl=272    OK
-   50/826 🇳🇱NL_3|2.0MB/s|P002- http    cf=419    dl=239    OK
-   51/826 🇺🇸US_10|1.2MB/s|R002 http    cf=242    dl=24     OK
-   52/826 🇺🇸US_11|1.7MB/s      http    cf=551    dl=234    OK
-   53/826 🇳🇱NL_4|1021KB/s      http    cf=451    dl=226    OK
-   54/826 🇺🇸US_12|1.1MB/s      http    cf=89     dl=775    OK
-   55/826 🇭🇷HR_1|1.7MB/s|K001- http    cf=524    dl=245    OK
-   56/826 🇩🇪DE_4|1.6MB/s       http    cf=505    dl=254    OK
-   57/826 🇸🇬SG_3|1.4MB/s       http    cf=602    dl=178    OK
-   58/826 🇺🇸US_15|1.0MB/s      http    cf=124    dl=728    OK
-   59/826 🇺🇸US_16|2.6MB/s|P002 http    cf=214    dl=564    OK
-   60/826 🇭🇰HK_1|1.3MB/s       http    cf=904    dl=134    OK
-   61/826                      http    cf=648    dl=195    OK
-   62/826                      http    cf=499    dl=258    OK
-   63/826                      http    cf=160    dl=660    OK
-   64/826                      http    cf=166    dl=710    OK
-   65/826                      http    cf=114    dl=968    OK
-   66/826                      http    cf=507    dl=254    OK
-   67/826                      http    cf=423    dl=302    OK
-   68/826                      http    cf=432    dl=287    OK
-   69/826                      http    cf=452    dl=282    OK
-   70/826                      http    cf=453    dl=284    OK
-   71/826                      http    cf=593    dl=219    OK
-   72/826                      http    cf=586    dl=213    OK
-   73/826                      http    cf=166    dl=735    OK
-   74/826                      http    cf=160    dl=701    OK
-   75/826                      http    cf=447    dl=290    OK
-   76/826                      http    cf=451    dl=266    OK
-   77/826                      http    cf=166    dl=725    OK
-   78/826                      http    cf=509    dl=255    OK
-   79/826                      http    cf=169    dl=735    OK
-   80/826                      http    cf=163    dl=768    OK
-   81/826                      http    cf=686    dl=202    OK
-   82/826                      http    cf=450    dl=288    OK
-   83/826                      http    cf=618    dl=232    OK
-   84/826                      http    cf=159    dl=750    OK
-   85/826                      http    cf=586    dl=217    OK
-   86/826                      http    cf=160    dl=695    OK
-   87/826                      http    cf=587    dl=218    OK
-   88/826                      http    cf=427    dl=297    OK
-   89/826                      http    cf=588    dl=212    OK
-   90/826                      http    cf=588    dl=212    OK
-   91/826                      http    cf=947    dl=139    OK
-   92/826                      http    cf=484    dl=266    OK
-   93/826                      http    cf=511    dl=256    OK
-   94/826                      http    cf=753    dl=163    OK
-   95/826                      http    cf=472    dl=273    OK
-   96/826                      http    cf=386    dl=285    OK
-   97/826                      http    cf=556    dl=201    OK
-   98/826                      http    cf=557    dl=229    OK
-   99/826                      http    cf=-      dl=-      X
-  100/826                      http    cf=236    dl=316    OK
-  101/826                      http    cf=126    dl=354    OK
-  102/826                      http    cf=-      dl=-      X
-  103/826 FR - zhuhai.uk 02 [f http    cf=541    dl=240    OK
-  104/826 HK - zhuhai.uk 03 [7 http    cf=910    dl=142    OK
-  105/826 HK - zhuhai.uk [b95f http    cf=705    dl=97     OK
-  106/826 ID - zhuhai.uk [57ab http    cf=862    dl=137    OK
-  107/826 IE - zhuhai.uk [dc3d http    cf=388    dl=312    OK
-  108/826 LT - zhuhai.uk [67e0 http    cf=567    dl=214    OK
-  109/826 NL - zhuhai.uk 03 [2 http    cf=449    dl=271    OK
-  110/826 NL - zhuhai.uk 04 [e http    cf=449    dl=291    OK
-  111/826 NL - zhuhai.uk [1aec http    cf=449    dl=288    OK
-  112/826 PL - zhuhai.uk [0568 http    cf=536    dl=238    OK
-  113/826 RU - zhuhai.uk [9b49 http    cf=641    dl=201    OK
-  114/826 SG - zhuhai.uk 02 [d http    cf=800    dl=156    OK
-  115/826 🇦🇹AT_1|1.0MB/s [c495 http    cf=522    dl=247    OK
-  116/826 🇨🇦CA_1|1.4MB/s|R002- http    cf=117    dl=440    OK
-  117/826 🇨🇦CA_2|3.1MB/s|P002- http    cf=105    dl=419    OK
-  118/826 🇨🇭CH_2|1.4MB/s|R002- http    cf=485    dl=257    OK
-  119/826 🇨🇭CH_3|1.6MB/s|K001- http    cf=495    dl=262    OK
-  120/826 🇨🇳CN_3|3.4MB/s [c34c http    cf=-      dl=-      X
-  121/826 🇩🇪DE_8|1.0MB/s|R002- http    cf=478    dl=270    OK
-  122/826 🇬🇧GB_2|2.3MB/s|R002- http    cf=402    dl=265    OK
-  123/826 🇬🇪GE_1|1.3MB/s [8036 http    cf=706    dl=116    OK
-  124/826 🇬🇷GR_2|1.9MB/s [563e http    cf=655    dl=193    OK
-  125/826 🇯🇵 日本 | JPN 2 [05743 anytls  cf=272    dl=21     OK
-  126/826 🇳🇴NO_1|1.6MB/s|P002- http    cf=578    dl=205    OK
-  127/826 🇺🇸US_11|1008KB/s [41 http    cf=-      dl=-      X
-  128/826                      http    cf=697    dl=162    OK
-  129/826                      http    cf=588    dl=214    OK
-  130/826                      http    cf=597    dl=210    OK
-  131/826                      http    cf=585    dl=215    OK
-  132/826                      http    cf=591    dl=214    OK
-  133/826                      http    cf=499    dl=86     OK
-  134/826                      http    cf=-      dl=-      X
-  135/826                      http    cf=589    dl=215    OK
-  136/826                      http    cf=583    dl=218    OK
-  137/826                      http    cf=166    dl=734    OK
-  138/826                      http    cf=507    dl=255    OK
-  139/826                      http    cf=436    dl=274    OK
-  140/826                      http    cf=-      dl=-      X
-  141/826                      http    cf=561    dl=174    OK
-  142/826                      http    cf=-      dl=-      X
-  143/826                      http    cf=-      dl=-      X
-  144/826                      http    cf=-      dl=-      X
-  145/826                      http    cf=-      dl=-      X
-  146/826                      http    cf=-      dl=-      X
-  147/826                      http    cf=513    dl=252    OK
-  148/826                      http    cf=571    dl=105    OK
-  149/826                      http    cf=504    dl=250    OK
-  150/826                      http    cf=580    dl=219    OK
-  151/826                      http    cf=2874   dl=-      X
-  152/826                      http    cf=-      dl=-      X
-  153/826                      http    cf=-      dl=-      X
-  154/826                      http    cf=-      dl=-      X
-  155/826                      http    cf=-      dl=-      X
-  156/826                      http    cf=-      dl=-      X
-  157/826                      http    cf=-      dl=-      X
-  158/826                      http    cf=-      dl=-      X
-  159/826                      http    cf=-      dl=-      X
-  160/826                      http    cf=-      dl=-      X
-  161/826                      http    cf=-      dl=-      X
-  162/826                      http    cf=-      dl=-      X
-  163/826                      http    cf=-      dl=-      X
-  164/826                      http    cf=-      dl=-      X
-  165/826                      http    cf=-      dl=-      X
-  166/826                      http    cf=-      dl=-      X
-  167/826                      http    cf=717    dl=-      X
-  168/826                      http    cf=-      dl=-      X
-  169/826                      http    cf=-      dl=-      X
-  170/826                      http    cf=-      dl=-      X
-  171/826                      http    cf=-      dl=-      X
-  172/826                      http    cf=-      dl=-      X
-  173/826                      http    cf=-      dl=-      X
-  174/826                      http    cf=-      dl=-      X
-  175/826                      http    cf=-      dl=-      X
-  176/826                      http    cf=-      dl=-      X
-  177/826                      http    cf=-      dl=-      X
-  178/826                      http    cf=-      dl=-      X
-  179/826                      http    cf=15002  dl=-      X
-  180/826                      http    cf=-      dl=-      X
-  181/826                      http    cf=-      dl=-      X
-  182/826                      http    cf=-      dl=-      X
-  183/826                      http    cf=-      dl=-      X
-  184/826                      http    cf=-      dl=-      X
-  185/826                      http    cf=-      dl=-      X
-  186/826                      http    cf=-      dl=-      X
-  187/826                      http    cf=-      dl=-      X
-  188/826                      http    cf=-      dl=-      X
-  189/826                      http    cf=-      dl=-      X
-  190/826                      http    cf=-      dl=-      X
-  191/826                      http    cf=-      dl=-      X
-  192/826                      http    cf=-      dl=-      X
-  193/826                      http    cf=-      dl=-      X
-  194/826                      http    cf=-      dl=-      X
-  195/826                      http    cf=-      dl=-      X
-  196/826                      http    cf=-      dl=-      X
-  197/826                      http    cf=-      dl=-      X
-  198/826                      http    cf=-      dl=-      X
-  199/826                      http    cf=-      dl=-      X
-  200/826                      http    cf=-      dl=-      X
-  201/826                      http    cf=-      dl=-      X
-  202/826                      http    cf=-      dl=-      X
-  203/826                      http    cf=5000   dl=-      X
-  204/826                      http    cf=683    dl=-      X
-  205/826                      http    cf=-      dl=-      X
-  206/826                      http    cf=-      dl=-      X
-  207/826                      http    cf=-      dl=-      X
-  208/826                      http    cf=-      dl=-      X
-  209/826                      http    cf=-      dl=-      X
-  210/826                      http    cf=-      dl=-      X
-  211/826                      http    cf=-      dl=-      X
-  212/826                      http    cf=-      dl=-      X
-  213/826                      http    cf=-      dl=-      X
-  214/826                      http    cf=-      dl=-      X
-  215/826                      http    cf=-      dl=-      X
-  216/826                      http    cf=-      dl=-      X
-  217/826                      http    cf=-      dl=-      X
-  218/826                      http    cf=-      dl=-      X
-  219/826                      http    cf=-      dl=-      X
-  220/826                      http    cf=-      dl=-      X
-  221/826                      http    cf=-      dl=-      X
-  222/826                      http    cf=-      dl=-      X
-  223/826                      http    cf=-      dl=-      X
-  224/826                      http    cf=-      dl=-      X
-  225/826                      http    cf=-      dl=-      X
-  226/826                      http    cf=-      dl=-      X
-  227/826                      http    cf=-      dl=-      X
-  228/826                      http    cf=-      dl=-      X
-  229/826                      http    cf=-      dl=-      X
-  230/826                      http    cf=-      dl=-      X
-  231/826                      http    cf=-      dl=-      X
-  232/826                      http    cf=-      dl=-      X
-  233/826                      http    cf=-      dl=-      X
-  234/826                      http    cf=-      dl=-      X
-  235/826                      http    cf=-      dl=-      X
-  236/826                      http    cf=-      dl=-      X
-  237/826                      http    cf=-      dl=-      X
-  238/826                      http    cf=1685   dl=113    OK
-  239/826                      http    cf=-      dl=-      X
-  240/826                      http    cf=2776   dl=-      X
-  241/826                      http    cf=-      dl=-      X
-  242/826                      http    cf=-      dl=-      X
-  243/826                      http    cf=-      dl=-      X
-  244/826                      http    cf=-      dl=-      X
-  245/826                      http    cf=-      dl=-      X
-  246/826                      http    cf=-      dl=-      X
-  247/826                      http    cf=-      dl=-      X
-  248/826                      http    cf=-      dl=-      X
-  249/826                      http    cf=986    dl=-      X
-  250/826                      http    cf=-      dl=-      X
-  251/826                      http    cf=-      dl=-      X
-  252/826                      http    cf=-      dl=-      X
-  253/826                      http    cf=-      dl=-      X
-  254/826                      http    cf=-      dl=-      X
-  255/826                      http    cf=-      dl=-      X
-  256/826                      http    cf=-      dl=-      X
-  257/826                      http    cf=-      dl=-      X
-  258/826                      http    cf=-      dl=-      X
-  259/826                      http    cf=-      dl=-      X
-  260/826                      http    cf=-      dl=-      X
-  261/826                      http    cf=-      dl=-      X
-  262/826                      http    cf=-      dl=-      X
-  263/826                      http    cf=-      dl=-      X
-  264/826                      http    cf=-      dl=-      X
-  265/826                      http    cf=-      dl=-      X
-  266/826                      http    cf=-      dl=-      X
-  267/826                      http    cf=-      dl=-      X
-  268/826                      http    cf=-      dl=-      X
-  269/826                      http    cf=-      dl=-      X
-  270/826                      http    cf=-      dl=-      X
-  271/826                      http    cf=-      dl=-      X
-  272/826                      http    cf=-      dl=-      X
-  273/826                      http    cf=-      dl=-      X
-  274/826                      http    cf=-      dl=-      X
-  275/826                      http    cf=-      dl=-      X
-  276/826                      http    cf=-      dl=-      X
-  277/826                      http    cf=-      dl=-      X
-  278/826                      http    cf=-      dl=-      X
-  279/826                      http    cf=-      dl=-      X
-  280/826                      http    cf=-      dl=-      X
-  281/826                      http    cf=-      dl=-      X
-  282/826                      http    cf=-      dl=-      X
-  283/826                      http    cf=-      dl=-      X
-  284/826                      http    cf=-      dl=-      X
-  285/826                      http    cf=-      dl=-      X
-  286/826                      http    cf=-      dl=-      X
-  287/826                      http    cf=-      dl=-      X
-  288/826                      http    cf=-      dl=-      X
-  289/826                      http    cf=-      dl=-      X
-  290/826                      http    cf=-      dl=-      X
-  291/826                      http    cf=-      dl=-      X
-  292/826                      http    cf=-      dl=-      X
-  293/826                      http    cf=-      dl=-      X
-  294/826                      http    cf=-      dl=-      X
-  295/826                      http    cf=-      dl=-      X
-  296/826                      http    cf=-      dl=-      X
-  297/826                      http    cf=-      dl=-      X
-  298/826                      http    cf=-      dl=-      X
-  299/826                      http    cf=-      dl=-      X
-  300/826                      http    cf=-      dl=-      X
-  301/826                      http    cf=-      dl=-      X
-  302/826                      http    cf=-      dl=-      X
-  303/826                      http    cf=1039   dl=130    OK
-  304/826                      http    cf=-      dl=-      X
-  305/826                      http    cf=-      dl=-      X
-  306/826                      http    cf=-      dl=-      X
-  307/826                      http    cf=-      dl=-      X
-  308/826                      http    cf=-      dl=-      X
-  309/826                      http    cf=-      dl=-      X
-  310/826                      http    cf=-      dl=-      X
-  311/826                      http    cf=-      dl=-      X
-  312/826                      http    cf=-      dl=-      X
-  313/826                      http    cf=-      dl=-      X
-  314/826                      http    cf=-      dl=-      X
-  315/826                      http    cf=-      dl=-      X
-  316/826                      http    cf=-      dl=-      X
-  317/826                      http    cf=-      dl=-      X
-  318/826                      http    cf=-      dl=-      X
-  319/826                      http    cf=5000   dl=-      X
-  320/826                      http    cf=-      dl=-      X
-  321/826                      http    cf=-      dl=-      X
-  322/826                      http    cf=-      dl=-      X
-  323/826                      http    cf=-      dl=-      X
-  324/826                      http    cf=1521   dl=72     OK
-  325/826                      http    cf=-      dl=-      X
-  326/826                      http    cf=-      dl=-      X
-  327/826                      http    cf=-      dl=-      X
-  328/826                      http    cf=-      dl=-      X
-  329/826                      http    cf=5000   dl=-      X
-  330/826                      http    cf=-      dl=-      X
-  331/826                      http    cf=-      dl=-      X
-  332/826                      http    cf=-      dl=-      X
-  333/826                      http    cf=-      dl=-      X
-  334/826                      http    cf=-      dl=-      X
-  335/826                      http    cf=-      dl=-      X
-  336/826                      http    cf=-      dl=-      X
-  337/826                      http    cf=-      dl=-      X
-  338/826                      http    cf=-      dl=-      X
-  339/826                      http    cf=-      dl=-      X
-  340/826                      http    cf=-      dl=-      X
-  341/826                      http    cf=-      dl=-      X
-  342/826                      http    cf=-      dl=-      X
-  343/826                      http    cf=-      dl=-      X
-  344/826                      http    cf=-      dl=-      X
-  345/826                      http    cf=-      dl=-      X
-  346/826                      http    cf=-      dl=-      X
-  347/826                      http    cf=1429   dl=-      X
-  348/826                      http    cf=-      dl=-      X
-  349/826                      http    cf=-      dl=-      X
-  350/826                      http    cf=-      dl=-      X
-  351/826                      http    cf=-      dl=-      X
-  352/826                      http    cf=-      dl=-      X
-  353/826                      http    cf=-      dl=-      X
-  354/826                      http    cf=-      dl=-      X
-  355/826                      http    cf=-      dl=-      X
-  356/826                      http    cf=-      dl=-      X
-  357/826                      http    cf=-      dl=-      X
-  358/826                      http    cf=-      dl=-      X
-  359/826                      http    cf=-      dl=-      X
-  360/826                      http    cf=-      dl=-      X
-  361/826                      http    cf=-      dl=-      X
-  362/826                      http    cf=-      dl=-      X
-  363/826                      http    cf=-      dl=-      X
-  364/826                      http    cf=-      dl=-      X
-  365/826                      http    cf=-      dl=-      X
-  366/826                      http    cf=-      dl=-      X
-  367/826                      http    cf=-      dl=-      X
-  368/826                      http    cf=2663   dl=-      X
-  369/826                      http    cf=-      dl=-      X
-  370/826                      http    cf=-      dl=-      X
-  371/826                      http    cf=-      dl=-      X
-  372/826                      http    cf=-      dl=-      X
-  373/826                      http    cf=-      dl=-      X
-  374/826                      http    cf=-      dl=-      X
-  375/826                      http    cf=-      dl=-      X
-  376/826                      http    cf=-      dl=-      X
-  377/826                      http    cf=-      dl=-      X
-  378/826                      http    cf=-      dl=-      X
-  379/826                      http    cf=-      dl=-      X
-  380/826                      http    cf=-      dl=-      X
-  381/826                      http    cf=-      dl=-      X
-  382/826                      http    cf=-      dl=-      X
-  383/826                      http    cf=-      dl=-      X
-  384/826                      http    cf=-      dl=-      X
-  385/826                      http    cf=-      dl=-      X
-  386/826                      http    cf=-      dl=-      X
-  387/826                      http    cf=-      dl=-      X
-  388/826                      http    cf=-      dl=-      X
-  389/826                      http    cf=-      dl=-      X
-  390/826                      http    cf=2990   dl=65     OK
-  391/826                      http    cf=449    dl=29     OK
-  392/826                      http    cf=-      dl=-      X
-  393/826                      http    cf=-      dl=-      X
-  394/826                      http    cf=-      dl=-      X
-  395/826                      http    cf=-      dl=-      X
-  396/826                      http    cf=5000   dl=-      X
-  397/826                      http    cf=-      dl=-      X
-  398/826                      http    cf=-      dl=-      X
-  399/826                      http    cf=-      dl=-      X
-  400/826                      http    cf=-      dl=-      X
-  401/826                      http    cf=-      dl=-      X
-  402/826                      http    cf=-      dl=-      X
-  403/826                      http    cf=-      dl=-      X
-  404/826                      http    cf=-      dl=-      X
-  405/826                      http    cf=-      dl=-      X
-  406/826                      http    cf=-      dl=-      X
-  407/826                      http    cf=-      dl=-      X
-  408/826                      http    cf=-      dl=-      X
-  409/826                      http    cf=-      dl=-      X
-  410/826                      http    cf=-      dl=-      X
-  411/826                      http    cf=-      dl=-      X
-  412/826                      http    cf=-      dl=-      X
-  413/826                      http    cf=-      dl=-      X
-  414/826                      http    cf=1255   dl=104    OK
-  415/826                      http    cf=-      dl=-      X
-  416/826                      http    cf=-      dl=-      X
-  417/826                      http    cf=-      dl=-      X
-  418/826                      http    cf=-      dl=-      X
-  419/826                      http    cf=-      dl=-      X
-  420/826                      http    cf=-      dl=-      X
-  421/826                      http    cf=-      dl=-      X
-  422/826                      http    cf=-      dl=-      X
-  423/826                      http    cf=-      dl=-      X
-  424/826                      http    cf=4907   dl=-      X
-  425/826                      http    cf=-      dl=-      X
-  426/826                      http    cf=-      dl=-      X
-  427/826                      http    cf=-      dl=-      X
-  428/826                      http    cf=-      dl=-      X
-  429/826                      http    cf=-      dl=-      X
-  430/826                      http    cf=-      dl=-      X
-  431/826                      http    cf=-      dl=-      X
-  432/826                      http    cf=3044   dl=-      X
-  433/826                      http    cf=-      dl=-      X
-  434/826                      http    cf=-      dl=-      X
-  435/826                      http    cf=-      dl=-      X
-  436/826                      http    cf=-      dl=-      X
-  437/826                      http    cf=-      dl=-      X
-  438/826                      http    cf=-      dl=-      X
-  439/826                      http    cf=-      dl=-      X
-  440/826                      http    cf=-      dl=-      X
-  441/826                      http    cf=-      dl=-      X
-  442/826                      http    cf=-      dl=-      X
-  443/826                      http    cf=-      dl=-      X
-  444/826                      http    cf=-      dl=-      X
-  445/826                      http    cf=-      dl=-      X
-  446/826                      http    cf=-      dl=-      X
-  447/826                      http    cf=-      dl=-      X
-  448/826                      http    cf=-      dl=-      X
-  449/826                      http    cf=-      dl=-      X
-  450/826                      http    cf=-      dl=-      X
-  451/826                      http    cf=-      dl=-      X
-  452/826                      http    cf=-      dl=-      X
-  453/826                      http    cf=-      dl=-      X
-  454/826                      http    cf=-      dl=-      X
-  455/826                      http    cf=-      dl=-      X
-  456/826                      http    cf=-      dl=-      X
-  457/826                      http    cf=-      dl=-      X
-  458/826                      http    cf=-      dl=-      X
-  459/826                      http    cf=-      dl=-      X
-  460/826                      http    cf=-      dl=-      X
-  461/826                      http    cf=-      dl=-      X
-  462/826                      http    cf=-      dl=-      X
-  463/826                      http    cf=-      dl=-      X
-  464/826                      http    cf=-      dl=-      X
-  465/826                      http    cf=-      dl=-      X
-  466/826                      http    cf=-      dl=-      X
-  467/826                      http    cf=-      dl=-      X
-  468/826                      http    cf=-      dl=-      X
-  469/826                      http    cf=1803   dl=-      X
-  470/826                      http    cf=-      dl=-      X
-  471/826                      http    cf=-      dl=-      X
-  472/826                      http    cf=-      dl=-      X
-  473/826                      http    cf=-      dl=-      X
-  474/826                      http    cf=-      dl=-      X
-  475/826                      http    cf=-      dl=-      X
-  476/826                      http    cf=-      dl=-      X
-  477/826                      http    cf=-      dl=-      X
-  478/826                      http    cf=1446   dl=-      X
-  479/826                      http    cf=-      dl=-      X
-  480/826                      http    cf=-      dl=-      X
-  481/826                      http    cf=-      dl=-      X
-  482/826                      http    cf=-      dl=-      X
-  483/826                      http    cf=-      dl=-      X
-  484/826                      http    cf=-      dl=-      X
-  485/826                      http    cf=-      dl=-      X
-  486/826                      http    cf=1086   dl=-      X
-  487/826                      http    cf=3542   dl=-      X
-  488/826                      http    cf=-      dl=-      X
-  489/826                      http    cf=-      dl=-      X
-  490/826                      http    cf=-      dl=-      X
-  491/826                      http    cf=-      dl=-      X
-  492/826                      http    cf=5000   dl=-      X
-  493/826                      http    cf=-      dl=-      X
-  494/826                      http    cf=-      dl=-      X
-  495/826                      http    cf=-      dl=-      X
-  496/826                      http    cf=-      dl=-      X
-  497/826                      http    cf=-      dl=-      X
-  498/826                      http    cf=-      dl=-      X
-  499/826                      http    cf=-      dl=-      X
-  500/826                      http    cf=-      dl=-      X
-  501/826                      http    cf=-      dl=-      X
-  502/826                      http    cf=-      dl=-      X
-  503/826                      http    cf=-      dl=-      X
-  504/826                      http    cf=-      dl=-      X
-  505/826                      http    cf=-      dl=-      X
-  506/826                      http    cf=1743   dl=45     OK
-  507/826                      http    cf=-      dl=-      X
-  508/826                      http    cf=-      dl=-      X
-  509/826                      http    cf=651    dl=95     OK
-  510/826                      http    cf=-      dl=-      X
-  511/826                      http    cf=-      dl=-      X
-  512/826                      http    cf=-      dl=-      X
-  513/826                      http    cf=-      dl=-      X
-  514/826                      http    cf=-      dl=-      X
-  515/826                      http    cf=-      dl=-      X
-  516/826                      http    cf=-      dl=-      X
-  517/826                      http    cf=-      dl=-      X
-  518/826                      http    cf=-      dl=-      X
-  519/826                      http    cf=-      dl=-      X
-  520/826                      http    cf=-      dl=-      X
-  521/826                      http    cf=-      dl=-      X
-  522/826                      http    cf=-      dl=-      X
-  523/826                      http    cf=-      dl=-      X
-  524/826                      http    cf=-      dl=-      X
-  525/826                      http    cf=-      dl=-      X
-  526/826                      http    cf=-      dl=-      X
-  527/826                      http    cf=-      dl=-      X
-  528/826                      http    cf=-      dl=-      X
-  529/826                      http    cf=-      dl=-      X
-  530/826                      http    cf=-      dl=-      X
-  531/826                      http    cf=-      dl=-      X
-  532/826                      http    cf=-      dl=-      X
-  533/826                      http    cf=-      dl=-      X
-  534/826                      http    cf=-      dl=-      X
-  535/826                      http    cf=-      dl=-      X
-  536/826                      http    cf=-      dl=-      X
-  537/826                      http    cf=-      dl=-      X
-  538/826                      http    cf=-      dl=-      X
-  539/826                      http    cf=-      dl=-      X
-  540/826                      http    cf=-      dl=-      X
-  541/826                      http    cf=-      dl=-      X
-  542/826                      http    cf=-      dl=-      X
-  543/826                      http    cf=-      dl=-      X
-  544/826                      http    cf=-      dl=-      X
-  545/826                      http    cf=-      dl=-      X
-  546/826                      http    cf=-      dl=-      X
-  547/826                      http    cf=-      dl=-      X
-  548/826                      http    cf=-      dl=-      X
-  549/826                      http    cf=-      dl=-      X
-  550/826                      http    cf=-      dl=-      X
-  551/826                      http    cf=667    dl=113    OK
-  552/826                      http    cf=-      dl=-      X
-  553/826 阿根廷-01               http    cf=-      dl=-      X
-  554/826 阿根廷-02               http    cf=-      dl=-      X
-  555/826 阿根廷-03               http    cf=-      dl=-      X
-  556/826 阿联酋-01               http    cf=-      dl=-      X
-  557/826 奥地利-01               http    cf=-      dl=-      X
-  558/826 澳大利亚-01              http    cf=-      dl=-      X
-  559/826 阿根廷-04               http    cf=-      dl=-      X
-  560/826 澳大利亚-02              http    cf=-      dl=-      X
-  561/826 阿联酋-02               http    cf=-      dl=-      X
-  562/826 澳大利亚-03              http    cf=-      dl=-      X
-  563/826 奥地利-02               http    cf=-      dl=-      X
-  564/826 阿根廷-05               http    cf=-      dl=-      X
-  565/826 澳大利亚-04              http    cf=-      dl=-      X
-  566/826 阿根廷-06               http    cf=-      dl=-      X
-  567/826 阿根廷-07               http    cf=-      dl=-      X
-  568/826 澳大利亚-05              http    cf=-      dl=-      X
-  569/826 奥地利-03               http    cf=-      dl=-      X
-  570/826 澳大利亚-06              http    cf=-      dl=-      X
-  571/826 澳大利亚-07              http    cf=-      dl=-      X
-  572/826 阿根廷-08               http    cf=-      dl=-      X
-  573/826 澳大利亚-08              http    cf=-      dl=-      X
-  574/826 阿根廷-09               http    cf=-      dl=-      X
-  575/826 澳大利亚-09              http    cf=-      dl=-      X
-  576/826 澳大利亚-10              http    cf=-      dl=-      X
-  577/826 澳大利亚-11              http    cf=-      dl=-      X
-  578/826 澳大利亚-12              http    cf=-      dl=-      X
-  579/826 澳大利亚-13              http    cf=-      dl=-      X
-  580/826 澳大利亚-14              http    cf=-      dl=-      X
-  581/826 玻利维亚-01              http    cf=-      dl=-      X
-  582/826 保加利亚-01              http    cf=-      dl=-      X
-  583/826 比利时-01               http    cf=-      dl=-      X
-  584/826 比利时-02               http    cf=-      dl=-      X
-  585/826 保加利亚-02              http    cf=-      dl=-      X
-  586/826 比利时-03               http    cf=-      dl=-      X
-  587/826 巴西-01                http    cf=-      dl=-      X
-  588/826 保加利亚-03              http    cf=-      dl=-      X
-  589/826 巴西-02                http    cf=-      dl=-      X
-  590/826 巴西-03                http    cf=-      dl=-      X
-  591/826 比利时-04               http    cf=-      dl=-      X
-  592/826 巴西-04                http    cf=-      dl=-      X
-  593/826 白俄罗斯-01              http    cf=-      dl=-      X
-  594/826 巴西-05                http    cf=-      dl=-      X
-  595/826 巴西-06                http    cf=-      dl=-      X
-  596/826 加拿大-01               http    cf=-      dl=-      X
-  597/826 巴西-07                http    cf=-      dl=-      X
-  598/826 加拿大-02               http    cf=-      dl=-      X
-  599/826 加拿大-03               http    cf=-      dl=-      X
-  600/826 加拿大-04               http    cf=-      dl=-      X
-  601/826 加拿大-05               http    cf=-      dl=-      X
-  602/826 加拿大-06               http    cf=-      dl=-      X
-  603/826 瑞士-01                http    cf=-      dl=-      X
-  604/826 加拿大-07               http    cf=-      dl=-      X
-  605/826 巴西-08                http    cf=-      dl=-      X
-  606/826 瑞士-02                http    cf=-      dl=-      X
-  607/826 加拿大-08               http    cf=-      dl=-      X
-  608/826 瑞士-03                http    cf=-      dl=-      X
-  609/826 智利-01                http    cf=-      dl=-      X
-  610/826 智利-02                http    cf=-      dl=-      X
-  611/826 智利-03                http    cf=-      dl=-      X
-  612/826 Côte d'Ivoire-01     http    cf=-      dl=-      X
-  613/826 瑞士-04                http    cf=-      dl=-      X
-  614/826 加拿大-09               http    cf=-      dl=-      X
-  615/826 哥伦比亚-01              http    cf=-      dl=-      X
-  616/826 中国-01                http    cf=-      dl=-      X
-  617/826 哥伦比亚-02              http    cf=-      dl=-      X
-  618/826 哥斯达黎加-01             http    cf=-      dl=-      X
-  619/826 塞浦路斯-01              http    cf=-      dl=-      X
-  620/826 塞浦路斯-02              http    cf=-      dl=-      X
-  621/826 捷克-01                http    cf=-      dl=-      X
-  622/826 中国-02                http    cf=-      dl=-      X
-  623/826 哥斯达黎加-02             http    cf=-      dl=-      X
-  624/826 德国-01                http    cf=-      dl=-      X
-  625/826 德国-02                http    cf=-      dl=-      X
-  626/826 捷克-02                http    cf=-      dl=-      X
-  627/826 德国-03                http    cf=-      dl=-      X
-  628/826 德国-04                http    cf=-      dl=-      X
-  629/826 德国-05                http    cf=-      dl=-      X
-  630/826 德国-06                http    cf=-      dl=-      X
-  631/826 德国-07                http    cf=-      dl=-      X
-  632/826 丹麦-01                http    cf=-      dl=-      X
-  633/826 德国-08                http    cf=-      dl=-      X
-  634/826 捷克-03                http    cf=-      dl=-      X
-  635/826 德国-09                http    cf=-      dl=-      X
-  636/826 丹麦-02                http    cf=-      dl=-      X
-  637/826 德国-10                http    cf=-      dl=-      X
-  638/826 德国-11                http    cf=-      dl=-      X
-  639/826 丹麦-03                http    cf=-      dl=-      X
-  640/826 爱沙尼亚-01              http    cf=-      dl=-      X
-  641/826 德国-12                http    cf=-      dl=-      X
-  642/826 丹麦-04                http    cf=-      dl=-      X
-  643/826 埃及-01                http    cf=-      dl=-      X
-  644/826 埃及-02                http    cf=-      dl=-      X
-  645/826 爱沙尼亚-02              http    cf=-      dl=-      X
-  646/826 阿尔及利亚-01             http    cf=-      dl=-      X
-  647/826 西班牙-01               http    cf=-      dl=-      X
-  648/826 厄瓜多尔-01              http    cf=-      dl=-      X
-  649/826 爱沙尼亚-03              http    cf=-      dl=-      X
-  650/826 西班牙-02               http    cf=-      dl=-      X
-  651/826 西班牙-03               http    cf=-      dl=-      X
-  652/826 西班牙-04               http    cf=-      dl=-      X
-  653/826 西班牙-05               http    cf=-      dl=-      X
-  654/826 西班牙-06               http    cf=-      dl=-      X
-  655/826 芬兰-01                http    cf=-      dl=-      X
-  656/826 法国-01                http    cf=-      dl=-      X
-  657/826 芬兰-02                http    cf=-      dl=-      X
-  658/826 英国-01                http    cf=-      dl=-      X
-  659/826 英国-02                http    cf=-      dl=-      X
-  660/826 英国-03                http    cf=-      dl=-      X
-  661/826 法国-02                http    cf=-      dl=-      X
-  662/826 英国-04                http    cf=-      dl=-      X
-  663/826 英国-05                http    cf=-      dl=-      X
-  664/826 英国-06                http    cf=-      dl=-      X
-  665/826 英国-07                http    cf=-      dl=-      X
-  666/826 英国-08                http    cf=-      dl=-      X
-  667/826 法国-03                http    cf=-      dl=-      X
-  668/826 英国-09                http    cf=-      dl=-      X
-  669/826 英国-10                http    cf=-      dl=-      X
-  670/826 英国-11                http    cf=-      dl=-      X
-  671/826 法国-04                http    cf=-      dl=-      X
-  672/826 英国-12                http    cf=-      dl=-      X
-  673/826 格鲁吉亚-01              http    cf=-      dl=-      X
-  674/826 英国-13                http    cf=-      dl=-      X
-  675/826 英国-14                http    cf=-      dl=-      X
-  676/826 英国-15                http    cf=-      dl=-      X
-  677/826 希腊-01                http    cf=-      dl=-      X
-  678/826 英国-16                http    cf=-      dl=-      X
-  679/826 格鲁吉亚-02              http    cf=-      dl=-      X
-  680/826 希腊-02                http    cf=-      dl=-      X
-  681/826 加纳-01                http    cf=-      dl=-      X
-  682/826 希腊-03                http    cf=-      dl=-      X
-  683/826 香港-01                http    cf=-      dl=-      X
-  684/826 危地马拉-01              http    cf=-      dl=-      X
-  685/826 希腊-04                http    cf=-      dl=-      X
-  686/826 克罗地亚-01              http    cf=-      dl=-      X
-  687/826 匈牙利-01               http    cf=-      dl=-      X
-  688/826 匈牙利-02               http    cf=-      dl=-      X
-  689/826 克罗地亚-02              http    cf=-      dl=-      X
-  690/826 匈牙利-03               http    cf=-      dl=-      X
-  691/826 香港-02                http    cf=-      dl=-      X
-  692/826 印度尼西亚-01             http    cf=-      dl=-      X
-  693/826 爱尔兰-01               http    cf=-      dl=-      X
-  694/826 以色列-01               http    cf=-      dl=-      X
-  695/826 以色列-02               http    cf=-      dl=-      X
-  696/826 印度-01                http    cf=-      dl=-      X
-  697/826 印度尼西亚-02             http    cf=-      dl=-      X
-  698/826 印度尼西亚-03             http    cf=-      dl=-      X
-  699/826 印度-02                http    cf=-      dl=-      X
-  700/826 爱尔兰-02               http    cf=-      dl=-      X
-  701/826 印度-03                http    cf=-      dl=-      X
-  702/826 以色列-03               http    cf=-      dl=-      X
-  703/826 冰岛-01                http    cf=-      dl=-      X
-  704/826 意大利-01               http    cf=-      dl=-      X
-  705/826 意大利-02               http    cf=-      dl=-      X
-  706/826 约旦-01                http    cf=-      dl=-      X
-  707/826 约旦-02                http    cf=-      dl=-      X
-  708/826 意大利-03               http    cf=-      dl=-      X
-  709/826 日本-01                http    cf=-      dl=-      X
-  710/826 日本-02                http    cf=-      dl=-      X
-  711/826 日本-03                http    cf=-      dl=-      X
-  712/826 意大利-04               http    cf=-      dl=-      X
-  713/826 冰岛-02                http    cf=-      dl=-      X
-  714/826 肯尼亚-01               http    cf=-      dl=-      X
-  715/826 日本-04                http    cf=-      dl=-      X
-  716/826 日本-05                http    cf=-      dl=-      X
-  717/826 日本-06                http    cf=-      dl=-      X
-  718/826 吉尔吉斯斯坦-01            http    cf=-      dl=-      X
-  719/826 日本-07                http    cf=-      dl=-      X
-  720/826 韩国-01                http    cf=-      dl=-      X
-  721/826 哈萨克斯坦-01             http    cf=-      dl=-      X
-  722/826 韩国-02                http    cf=-      dl=-      X
-  723/826 科威特-01               http    cf=-      dl=-      X
-  724/826 斯里兰卡-01              http    cf=-      dl=-      X
-  725/826 立陶宛-01               http    cf=-      dl=-      X
-  726/826 卢森堡-01               http    cf=-      dl=-      X
-  727/826 韩国-03                http    cf=-      dl=-      X
-  728/826 卢森堡-02               http    cf=-      dl=-      X
-  729/826 卢森堡-03               http    cf=-      dl=-      X
-  730/826 吉尔吉斯斯坦-02            http    cf=-      dl=-      X
-  731/826 卢森堡-04               http    cf=-      dl=-      X
-  732/826 拉脱维亚-01              http    cf=-      dl=-      X
-  733/826 卢森堡-05               http    cf=-      dl=-      X
-  734/826 蒙古-01                http    cf=-      dl=-      X
-  735/826 立陶宛-02               http    cf=-      dl=-      X
-  736/826 摩洛哥-01               http    cf=-      dl=-      X
-  737/826 蒙古-02                http    cf=-      dl=-      X
-  738/826 卢森堡-06               http    cf=-      dl=-      X
-  739/826 拉脱维亚-02              http    cf=-      dl=-      X
-  740/826 摩洛哥-02               http    cf=-      dl=-      X
-  741/826 墨西哥-01               http    cf=-      dl=-      X
-  742/826 墨西哥-02               http    cf=-      dl=-      X
-  743/826 马耳他-01               http    cf=-      dl=-      X
-  744/826 马来西亚-01              http    cf=-      dl=-      X
-  745/826 马耳他-02               http    cf=-      dl=-      X
-  746/826 荷兰-01                http    cf=-      dl=-      X
-  747/826 马来西亚-02              http    cf=-      dl=-      X
-  748/826 荷兰-02                http    cf=-      dl=-      X
-  749/826 马来西亚-03              http    cf=-      dl=-      X
-  750/826 挪威-01                http    cf=-      dl=-      X
-  751/826 尼加拉瓜-01              http    cf=-      dl=-      X
-  752/826 荷兰-03                http    cf=-      dl=-      X
-  753/826 新西兰-01               http    cf=-      dl=-      X
-  754/826 尼日利亚-01              http    cf=-      dl=-      X
-  755/826 挪威-02                http    cf=-      dl=-      X
-  756/826 巴拿马-01               http    cf=-      dl=-      X
-  757/826 新西兰-02               http    cf=-      dl=-      X
-  758/826 秘鲁-01                http    cf=-      dl=-      X
-  759/826 菲律宾-01               http    cf=-      dl=-      X
-  760/826 挪威-03                http    cf=-      dl=-      X
-  761/826 菲律宾-02               http    cf=-      dl=-      X
-  762/826 波兰-01                http    cf=-      dl=-      X
-  763/826 菲律宾-03               http    cf=-      dl=-      X
-  764/826 新西兰-03               http    cf=-      dl=-      X
-  765/826 秘鲁-02                http    cf=-      dl=-      X
-  766/826 新西兰-04               http    cf=-      dl=-      X
-  767/826 波兰-02                http    cf=-      dl=-      X
-  768/826 波多黎各-01              http    cf=-      dl=-      X
-  769/826 波多黎各-02              http    cf=-      dl=-      X
-  770/826 波兰-03                http    cf=-      dl=-      X
-  771/826 葡萄牙-01               http    cf=-      dl=-      X
-  772/826 葡萄牙-02               http    cf=-      dl=-      X
-  773/826 罗马尼亚-01              http    cf=-      dl=-      X
-  774/826 巴基斯坦-01              http    cf=-      dl=-      X
-  775/826 巴拉圭-01               http    cf=-      dl=-      X
-  776/826 葡萄牙-03               http    cf=-      dl=-      X
-  777/826 巴拉圭-02               http    cf=-      dl=-      X
-  778/826 罗马尼亚-02              http    cf=-      dl=-      X
-  779/826 俄罗斯-01               http    cf=-      dl=-      X
-  780/826 沙特阿拉伯-01             http    cf=-      dl=-      X
-  781/826 新加坡-01               http    cf=-      dl=-      X
-  782/826 俄罗斯-02               http    cf=-      dl=-      X
-  783/826 俄罗斯-03               http    cf=-      dl=-      X
-  784/826 新加坡-02               http    cf=-      dl=-      X
-  785/826 斯洛文尼亚-01             http    cf=-      dl=-      X
-  786/826 新加坡-03               http    cf=-      dl=-      X
-  787/826 斯洛文尼亚-02             http    cf=-      dl=-      X
-  788/826 瑞典-01                http    cf=-      dl=-      X
-  789/826 斯洛伐克-01              http    cf=-      dl=-      X
-  790/826 新加坡-04               http    cf=-      dl=-      X
-  791/826 泰国-01                http    cf=-      dl=-      X
-  792/826 俄罗斯-04               http    cf=-      dl=-      X
-  793/826 泰国-02                http    cf=-      dl=-      X
-  794/826 斯洛伐克-02              http    cf=-      dl=-      X
-  795/826 土耳其-01               http    cf=-      dl=-      X
-  796/826 土耳其-02               http    cf=-      dl=-      X
-  797/826 土耳其-03               http    cf=-      dl=-      X
-  798/826 土耳其-04               http    cf=-      dl=-      X
-  799/826 斯洛伐克-03              http    cf=-      dl=-      X
-  800/826 乌克兰-01               http    cf=-      dl=-      X
-  801/826 台湾-01                http    cf=-      dl=-      X
-  802/826 台湾-02                http    cf=-      dl=-      X
-  803/826 乌克兰-02               http    cf=-      dl=-      X
-  804/826 乌克兰-03               http    cf=-      dl=-      X
-  805/826 美国-01                http    cf=-      dl=-      X
-  806/826 乌克兰-04               http    cf=-      dl=-      X
-  807/826 美国-02                http    cf=-      dl=-      X
-  808/826 美国-03                http    cf=-      dl=-      X
-  809/826 美国-04                http    cf=-      dl=-      X
-  810/826 美国-05                http    cf=-      dl=-      X
-  811/826 美国-06                http    cf=-      dl=-      X
-  812/826 美国-07                http    cf=-      dl=-      X
-  813/826 美国-08                http    cf=-      dl=-      X
-  814/826 美国-09                http    cf=-      dl=-      X
-  815/826 美国-10                http    cf=-      dl=-      X
-  816/826 乌拉圭-01               http    cf=-      dl=-      X
-  817/826 乌拉圭-02               http    cf=-      dl=-      X
-  818/826 越南-01                http    cf=-      dl=-      X
-  819/826 美国-11                http    cf=-      dl=-      X
-  820/826 越南-02                http    cf=-      dl=-      X
-  821/826 南非-01                http    cf=-      dl=-      X
-  822/826 美国-12                http    cf=-      dl=-      X
-  823/826 美国-13                http    cf=-      dl=-      X
-  824/826 美国-14                http    cf=-      dl=-      X
-  825/826 南非-02                http    cf=-      dl=-      X
-  826/826 github-anytls-1      anytls  cf=120    dl=592    OK
+    1/1226 HK - zhuhai.uk       http    cf=731    dl=171    OK
+    2/1226 US - zhuhai.uk       http    cf=161    dl=747    OK
+    3/1226 KR - zhuhai.uk       http    cf=695    dl=123    OK
+    4/1226 US - zhuhai.uk 02    http    cf=162    dl=696    OK
+    5/1226 AU - zhuhai.uk       http    cf=748    dl=147    OK
+    6/1226 CZ - zhuhai.uk       http    cf=506    dl=257    OK
+    7/1226 RS - zhuhai.uk       http    cf=574    dl=229    OK
+    8/1226 US - zhuhai.uk 06    http    cf=162    dl=721    OK
+    9/1226 JP - zhuhai.uk 02    http    cf=568    dl=74     OK
+   10/1226 NL - zhuhai.uk       http    cf=426    dl=296    OK
+   11/1226 GB - zhuhai.uk       http    cf=415    dl=275    OK
+   12/1226 PT - zhuhai.uk       http    cf=778    dl=15     OK
+   13/1226 US - zhuhai.uk 08    http    cf=160    dl=637    OK
+   14/1226 CZ - zhuhai.uk 02    http    cf=522    dl=250    OK
+   15/1226 GB - zhuhai.uk 02    http    cf=416    dl=313    OK
+   16/1226 🇹🇼_TW_台湾->🇺🇸_US_美国_I anytls  cf=731    dl=50     OK
+   17/1226 🇩🇪 机场推荐:dafei.de 德国  anytls  cf=468    dl=60     OK
+   18/1226 🇲🇾 机场推荐:dafei.de 马来  anytls  cf=253    dl=13     OK
+   19/1226 🇩🇪DE_1|2.0MB/s       http    cf=38     dl=1830   OK
+   20/1226 🇨🇭CH_1|2.5MB/s       http    cf=491    dl=264    OK
+   21/1226 🇪🇪EE_1|1.4MB/s       http    cf=532    dl=235    OK
+   22/1226 🇵🇱PL_1|1.4MB/s       http    cf=513    dl=220    OK
+   23/1226 🇧🇬BG_1|2.0MB/s|R002- http    cf=638    dl=203    OK
+   24/1226 🇵🇱PL_2|2.4MB/s|R002- http    cf=514    dl=245    OK
+   25/1226 🇭🇺HU_1|2.0MB/s       http    cf=517    dl=243    OK
+   26/1226 🇺🇸US_2|3.3MB/s|P002- http    cf=162    dl=739    OK
+   27/1226 🇬🇧GB_1|2.0MB/s|R002- http    cf=418    dl=302    OK
+   28/1226 🇷🇺RU_2|1.5MB/s       http    cf=713    dl=196    OK
+   29/1226 🇩🇪DE_2|3.5MB/s       http    cf=36     dl=1624   OK
+   30/1226 🇮🇹IT_8|2.5MB/s|R002- http    cf=515    dl=236    OK
+   31/1226 🇨🇦CA_1|1.2MB/s|K001- http    cf=115    dl=34     OK
+   32/1226 🇳🇱NL_1|2.5MB/s       http    cf=456    dl=286    OK
+   33/1226 🇺🇸US_3|1.4MB/s|P002- http    cf=160    dl=759    OK
+   34/1226 🇩🇪DE_3|2.1MB/s       http    cf=459    dl=279    OK
+   35/1226 🇬🇧GB_2|1.7MB/s|R002- http    cf=432    dl=233    OK
+   36/1226 🇺🇸US_4|1.2MB/s|R002- http    cf=247    dl=461    OK
+   37/1226 🇸🇬SG_2|2.8MB/s       http    cf=793    dl=161    OK
+   38/1226 🇺🇸US_5|3.6MB/s       http    cf=1360   dl=104    OK
+   39/1226 🇳🇱NL_2|2.0MB/s       http    cf=451    dl=289    OK
+   40/1226 🇨🇿CZ_2|1.5MB/s       http    cf=517    dl=250    OK
+   41/1226 🇺🇸US_6|2.9MB/s       http    cf=163    dl=610    OK
+   42/1226 🇺🇸US_7|2.6MB/s|R002- http    cf=162    dl=752    OK
+   43/1226 🇺🇸US_8|1.5MB/s       http    cf=168    dl=743    OK
+   44/1226 🇸🇪SE_2|2.8MB/s|R002- http    cf=518    dl=245    OK
+   45/1226 🇩🇰DK_1|2.1MB/s|R002- http    cf=452    dl=284    OK
+   46/1226 🇺🇸US_9|2.4MB/s       http    cf=162    dl=733    OK
+   47/1226 🇮🇪IE_1|1.7MB/s|P002- http    cf=467    dl=192    OK
+   48/1226 🇷🇴RO_1|2.6MB/s       http    cf=598    dl=214    OK
+   49/1226 🇬🇧GB_4|1.3MB/s|P002- http    cf=405    dl=247    OK
+   50/1226 🇳🇱NL_3|2.0MB/s|P002- http    cf=462    dl=252    OK
+   51/1226 🇺🇸US_10|1.2MB/s|R002 http    cf=249    dl=277    OK
+   52/1226 🇺🇸US_11|1.7MB/s      http    cf=551    dl=238    OK
+   53/1226 🇳🇱NL_4|1021KB/s      http    cf=440    dl=281    OK
+   54/1226 🇺🇸US_12|1.1MB/s      http    cf=96     dl=977    OK
+   55/1226 🇭🇷HR_1|1.7MB/s|K001- http    cf=524    dl=224    OK
+   56/1226 🇩🇪DE_4|1.6MB/s       http    cf=505    dl=259    OK
+   57/1226 🇸🇬SG_3|1.4MB/s       http    cf=548    dl=127    OK
+   58/1226 🇺🇸US_15|1.0MB/s      http    cf=121    dl=735    OK
+   59/1226 🇺🇸US_16|2.6MB/s|P002 http    cf=211    dl=573    OK
+   60/1226 🇭🇰HK_1|1.3MB/s       http    cf=895    dl=141    OK
+   61/1226                      http    cf=657    dl=199    OK
+   62/1226                      http    cf=497    dl=258    OK
+   63/1226                      http    cf=160    dl=632    OK
+   64/1226                      http    cf=163    dl=700    OK
+   65/1226                      http    cf=126    dl=206    OK
+   66/1226                      http    cf=504    dl=258    OK
+   67/1226                      http    cf=423    dl=300    OK
+   68/1226                      http    cf=430    dl=21     OK
+   69/1226                      http    cf=444    dl=284    OK
+   70/1226                      http    cf=454    dl=289    OK
+   71/1226                      http    cf=591    dl=216    OK
+   72/1226                      http    cf=588    dl=209    OK
+   73/1226                      http    cf=159    dl=752    OK
+   74/1226                      http    cf=162    dl=734    OK
+   75/1226                      http    cf=446    dl=288    OK
+   76/1226                      http    cf=452    dl=280    OK
+   77/1226                      http    cf=163    dl=748    OK
+   78/1226                      http    cf=512    dl=251    OK
+   79/1226                      http    cf=163    dl=760    OK
+   80/1226                      http    cf=163    dl=764    OK
+   81/1226                      http    cf=688    dl=199    OK
+   82/1226                      http    cf=441    dl=285    OK
+   83/1226                      http    cf=631    dl=159    OK
+   84/1226                      http    cf=163    dl=733    OK
+   85/1226                      http    cf=591    dl=217    OK
+   86/1226                      http    cf=164    dl=678    OK
+   87/1226                      http    cf=586    dl=213    OK
+   88/1226                      http    cf=428    dl=275    OK
+   89/1226                      http    cf=601    dl=213    OK
+   90/1226                      http    cf=591    dl=218    OK
+   91/1226                      http    cf=903    dl=140    OK
+   92/1226                      http    cf=479    dl=262    OK
+   93/1226                      http    cf=505    dl=260    OK
+   94/1226                      http    cf=637    dl=186    OK
+   95/1226                      http    cf=465    dl=267    OK
+   96/1226                      http    cf=383    dl=251    OK
+   97/1226                      http    cf=556    dl=227    OK
+   98/1226                      http    cf=558    dl=234    OK
+   99/1226                      http    cf=-      dl=-      X
+  100/1226                      http    cf=235    dl=542    OK
+  101/1226                      http    cf=122    dl=972    OK
+  102/1226                      http    cf=-      dl=-      X
+  103/1226 FR - zhuhai.uk 02 [f http    cf=534    dl=199    OK
+  104/1226 HK - zhuhai.uk 03 [7 http    cf=911    dl=142    OK
+  105/1226 HK - zhuhai.uk [b95f http    cf=705    dl=94     OK
+  106/1226 ID - zhuhai.uk [57ab http    cf=860    dl=126    OK
+  107/1226 IE - zhuhai.uk [dc3d http    cf=394    dl=207    OK
+  108/1226 LT - zhuhai.uk [67e0 http    cf=563    dl=225    OK
+  109/1226 NL - zhuhai.uk 03 [2 http    cf=450    dl=283    OK
+  110/1226 NL - zhuhai.uk 04 [e http    cf=447    dl=285    OK
+  111/1226 NL - zhuhai.uk [1aec http    cf=448    dl=242    OK
+  112/1226 PL - zhuhai.uk [0568 http    cf=538    dl=236    OK
+  113/1226 RU - zhuhai.uk [9b49 http    cf=610    dl=-      X
+  114/1226 SG - zhuhai.uk 02 [d http    cf=798    dl=158    OK
+  115/1226 🇦🇹AT_1|1.0MB/s [c495 http    cf=529    dl=243    OK
+  116/1226 🇨🇦CA_1|1.4MB/s|R002- http    cf=119    dl=190    OK
+  117/1226 🇨🇦CA_2|3.1MB/s|P002- http    cf=118    dl=684    OK
+  118/1226 🇨🇭CH_2|1.4MB/s|R002- http    cf=491    dl=257    OK
+  119/1226 🇨🇭CH_3|1.6MB/s|K001- http    cf=495    dl=224    OK
+  120/1226 🇨🇳CN_3|3.4MB/s [c34c http    cf=-      dl=-      X
+  121/1226 🇩🇪DE_8|1.0MB/s|R002- http    cf=478    dl=265    OK
+  122/1226 🇬🇧GB_2|2.3MB/s|R002- http    cf=404    dl=214    OK
+  123/1226 🇬🇪GE_1|1.3MB/s [8036 http    cf=701    dl=184    OK
+  124/1226 🇬🇷GR_2|1.9MB/s [563e http    cf=647    dl=205    OK
+  125/1226 🇯🇵 日本 | JPN 2 [05743 anytls  cf=271    dl=20     OK
+  126/1226 🇳🇴NO_1|1.6MB/s|P002- http    cf=575    dl=221    OK
+  127/1226 🇺🇸US_11|1008KB/s [41 http    cf=-      dl=-      X
+  128/1226                      http    cf=694    dl=140    OK
+  129/1226                      http    cf=592    dl=196    OK
+  130/1226                      http    cf=592    dl=204    OK
+  131/1226                      http    cf=605    dl=218    OK
+  132/1226                      http    cf=593    dl=218    OK
+  133/1226                      http    cf=499    dl=260    OK
+  134/1226                      http    cf=-      dl=-      X
+  135/1226                      http    cf=592    dl=207    OK
+  136/1226                      http    cf=590    dl=211    OK
+  137/1226                      http    cf=158    dl=767    OK
+  138/1226                      http    cf=508    dl=240    OK
+  139/1226                      http    cf=433    dl=303    OK
+  140/1226                      http    cf=-      dl=-      X
+  141/1226                      http    cf=600    dl=176    OK
+  142/1226                      http    cf=-      dl=-      X
+  143/1226                      http    cf=-      dl=-      X
+  144/1226                      http    cf=-      dl=-      X
+  145/1226                      http    cf=-      dl=-      X
+  146/1226                      http    cf=-      dl=-      X
+  147/1226                      http    cf=510    dl=253    OK
+  148/1226                      http    cf=567    dl=249    OK
+  149/1226                      http    cf=497    dl=260    OK
+  150/1226                      http    cf=593    dl=219    OK
+  151/1226                      http    cf=349    dl=243    OK
+  152/1226                      http    cf=350    dl=304    OK
+  153/1226                      http    cf=350    dl=296    OK
+  154/1226                      http    cf=349    dl=280    OK
+  155/1226                      http    cf=350    dl=304    OK
+  156/1226                      http    cf=348    dl=289    OK
+  157/1226                      http    cf=350    dl=296    OK
+  158/1226                      http    cf=349    dl=273    OK
+  159/1226                      http    cf=351    dl=296    OK
+  160/1226                      http    cf=350    dl=268    OK
+  161/1226                      http    cf=352    dl=306    OK
+  162/1226                      http    cf=350    dl=306    OK
+  163/1226                      http    cf=351    dl=291    OK
+  164/1226                      http    cf=349    dl=307    OK
+  165/1226                      http    cf=349    dl=292    OK
+  166/1226                      http    cf=348    dl=290    OK
+  167/1226                      http    cf=350    dl=304    OK
+  168/1226                      http    cf=348    dl=266    OK
+  169/1226                      http    cf=349    dl=304    OK
+  170/1226                      http    cf=351    dl=272    OK
+  171/1226                      http    cf=349    dl=293    OK
+  172/1226                      http    cf=351    dl=271    OK
+  173/1226                      http    cf=350    dl=304    OK
+  174/1226                      http    cf=348    dl=304    OK
+  175/1226                      http    cf=352    dl=303    OK
+  176/1226                      http    cf=352    dl=303    OK
+  177/1226                      http    cf=352    dl=298    OK
+  178/1226                      http    cf=349    dl=303    OK
+  179/1226                      http    cf=351    dl=299    OK
+  180/1226                      http    cf=352    dl=275    OK
+  181/1226                      http    cf=349    dl=296    OK
+  182/1226                      http    cf=350    dl=308    OK
+  183/1226                      http    cf=347    dl=304    OK
+  184/1226                      http    cf=352    dl=307    OK
+  185/1226                      http    cf=351    dl=307    OK
+  186/1226                      http    cf=349    dl=262    OK
+  187/1226                      http    cf=352    dl=286    OK
+  188/1226                      http    cf=349    dl=302    OK
+  189/1226                      http    cf=350    dl=275    OK
+  190/1226                      http    cf=350    dl=304    OK
+  191/1226                      http    cf=350    dl=301    OK
+  192/1226                      http    cf=351    dl=304    OK
+  193/1226                      http    cf=351    dl=294    OK
+  194/1226                      http    cf=350    dl=284    OK
+  195/1226                      http    cf=349    dl=296    OK
+  196/1226                      http    cf=351    dl=294    OK
+  197/1226                      http    cf=350    dl=299    OK
+  198/1226                      http    cf=349    dl=309    OK
+  199/1226                      http    cf=351    dl=284    OK
+  200/1226                      http    cf=353    dl=275    OK
+  201/1226                      http    cf=349    dl=305    OK
+  202/1226                      http    cf=349    dl=304    OK
+  203/1226                      http    cf=351    dl=288    OK
+  204/1226                      http    cf=350    dl=304    OK
+  205/1226                      http    cf=349    dl=305    OK
+  206/1226                      http    cf=349    dl=305    OK
+  207/1226                      http    cf=351    dl=301    OK
+  208/1226                      http    cf=350    dl=305    OK
+  209/1226                      http    cf=350    dl=306    OK
+  210/1226                      http    cf=351    dl=296    OK
+  211/1226                      http    cf=350    dl=303    OK
+  212/1226                      http    cf=348    dl=271    OK
+  213/1226                      http    cf=350    dl=301    OK
+  214/1226                      http    cf=351    dl=297    OK
+  215/1226                      http    cf=350    dl=303    OK
+  216/1226                      http    cf=349    dl=300    OK
+  217/1226                      http    cf=352    dl=283    OK
+  218/1226                      http    cf=350    dl=304    OK
+  219/1226                      http    cf=353    dl=300    OK
+  220/1226                      http    cf=350    dl=292    OK
+  221/1226                      http    cf=351    dl=301    OK
+  222/1226                      http    cf=349    dl=309    OK
+  223/1226                      http    cf=350    dl=294    OK
+  224/1226                      http    cf=350    dl=308    OK
+  225/1226                      http    cf=354    dl=270    OK
+  226/1226                      http    cf=348    dl=294    OK
+  227/1226                      http    cf=354    dl=270    OK
+  228/1226                      http    cf=350    dl=297    OK
+  229/1226                      http    cf=351    dl=296    OK
+  230/1226                      http    cf=350    dl=296    OK
+  231/1226                      http    cf=350    dl=294    OK
+  232/1226                      http    cf=350    dl=300    OK
+  233/1226                      http    cf=349    dl=280    OK
+  234/1226                      http    cf=350    dl=303    OK
+  235/1226                      http    cf=349    dl=300    OK
+  236/1226                      http    cf=350    dl=303    OK
+  237/1226                      http    cf=354    dl=290    OK
+  238/1226                      http    cf=350    dl=308    OK
+  239/1226                      http    cf=350    dl=275    OK
+  240/1226                      http    cf=351    dl=305    OK
+  241/1226                      http    cf=350    dl=293    OK
+  242/1226                      http    cf=351    dl=303    OK
+  243/1226                      http    cf=350    dl=304    OK
+  244/1226                      http    cf=349    dl=298    OK
+  245/1226                      http    cf=379    dl=261    OK
+  246/1226                      http    cf=-      dl=-      X
+  247/1226                      http    cf=351    dl=286    OK
+  248/1226                      http    cf=355    dl=296    OK
+  249/1226                      http    cf=358    dl=276    OK
+  250/1226                      http    cf=377    dl=273    OK
+  251/1226                      http    cf=352    dl=296    OK
+  252/1226                      http    cf=379    dl=255    OK
+  253/1226                      http    cf=377    dl=275    OK
+  254/1226                      http    cf=377    dl=284    OK
+  255/1226                      http    cf=377    dl=281    OK
+  256/1226                      http    cf=377    dl=280    OK
+  257/1226                      http    cf=353    dl=282    OK
+  258/1226                      http    cf=358    dl=274    OK
+  259/1226                      http    cf=-      dl=-      X
+  260/1226                      http    cf=349    dl=305    OK
+  261/1226                      http    cf=378    dl=283    OK
+  262/1226                      http    cf=351    dl=269    OK
+  263/1226                      http    cf=376    dl=242    OK
+  264/1226                      http    cf=382    dl=263    OK
+  265/1226                      http    cf=377    dl=268    OK
+  266/1226                      http    cf=377    dl=256    OK
+  267/1226                      http    cf=315    dl=341    OK
+  268/1226                      http    cf=382    dl=255    OK
+  269/1226                      http    cf=378    dl=280    OK
+  270/1226                      http    cf=378    dl=285    OK
+  271/1226                      http    cf=376    dl=275    OK
+  272/1226                      http    cf=-      dl=-      X
+  273/1226                      http    cf=378    dl=285    OK
+  274/1226                      http    cf=389    dl=268    OK
+  275/1226                      http    cf=315    dl=330    OK
+  276/1226                      http    cf=314    dl=291    OK
+  277/1226                      http    cf=317    dl=285    OK
+  278/1226                      http    cf=316    dl=326    OK
+  279/1226                      http    cf=378    dl=284    OK
+  280/1226                      http    cf=376    dl=245    OK
+  281/1226                      http    cf=317    dl=281    OK
+  282/1226                      http    cf=315    dl=334    OK
+  283/1226                      http    cf=377    dl=275    OK
+  284/1226                      http    cf=379    dl=287    OK
+  285/1226                      http    cf=377    dl=284    OK
+  286/1226                      http    cf=381    dl=270    OK
+  287/1226                      http    cf=380    dl=251    OK
+  288/1226                      http    cf=316    dl=336    OK
+  289/1226                      http    cf=314    dl=305    OK
+  290/1226                      http    cf=380    dl=262    OK
+  291/1226                      http    cf=376    dl=265    OK
+  292/1226                      http    cf=316    dl=320    OK
+  293/1226                      http    cf=377    dl=283    OK
+  294/1226                      http    cf=383    dl=281    OK
+  295/1226                      http    cf=329    dl=323    OK
+  296/1226                      http    cf=315    dl=325    OK
+  297/1226                      http    cf=380    dl=237    OK
+  298/1226                      http    cf=378    dl=246    OK
+  299/1226                      http    cf=330    dl=317    OK
+  300/1226                      http    cf=377    dl=257    OK
+  301/1226                      http    cf=329    dl=319    OK
+  302/1226                      http    cf=381    dl=230    OK
+  303/1226                      http    cf=329    dl=319    OK
+  304/1226                      http    cf=353    dl=274    OK
+  305/1226                      http    cf=333    dl=320    OK
+  306/1226                      http    cf=329    dl=311    OK
+  307/1226                      http    cf=369    dl=255    OK
+  308/1226                      http    cf=328    dl=313    OK
+  309/1226                      http    cf=367    dl=289    OK
+  310/1226                      http    cf=368    dl=292    OK
+  311/1226                      http    cf=382    dl=283    OK
+  312/1226                      http    cf=366    dl=293    OK
+  313/1226                      http    cf=338    dl=200    OK
+  314/1226                      http    cf=333    dl=324    OK
+  315/1226                      http    cf=382    dl=282    OK
+  316/1226                      http    cf=317    dl=335    OK
+  317/1226                      http    cf=347    dl=309    OK
+  318/1226                      http    cf=315    dl=326    OK
+  319/1226                      http    cf=328    dl=323    OK
+  320/1226                      http    cf=330    dl=324    OK
+  321/1226                      http    cf=329    dl=212    OK
+  322/1226                      http    cf=381    dl=283    OK
+  323/1226                      http    cf=329    dl=289    OK
+  324/1226                      http    cf=331    dl=288    OK
+  325/1226                      http    cf=383    dl=283    OK
+  326/1226                      http    cf=332    dl=309    OK
+  327/1226                      http    cf=369    dl=283    OK
+  328/1226                      http    cf=387    dl=249    OK
+  329/1226                      http    cf=328    dl=315    OK
+  330/1226                      http    cf=329    dl=319    OK
+  331/1226                      http    cf=378    dl=255    OK
+  332/1226                      http    cf=331    dl=323    OK
+  333/1226                      http    cf=315    dl=338    OK
+  334/1226                      http    cf=329    dl=285    OK
+  335/1226                      http    cf=345    dl=277    OK
+  336/1226                      http    cf=329    dl=150    OK
+  337/1226                      http    cf=328    dl=312    OK
+  338/1226                      http    cf=332    dl=287    OK
+  339/1226                      http    cf=332    dl=317    OK
+  340/1226                      http    cf=327    dl=269    OK
+  341/1226                      http    cf=-      dl=-      X
+  342/1226                      http    cf=382    dl=274    OK
+  343/1226                      http    cf=383    dl=279    OK
+  344/1226                      http    cf=326    dl=328    OK
+  345/1226                      http    cf=367    dl=293    OK
+  346/1226                      http    cf=316    dl=339    OK
+  347/1226                      http    cf=367    dl=263    OK
+  348/1226                      http    cf=369    dl=295    OK
+  349/1226                      http    cf=347    dl=306    OK
+  350/1226                      http    cf=328    dl=291    OK
+  351/1226                      http    cf=328    dl=256    OK
+  352/1226                      http    cf=330    dl=323    OK
+  353/1226                      http    cf=348    dl=197    OK
+  354/1226                      http    cf=370    dl=281    OK
+  355/1226                      http    cf=348    dl=297    OK
+  356/1226                      http    cf=330    dl=285    OK
+  357/1226                      http    cf=329    dl=309    OK
+  358/1226                      http    cf=368    dl=294    OK
+  359/1226                      http    cf=331    dl=323    OK
+  360/1226                      http    cf=331    dl=325    OK
+  361/1226                      http    cf=329    dl=326    OK
+  362/1226                      http    cf=334    dl=313    OK
+  363/1226                      http    cf=366    dl=289    OK
+  364/1226                      http    cf=352    dl=273    OK
+  365/1226                      http    cf=347    dl=309    OK
+  366/1226                      http    cf=330    dl=323    OK
+  367/1226                      http    cf=358    dl=290    OK
+  368/1226                      http    cf=301    dl=357    OK
+  369/1226                      http    cf=299    dl=355    OK
+  370/1226                      http    cf=328    dl=326    OK
+  371/1226                      http    cf=-      dl=-      X
+  372/1226                      http    cf=-      dl=-      X
+  373/1226                      http    cf=298    dl=357    OK
+  374/1226                      http    cf=299    dl=331    OK
+  375/1226                      http    cf=299    dl=352    OK
+  376/1226                      http    cf=298    dl=227    OK
+  377/1226                      http    cf=300    dl=328    OK
+  378/1226                      http    cf=-      dl=-      X
+  379/1226                      http    cf=298    dl=83     OK
+  380/1226                      http    cf=-      dl=-      X
+  381/1226                      http    cf=298    dl=277    OK
+  382/1226                      http    cf=300    dl=346    OK
+  383/1226                      http    cf=-      dl=-      X
+  384/1226                      http    cf=298    dl=357    OK
+  385/1226                      http    cf=360    dl=293    OK
+  386/1226                      http    cf=353    dl=283    OK
+  387/1226                      http    cf=300    dl=208    OK
+  388/1226                      http    cf=299    dl=278    OK
+  389/1226                      http    cf=-      dl=-      X
+  390/1226                      http    cf=299    dl=358    OK
+  391/1226                      http    cf=303    dl=285    OK
+  392/1226                      http    cf=-      dl=-      X
+  393/1226                      http    cf=-      dl=-      X
+  394/1226                      http    cf=311    dl=291    OK
+  395/1226                      http    cf=312    dl=124    OK
+  396/1226                      http    cf=312    dl=332    OK
+  397/1226                      http    cf=311    dl=306    OK
+  398/1226                      http    cf=309    dl=269    OK
+  399/1226                      http    cf=318    dl=321    OK
+  400/1226                      http    cf=310    dl=340    OK
+  401/1226                      http    cf=312    dl=265    OK
+  402/1226                      http    cf=311    dl=341    OK
+  403/1226                      http    cf=314    dl=159    OK
+  404/1226                      http    cf=313    dl=277    OK
+  405/1226                      http    cf=311    dl=340    OK
+  406/1226                      http    cf=315    dl=342    OK
+  407/1226                      http    cf=318    dl=135    OK
+  408/1226                      http    cf=311    dl=177    OK
+  409/1226                      http    cf=319    dl=320    OK
+  410/1226                      http    cf=312    dl=118    OK
+  411/1226                      http    cf=311    dl=301    OK
+  412/1226                      http    cf=313    dl=154    OK
+  413/1226                      http    cf=312    dl=270    OK
+  414/1226                      http    cf=311    dl=304    OK
+  415/1226                      http    cf=-      dl=-      X
+  416/1226                      http    cf=311    dl=89     OK
+  417/1226                      http    cf=312    dl=341    OK
+  418/1226                      http    cf=313    dl=125    OK
+  419/1226                      http    cf=329    dl=294    OK
+  420/1226                      http    cf=338    dl=290    OK
+  421/1226                      http    cf=331    dl=290    OK
+  422/1226                      http    cf=351    dl=268    OK
+  423/1226                      http    cf=305    dl=351    OK
+  424/1226                      http    cf=335    dl=272    OK
+  425/1226                      http    cf=307    dl=169    OK
+  426/1226                      http    cf=303    dl=318    OK
+  427/1226                      http    cf=303    dl=192    OK
+  428/1226                      http    cf=307    dl=325    OK
+  429/1226                      http    cf=305    dl=276    OK
+  430/1226                      http    cf=306    dl=319    OK
+  431/1226                      http    cf=307    dl=278    OK
+  432/1226                      http    cf=305    dl=280    OK
+  433/1226                      http    cf=306    dl=190    OK
+  434/1226                      http    cf=-      dl=-      X
+  435/1226                      http    cf=303    dl=192    OK
+  436/1226                      http    cf=304    dl=336    OK
+  437/1226                      http    cf=305    dl=349    OK
+  438/1226                      http    cf=307    dl=94     OK
+  439/1226                      http    cf=350    dl=302    OK
+  440/1226                      http    cf=350    dl=297    OK
+  441/1226                      http    cf=315    dl=156    OK
+  442/1226                      http    cf=-      dl=-      X
+  443/1226                      http    cf=-      dl=-      X
+  444/1226                      http    cf=-      dl=-      X
+  445/1226                      http    cf=-      dl=-      X
+  446/1226                      http    cf=315    dl=332    OK
+  447/1226                      http    cf=-      dl=-      X
+  448/1226                      http    cf=529    dl=119    OK
+  449/1226                      http    cf=-      dl=-      X
+  450/1226                      http    cf=1280   dl=146    OK
+  451/1226                      http    cf=858    dl=52     OK
+  452/1226                      http    cf=388    dl=257    OK
+  453/1226                      http    cf=305    dl=354    OK
+  454/1226                      http    cf=614    dl=158    OK
+  455/1226                      http    cf=-      dl=-      X
+  456/1226                      http    cf=-      dl=-      X
+  457/1226                      http    cf=619    dl=162    OK
+  458/1226                      http    cf=-      dl=-      X
+  459/1226                      http    cf=5000   dl=-      X
+  460/1226                      http    cf=-      dl=-      X
+  461/1226                      http    cf=-      dl=-      X
+  462/1226                      http    cf=687    dl=157    OK
+  463/1226                      http    cf=-      dl=-      X
+  464/1226                      http    cf=-      dl=-      X
+  465/1226                      http    cf=-      dl=-      X
+  466/1226                      http    cf=-      dl=-      X
+  467/1226                      http    cf=-      dl=-      X
+  468/1226                      http    cf=-      dl=-      X
+  469/1226                      http    cf=-      dl=-      X
+  470/1226                      http    cf=-      dl=-      X
+  471/1226                      http    cf=-      dl=-      X
+  472/1226                      http    cf=688    dl=156    OK
+  473/1226                      http    cf=691    dl=155    OK
+  474/1226                      http    cf=686    dl=141    OK
+  475/1226                      http    cf=691    dl=157    OK
+  476/1226                      http    cf=685    dl=153    OK
+  477/1226                      http    cf=689    dl=158    OK
+  478/1226                      http    cf=715    dl=152    OK
+  479/1226                      http    cf=751    dl=144    OK
+  480/1226                      http    cf=-      dl=-      X
+  481/1226                      http    cf=714    dl=126    OK
+  482/1226                      http    cf=709    dl=-      X
+  483/1226                      http    cf=716    dl=136    OK
+  484/1226                      http    cf=692    dl=155    OK
+  485/1226                      http    cf=716    dl=149    OK
+  486/1226                      http    cf=688    dl=152    OK
+  487/1226                      http    cf=686    dl=154    OK
+  488/1226                      http    cf=714    dl=134    OK
+  489/1226                      http    cf=-      dl=-      X
+  490/1226                      http    cf=715    dl=147    OK
+  491/1226                      http    cf=-      dl=-      X
+  492/1226                      http    cf=716    dl=135    OK
+  493/1226                      http    cf=688    dl=150    OK
+  494/1226                      http    cf=716    dl=85     OK
+  495/1226                      http    cf=716    dl=152    OK
+  496/1226                      http    cf=-      dl=-      X
+  497/1226                      http    cf=714    dl=140    OK
+  498/1226                      http    cf=687    dl=154    OK
+  499/1226                      http    cf=715    dl=99     OK
+  500/1226                      http    cf=716    dl=136    OK
+  501/1226                      http    cf=714    dl=88     OK
+  502/1226                      http    cf=619    dl=173    OK
+  503/1226                      http    cf=620    dl=156    OK
+  504/1226                      http    cf=691    dl=140    OK
+  505/1226                      http    cf=714    dl=71     OK
+  506/1226                      http    cf=619    dl=171    OK
+  507/1226                      http    cf=-      dl=-      X
+  508/1226                      http    cf=624    dl=162    OK
+  509/1226                      http    cf=615    dl=172    OK
+  510/1226                      http    cf=619    dl=144    OK
+  511/1226                      http    cf=694    dl=156    OK
+  512/1226                      http    cf=689    dl=148    OK
+  513/1226                      http    cf=129    dl=428    OK
+  514/1226                      http    cf=-      dl=-      X
+  515/1226                      http    cf=-      dl=-      X
+  516/1226                      http    cf=-      dl=-      X
+  517/1226                      http    cf=-      dl=-      X
+  518/1226                      http    cf=-      dl=-      X
+  519/1226                      http    cf=684    dl=157    OK
+  520/1226                      http    cf=-      dl=-      X
+  521/1226                      http    cf=-      dl=-      X
+  522/1226                      http    cf=-      dl=-      X
+  523/1226                      http    cf=-      dl=-      X
+  524/1226                      http    cf=-      dl=-      X
+  525/1226                      http    cf=689    dl=145    OK
+  526/1226                      http    cf=-      dl=-      X
+  527/1226                      http    cf=15002  dl=-      X
+  528/1226                      http    cf=-      dl=-      X
+  529/1226                      http    cf=-      dl=-      X
+  530/1226                      http    cf=621    dl=160    OK
+  531/1226                      http    cf=-      dl=-      X
+  532/1226                      http    cf=623    dl=155    OK
+  533/1226                      http    cf=619    dl=161    OK
+  534/1226                      http    cf=161    dl=-      X
+  535/1226                      http    cf=619    dl=142    OK
+  536/1226                      http    cf=603    dl=112    OK
+  537/1226                      http    cf=-      dl=-      X
+  538/1226                      http    cf=686    dl=136    OK
+  539/1226                      http    cf=616    dl=161    OK
+  540/1226                      http    cf=621    dl=156    OK
+  541/1226                      http    cf=-      dl=-      X
+  542/1226                      http    cf=-      dl=-      X
+  543/1226                      http    cf=-      dl=-      X
+  544/1226                      http    cf=-      dl=-      X
+  545/1226                      http    cf=619    dl=160    OK
+  546/1226                      http    cf=604    dl=181    OK
+  547/1226                      http    cf=-      dl=-      X
+  548/1226                      http    cf=-      dl=-      X
+  549/1226                      http    cf=-      dl=-      X
+  550/1226                      http    cf=-      dl=-      X
+  551/1226                      http    cf=-      dl=-      X
+  552/1226                      http    cf=-      dl=-      X
+  553/1226                      http    cf=-      dl=-      X
+  554/1226                      http    cf=-      dl=-      X
+  555/1226                      http    cf=-      dl=-      X
+  556/1226                      http    cf=-      dl=-      X
+  557/1226                      http    cf=-      dl=-      X
+  558/1226                      http    cf=-      dl=-      X
+  559/1226                      http    cf=-      dl=-      X
+  560/1226                      http    cf=-      dl=-      X
+  561/1226                      http    cf=-      dl=-      X
+  562/1226                      http    cf=714    dl=-      X
+  563/1226                      http    cf=-      dl=-      X
+  564/1226                      http    cf=-      dl=-      X
+  565/1226                      http    cf=-      dl=-      X
+  566/1226                      http    cf=-      dl=-      X
+  567/1226                      http    cf=-      dl=-      X
+  568/1226                      http    cf=-      dl=-      X
+  569/1226                      http    cf=-      dl=-      X
+  570/1226                      http    cf=-      dl=-      X
+  571/1226                      http    cf=-      dl=-      X
+  572/1226                      http    cf=-      dl=-      X
+  573/1226                      http    cf=-      dl=-      X
+  574/1226                      http    cf=5001   dl=-      X
+  575/1226                      http    cf=-      dl=-      X
+  576/1226                      http    cf=-      dl=-      X
+  577/1226                      http    cf=-      dl=-      X
+  578/1226                      http    cf=-      dl=-      X
+  579/1226                      http    cf=-      dl=-      X
+  580/1226                      http    cf=-      dl=-      X
+  581/1226                      http    cf=-      dl=-      X
+  582/1226                      http    cf=-      dl=-      X
+  583/1226                      http    cf=4628   dl=-      X
+  584/1226                      http    cf=-      dl=-      X
+  585/1226                      http    cf=-      dl=-      X
+  586/1226                      http    cf=-      dl=-      X
+  587/1226                      http    cf=-      dl=-      X
+  588/1226                      http    cf=-      dl=-      X
+  589/1226                      http    cf=-      dl=-      X
+  590/1226                      http    cf=-      dl=-      X
+  591/1226                      http    cf=-      dl=-      X
+  592/1226                      http    cf=-      dl=-      X
+  593/1226                      http    cf=-      dl=-      X
+  594/1226                      http    cf=-      dl=-      X
+  595/1226                      http    cf=-      dl=-      X
+  596/1226                      http    cf=-      dl=-      X
+  597/1226                      http    cf=5001   dl=-      X
+  598/1226                      http    cf=-      dl=-      X
+  599/1226                      http    cf=-      dl=-      X
+  600/1226                      http    cf=-      dl=-      X
+  601/1226                      http    cf=-      dl=-      X
+  602/1226                      http    cf=-      dl=-      X
+  603/1226                      http    cf=-      dl=-      X
+  604/1226                      http    cf=-      dl=-      X
+  605/1226                      http    cf=-      dl=-      X
+  606/1226                      http    cf=-      dl=-      X
+  607/1226                      http    cf=-      dl=-      X
+  608/1226                      http    cf=-      dl=-      X
+  609/1226                      http    cf=-      dl=-      X
+  610/1226                      http    cf=-      dl=-      X
+  611/1226                      http    cf=-      dl=-      X
+  612/1226                      http    cf=-      dl=-      X
+  613/1226                      http    cf=-      dl=-      X
+  614/1226                      http    cf=-      dl=-      X
+  615/1226                      http    cf=-      dl=-      X
+  616/1226                      http    cf=-      dl=-      X
+  617/1226                      http    cf=1345   dl=-      X
+  618/1226                      http    cf=-      dl=-      X
+  619/1226                      http    cf=-      dl=-      X
+  620/1226                      http    cf=-      dl=-      X
+  621/1226                      http    cf=-      dl=-      X
+  622/1226                      http    cf=-      dl=-      X
+  623/1226                      http    cf=-      dl=-      X
+  624/1226                      http    cf=3303   dl=-      X
+  625/1226                      http    cf=-      dl=-      X
+  626/1226                      http    cf=-      dl=-      X
+  627/1226                      http    cf=-      dl=-      X
+  628/1226                      http    cf=-      dl=-      X
+  629/1226                      http    cf=-      dl=-      X
+  630/1226                      http    cf=-      dl=-      X
+  631/1226                      http    cf=-      dl=-      X
+  632/1226                      http    cf=-      dl=-      X
+  633/1226                      http    cf=-      dl=-      X
+  634/1226                      http    cf=-      dl=-      X
+  635/1226                      http    cf=-      dl=-      X
+  636/1226                      http    cf=-      dl=-      X
+  637/1226                      http    cf=-      dl=-      X
+  638/1226                      http    cf=-      dl=-      X
+  639/1226                      http    cf=-      dl=-      X
+  640/1226                      http    cf=-      dl=-      X
+  641/1226                      http    cf=-      dl=-      X
+  642/1226                      http    cf=-      dl=-      X
+  643/1226                      http    cf=-      dl=-      X
+  644/1226                      http    cf=-      dl=-      X
+  645/1226                      http    cf=-      dl=-      X
+  646/1226                      http    cf=-      dl=-      X
+  647/1226                      http    cf=-      dl=-      X
+  648/1226                      http    cf=-      dl=-      X
+  649/1226                      http    cf=-      dl=-      X
+  650/1226                      http    cf=-      dl=-      X
+  651/1226                      http    cf=-      dl=-      X
+  652/1226                      http    cf=-      dl=-      X
+  653/1226                      http    cf=-      dl=-      X
+  654/1226                      http    cf=-      dl=-      X
+  655/1226                      http    cf=-      dl=-      X
+  656/1226                      http    cf=-      dl=-      X
+  657/1226                      http    cf=-      dl=-      X
+  658/1226                      http    cf=-      dl=-      X
+  659/1226                      http    cf=-      dl=-      X
+  660/1226                      http    cf=-      dl=-      X
+  661/1226                      http    cf=-      dl=-      X
+  662/1226                      http    cf=-      dl=-      X
+  663/1226                      http    cf=-      dl=-      X
+  664/1226                      http    cf=-      dl=-      X
+  665/1226                      http    cf=-      dl=-      X
+  666/1226                      http    cf=-      dl=-      X
+  667/1226                      http    cf=-      dl=-      X
+  668/1226                      http    cf=-      dl=-      X
+  669/1226                      http    cf=-      dl=-      X
+  670/1226                      http    cf=-      dl=-      X
+  671/1226                      http    cf=-      dl=-      X
+  672/1226                      http    cf=-      dl=-      X
+  673/1226                      http    cf=-      dl=-      X
+  674/1226                      http    cf=-      dl=-      X
+  675/1226                      http    cf=-      dl=-      X
+  676/1226                      http    cf=-      dl=-      X
+  677/1226                      http    cf=-      dl=-      X
+  678/1226                      http    cf=-      dl=-      X
+  679/1226                      http    cf=-      dl=-      X
+  680/1226                      http    cf=-      dl=-      X
+  681/1226                      http    cf=-      dl=-      X
+  682/1226                      http    cf=-      dl=-      X
+  683/1226                      http    cf=-      dl=-      X
+  684/1226                      http    cf=-      dl=-      X
+  685/1226                      http    cf=-      dl=-      X
+  686/1226                      http    cf=-      dl=-      X
+  687/1226                      http    cf=-      dl=-      X
+  688/1226                      http    cf=-      dl=-      X
+  689/1226                      http    cf=-      dl=-      X
+  690/1226                      http    cf=-      dl=-      X
+  691/1226                      http    cf=-      dl=-      X
+  692/1226                      http    cf=-      dl=-      X
+  693/1226                      http    cf=-      dl=-      X
+  694/1226                      http    cf=-      dl=-      X
+  695/1226                      http    cf=-      dl=-      X
+  696/1226                      http    cf=-      dl=-      X
+  697/1226                      http    cf=-      dl=-      X
+  698/1226                      http    cf=-      dl=-      X
+  699/1226                      http    cf=-      dl=-      X
+  700/1226                      http    cf=-      dl=-      X
+  701/1226                      http    cf=-      dl=-      X
+  702/1226                      http    cf=-      dl=-      X
+  703/1226                      http    cf=-      dl=-      X
+  704/1226                      http    cf=-      dl=-      X
+  705/1226                      http    cf=-      dl=-      X
+  706/1226                      http    cf=-      dl=-      X
+  707/1226                      http    cf=-      dl=-      X
+  708/1226                      http    cf=-      dl=-      X
+  709/1226                      http    cf=-      dl=-      X
+  710/1226                      http    cf=-      dl=-      X
+  711/1226                      http    cf=-      dl=-      X
+  712/1226                      http    cf=-      dl=-      X
+  713/1226                      http    cf=-      dl=-      X
+  714/1226                      http    cf=-      dl=-      X
+  715/1226                      http    cf=-      dl=-      X
+  716/1226                      http    cf=-      dl=-      X
+  717/1226                      http    cf=-      dl=-      X
+  718/1226                      http    cf=-      dl=-      X
+  719/1226                      http    cf=-      dl=-      X
+  720/1226                      http    cf=-      dl=-      X
+  721/1226                      http    cf=-      dl=-      X
+  722/1226                      http    cf=-      dl=-      X
+  723/1226                      http    cf=-      dl=-      X
+  724/1226                      http    cf=-      dl=-      X
+  725/1226                      http    cf=-      dl=-      X
+  726/1226                      http    cf=-      dl=-      X
+  727/1226                      http    cf=-      dl=-      X
+  728/1226                      http    cf=5001   dl=-      X
+  729/1226                      http    cf=-      dl=-      X
+  730/1226                      http    cf=-      dl=-      X
+  731/1226                      http    cf=-      dl=-      X
+  732/1226                      http    cf=-      dl=-      X
+  733/1226                      http    cf=-      dl=-      X
+  734/1226                      http    cf=-      dl=-      X
+  735/1226                      http    cf=-      dl=-      X
+  736/1226                      http    cf=-      dl=-      X
+  737/1226                      http    cf=-      dl=-      X
+  738/1226                      http    cf=2823   dl=-      X
+  739/1226                      http    cf=-      dl=-      X
+  740/1226                      http    cf=-      dl=-      X
+  741/1226                      http    cf=-      dl=-      X
+  742/1226                      http    cf=-      dl=-      X
+  743/1226                      http    cf=-      dl=-      X
+  744/1226                      http    cf=-      dl=-      X
+  745/1226                      http    cf=-      dl=-      X
+  746/1226                      http    cf=-      dl=-      X
+  747/1226                      http    cf=-      dl=-      X
+  748/1226                      http    cf=-      dl=-      X
+  749/1226                      http    cf=-      dl=-      X
+  750/1226                      http    cf=165    dl=30     OK
+  751/1226                      http    cf=-      dl=-      X
+  752/1226                      http    cf=-      dl=-      X
+  753/1226                      http    cf=-      dl=-      X
+  754/1226                      http    cf=-      dl=-      X
+  755/1226                      http    cf=-      dl=-      X
+  756/1226                      http    cf=-      dl=-      X
+  757/1226                      http    cf=-      dl=-      X
+  758/1226                      http    cf=-      dl=-      X
+  759/1226                      http    cf=-      dl=-      X
+  760/1226                      http    cf=-      dl=-      X
+  761/1226                      http    cf=-      dl=-      X
+  762/1226                      http    cf=-      dl=-      X
+  763/1226                      http    cf=-      dl=-      X
+  764/1226                      http    cf=-      dl=-      X
+  765/1226                      http    cf=-      dl=-      X
+  766/1226                      http    cf=-      dl=-      X
+  767/1226                      http    cf=-      dl=-      X
+  768/1226                      http    cf=-      dl=-      X
+  769/1226                      http    cf=-      dl=-      X
+  770/1226                      http    cf=-      dl=-      X
+  771/1226                      http    cf=-      dl=-      X
+  772/1226                      http    cf=-      dl=-      X
+  773/1226                      http    cf=1068   dl=40     OK
+  774/1226                      http    cf=-      dl=-      X
+  775/1226                      http    cf=-      dl=-      X
+  776/1226                      http    cf=-      dl=-      X
+  777/1226                      http    cf=-      dl=-      X
+  778/1226                      http    cf=-      dl=-      X
+  779/1226                      http    cf=-      dl=-      X
+  780/1226                      http    cf=-      dl=-      X
+  781/1226                      http    cf=-      dl=-      X
+  782/1226                      http    cf=-      dl=-      X
+  783/1226                      http    cf=-      dl=-      X
+  784/1226                      http    cf=-      dl=-      X
+  785/1226                      http    cf=-      dl=-      X
+  786/1226                      http    cf=-      dl=-      X
+  787/1226                      http    cf=-      dl=-      X
+  788/1226                      http    cf=-      dl=-      X
+  789/1226                      http    cf=-      dl=-      X
+  790/1226                      http    cf=-      dl=-      X
+  791/1226                      http    cf=-      dl=-      X
+  792/1226                      http    cf=-      dl=-      X
+  793/1226                      http    cf=-      dl=-      X
+  794/1226                      http    cf=-      dl=-      X
+  795/1226                      http    cf=-      dl=-      X
+  796/1226                      http    cf=-      dl=-      X
+  797/1226                      http    cf=-      dl=-      X
+  798/1226                      http    cf=-      dl=-      X
+  799/1226                      http    cf=-      dl=-      X
+  800/1226                      http    cf=-      dl=-      X
+  801/1226                      http    cf=-      dl=-      X
+  802/1226                      http    cf=-      dl=-      X
+  803/1226                      http    cf=-      dl=-      X
+  804/1226                      http    cf=-      dl=-      X
+  805/1226                      http    cf=-      dl=-      X
+  806/1226                      http    cf=-      dl=-      X
+  807/1226                      http    cf=-      dl=-      X
+  808/1226                      http    cf=-      dl=-      X
+  809/1226                      http    cf=-      dl=-      X
+  810/1226                      http    cf=-      dl=-      X
+  811/1226                      http    cf=-      dl=-      X
+  812/1226                      http    cf=-      dl=-      X
+  813/1226                      http    cf=-      dl=-      X
+  814/1226                      http    cf=-      dl=-      X
+  815/1226                      http    cf=-      dl=-      X
+  816/1226                      http    cf=-      dl=-      X
+  817/1226                      http    cf=-      dl=-      X
+  818/1226                      http    cf=-      dl=-      X
+  819/1226                      http    cf=-      dl=-      X
+  820/1226                      http    cf=-      dl=-      X
+  821/1226                      http    cf=-      dl=-      X
+  822/1226                      http    cf=-      dl=-      X
+  823/1226                      http    cf=-      dl=-      X
+  824/1226                      http    cf=-      dl=-      X
+  825/1226                      http    cf=3845   dl=-      X
+  826/1226                      http    cf=-      dl=-      X
+  827/1226                      http    cf=-      dl=-      X
+  828/1226                      http    cf=-      dl=-      X
+  829/1226                      http    cf=2483   dl=-      X
+  830/1226                      http    cf=5000   dl=-      X
+  831/1226                      http    cf=-      dl=-      X
+  832/1226                      http    cf=-      dl=-      X
+  833/1226                      http    cf=-      dl=-      X
+  834/1226                      http    cf=-      dl=-      X
+  835/1226                      http    cf=-      dl=-      X
+  836/1226                      http    cf=-      dl=-      X
+  837/1226                      http    cf=-      dl=-      X
+  838/1226                      http    cf=-      dl=-      X
+  839/1226                      http    cf=-      dl=-      X
+  840/1226                      http    cf=-      dl=-      X
+  841/1226                      http    cf=-      dl=-      X
+  842/1226                      http    cf=-      dl=-      X
+  843/1226                      http    cf=-      dl=-      X
+  844/1226                      http    cf=-      dl=-      X
+  845/1226                      http    cf=-      dl=-      X
+  846/1226                      http    cf=-      dl=-      X
+  847/1226                      http    cf=-      dl=-      X
+  848/1226                      http    cf=-      dl=-      X
+  849/1226                      http    cf=-      dl=-      X
+  850/1226                      http    cf=-      dl=-      X
+  851/1226                      http    cf=-      dl=-      X
+  852/1226                      http    cf=-      dl=-      X
+  853/1226                      http    cf=-      dl=-      X
+  854/1226                      http    cf=-      dl=-      X
+  855/1226                      http    cf=-      dl=-      X
+  856/1226                      http    cf=-      dl=-      X
+  857/1226                      http    cf=-      dl=-      X
+  858/1226                      http    cf=-      dl=-      X
+  859/1226                      http    cf=-      dl=-      X
+  860/1226                      http    cf=-      dl=-      X
+  861/1226                      http    cf=-      dl=-      X
+  862/1226                      http    cf=-      dl=-      X
+  863/1226                      http    cf=-      dl=-      X
+  864/1226                      http    cf=765    dl=138    OK
+  865/1226                      http    cf=-      dl=-      X
+  866/1226                      http    cf=-      dl=-      X
+  867/1226                      http    cf=-      dl=-      X
+  868/1226                      http    cf=-      dl=-      X
+  869/1226                      http    cf=935    dl=68     OK
+  870/1226                      http    cf=-      dl=-      X
+  871/1226                      http    cf=-      dl=-      X
+  872/1226                      http    cf=-      dl=-      X
+  873/1226                      http    cf=-      dl=-      X
+  874/1226                      http    cf=-      dl=-      X
+  875/1226                      http    cf=-      dl=-      X
+  876/1226                      http    cf=-      dl=-      X
+  877/1226                      http    cf=-      dl=-      X
+  878/1226                      http    cf=-      dl=-      X
+  879/1226                      http    cf=-      dl=-      X
+  880/1226                      http    cf=-      dl=-      X
+  881/1226                      http    cf=-      dl=-      X
+  882/1226                      http    cf=-      dl=-      X
+  883/1226                      http    cf=-      dl=-      X
+  884/1226                      http    cf=-      dl=-      X
+  885/1226                      http    cf=-      dl=-      X
+  886/1226                      http    cf=-      dl=-      X
+  887/1226                      http    cf=-      dl=-      X
+  888/1226                      http    cf=-      dl=-      X
+  889/1226                      http    cf=-      dl=-      X
+  890/1226                      http    cf=-      dl=-      X
+  891/1226                      http    cf=-      dl=-      X
+  892/1226                      http    cf=-      dl=-      X
+  893/1226                      http    cf=-      dl=-      X
+  894/1226                      http    cf=-      dl=-      X
+  895/1226                      http    cf=-      dl=-      X
+  896/1226                      http    cf=-      dl=-      X
+  897/1226                      http    cf=-      dl=-      X
+  898/1226                      http    cf=-      dl=-      X
+  899/1226                      http    cf=-      dl=-      X
+  900/1226                      http    cf=-      dl=-      X
+  901/1226                      http    cf=163    dl=37     OK
+  902/1226                      http    cf=-      dl=-      X
+  903/1226                      http    cf=-      dl=-      X
+  904/1226                      http    cf=-      dl=-      X
+  905/1226                      http    cf=-      dl=-      X
+  906/1226                      http    cf=-      dl=-      X
+  907/1226                      http    cf=-      dl=-      X
+  908/1226                      http    cf=-      dl=-      X
+  909/1226                      http    cf=-      dl=-      X
+  910/1226                      http    cf=-      dl=-      X
+  911/1226                      http    cf=-      dl=-      X
+  912/1226                      http    cf=-      dl=-      X
+  913/1226                      http    cf=-      dl=-      X
+  914/1226                      http    cf=-      dl=-      X
+  915/1226                      http    cf=-      dl=-      X
+  916/1226                      http    cf=-      dl=-      X
+  917/1226                      http    cf=-      dl=-      X
+  918/1226                      http    cf=-      dl=-      X
+  919/1226                      http    cf=-      dl=-      X
+  920/1226                      http    cf=-      dl=-      X
+  921/1226                      http    cf=-      dl=-      X
+  922/1226                      http    cf=-      dl=-      X
+  923/1226                      http    cf=-      dl=-      X
+  924/1226                      http    cf=-      dl=-      X
+  925/1226                      http    cf=-      dl=-      X
+  926/1226                      http    cf=-      dl=-      X
+  927/1226                      http    cf=-      dl=-      X
+  928/1226                      http    cf=-      dl=-      X
+  929/1226                      http    cf=-      dl=-      X
+  930/1226                      http    cf=-      dl=-      X
+  931/1226                      http    cf=-      dl=-      X
+  932/1226                      http    cf=-      dl=-      X
+  933/1226                      http    cf=-      dl=-      X
+  934/1226                      http    cf=-      dl=-      X
+  935/1226                      http    cf=-      dl=-      X
+  936/1226                      http    cf=-      dl=-      X
+  937/1226                      http    cf=-      dl=-      X
+  938/1226                      http    cf=-      dl=-      X
+  939/1226                      http    cf=-      dl=-      X
+  940/1226                      http    cf=-      dl=-      X
+  941/1226                      http    cf=-      dl=-      X
+  942/1226                      http    cf=-      dl=-      X
+  943/1226                      http    cf=-      dl=-      X
+  944/1226                      http    cf=-      dl=-      X
+  945/1226                      http    cf=-      dl=-      X
+  946/1226                      http    cf=-      dl=-      X
+  947/1226                      http    cf=-      dl=-      X
+  948/1226                      http    cf=-      dl=-      X
+  949/1226                      http    cf=-      dl=-      X
+  950/1226                      http    cf=-      dl=-      X
+  951/1226                      http    cf=-      dl=-      X
+  952/1226                      http    cf=-      dl=-      X
+  953/1226 阿根廷-01               http    cf=471    dl=217    OK
+  954/1226 阿联酋-01               http    cf=607    dl=146    OK
+  955/1226 阿根廷-02               http    cf=518    dl=200    OK
+  956/1226 阿根廷-03               http    cf=467    dl=204    OK
+  957/1226 阿根廷-04               http    cf=493    dl=214    OK
+  958/1226 阿联酋-02               http    cf=556    dl=177    OK
+  959/1226 阿根廷-05               http    cf=494    dl=153    OK
+  960/1226 阿根廷-06               http    cf=471    dl=225    OK
+  961/1226 澳大利亚-01              http    cf=550    dl=185    OK
+  962/1226 阿根廷-07               http    cf=490    dl=206    OK
+  963/1226 澳大利亚-02              http    cf=560    dl=189    OK
+  964/1226 阿根廷-08               http    cf=491    dl=209    OK
+  965/1226 阿根廷-09               http    cf=467    dl=212    OK
+  966/1226 奥地利-01               http    cf=400    dl=263    OK
+  967/1226 澳大利亚-03              http    cf=549    dl=151    OK
+  968/1226 奥地利-02               http    cf=404    dl=260    OK
+  969/1226 澳大利亚-04              http    cf=550    dl=152    OK
+  970/1226 澳大利亚-05              http    cf=550    dl=161    OK
+  971/1226 澳大利亚-06              http    cf=524    dl=199    OK
+  972/1226 澳大利亚-07              http    cf=551    dl=184    OK
+  973/1226 澳大利亚-08              http    cf=520    dl=182    OK
+  974/1226 澳大利亚-09              http    cf=567    dl=110    OK
+  975/1226 澳大利亚-10              http    cf=550    dl=176    OK
+  976/1226 澳大利亚-11              http    cf=561    dl=185    OK
+  977/1226 奥地利-03               http    cf=402    dl=267    OK
+  978/1226 比利时-01               http    cf=598    dl=230    OK
+  979/1226 澳大利亚-12              http    cf=553    dl=188    OK
+  980/1226 比利时-02               http    cf=332    dl=307    OK
+  981/1226 比利时-03               http    cf=334    dl=314    OK
+  982/1226 澳大利亚-13              http    cf=521    dl=196    OK
+  983/1226 保加利亚-01              http    cf=493    dl=216    OK
+  984/1226 玻利维亚-01              http    cf=668    dl=60     OK
+  985/1226 比利时-04               http    cf=332    dl=313    OK
+  986/1226 澳大利亚-14              http    cf=556    dl=140    OK
+  987/1226 保加利亚-02              http    cf=422    dl=234    OK
+  988/1226 巴西-01                http    cf=439    dl=236    OK
+  989/1226 巴西-02                http    cf=467    dl=206    OK
+  990/1226 巴西-03                http    cf=439    dl=221    OK
+  991/1226 保加利亚-03              http    cf=489    dl=219    OK
+  992/1226 巴西-04                http    cf=437    dl=238    OK
+  993/1226 巴西-05                http    cf=441    dl=234    OK
+  994/1226 巴西-06                http    cf=441    dl=208    OK
+  995/1226 巴西-07                http    cf=437    dl=215    OK
+  996/1226 加拿大-01               http    cf=131    dl=408    OK
+  997/1226 白俄罗斯-01              http    cf=649    dl=28     OK
+  998/1226 加拿大-02               http    cf=112    dl=191    OK
+  999/1226 加拿大-03               http    cf=100    dl=804    OK
+  1000/1226 加拿大-04               http    cf=82     dl=1144   OK
+  1001/1226 加拿大-05               http    cf=225    dl=-      X
+  1002/1226 加拿大-06               http    cf=66     dl=961    OK
+  1003/1226 加拿大-07               http    cf=133    dl=745    OK
+  1004/1226 巴西-08                http    cf=446    dl=212    OK
+  1005/1226 加拿大-08               http    cf=94     dl=278    OK
+  1006/1226 瑞士-01                http    cf=364    dl=258    OK
+  1007/1226 加拿大-09               http    cf=124    dl=811    OK
+  1008/1226 瑞士-02                http    cf=370    dl=274    OK
+  1009/1226 智利-01                http    cf=415    dl=244    OK
+  1010/1226 中国-01                http    cf=644    dl=79     OK
+  1011/1226 智利-02                http    cf=388    dl=263    OK
+  1012/1226 Côte d'Ivoire-01     http    cf=676    dl=132    OK
+  1013/1226 智利-03                http    cf=-      dl=-      X
+  1014/1226 瑞士-03                http    cf=393    dl=176    OK
+  1015/1226 瑞士-04                http    cf=375    dl=283    OK
+  1016/1226 中国-02                http    cf=579    dl=54     OK
+  1017/1226 哥斯达黎加-01             http    cf=246    dl=379    OK
+  1018/1226 哥伦比亚-01              http    cf=239    dl=377    OK
+  1019/1226 塞浦路斯-01              http    cf=441    dl=-      X
+  1020/1226 塞浦路斯-02              http    cf=492    dl=229    OK
+  1021/1226 哥斯达黎加-02             http    cf=995    dl=254    OK
+  1022/1226 哥伦比亚-02              http    cf=281    dl=298    OK
+  1023/1226 捷克-01                http    cf=386    dl=270    OK
+  1024/1226 捷克-02                http    cf=395    dl=266    OK
+  1025/1226 捷克-03                http    cf=395    dl=260    OK
+  1026/1226 德国-01                http    cf=345    dl=275    OK
+  1027/1226 德国-02                http    cf=338    dl=299    OK
+  1028/1226 德国-03                http    cf=328    dl=314    OK
+  1029/1226 德国-04                http    cf=366    dl=273    OK
+  1030/1226 德国-05                http    cf=348    dl=275    OK
+  1031/1226 德国-06                http    cf=338    dl=286    OK
+  1032/1226 德国-07                http    cf=369    dl=281    OK
+  1033/1226 德国-08                http    cf=347    dl=281    OK
+  1034/1226 德国-09                http    cf=340    dl=249    OK
+  1035/1226 德国-10                http    cf=325    dl=319    OK
+  1036/1226 德国-11                http    cf=349    dl=284    OK
+  1037/1226 丹麦-01                http    cf=337    dl=292    OK
+  1038/1226 阿尔及利亚-01             http    cf=541    dl=46     OK
+  1039/1226 德国-12                http    cf=323    dl=321    OK
+  1040/1226 丹麦-02                http    cf=391    dl=180    OK
+  1041/1226 爱沙尼亚-01              http    cf=395    dl=257    OK
+  1042/1226 丹麦-03                http    cf=368    dl=232    OK
+  1043/1226 丹麦-04                http    cf=390    dl=268    OK
+  1044/1226 厄瓜多尔-01              http    cf=362    dl=137    OK
+  1045/1226 爱沙尼亚-02              http    cf=377    dl=274    OK
+  1046/1226 爱沙尼亚-03              http    cf=397    dl=261    OK
+  1047/1226 埃及-01                http    cf=429    dl=222    OK
+  1048/1226 埃及-02                http    cf=427    dl=234    OK
+  1049/1226 西班牙-01               http    cf=349    dl=232    OK
+  1050/1226 西班牙-02               http    cf=352    dl=239    OK
+  1051/1226 西班牙-03               http    cf=410    dl=222    OK
+  1052/1226 西班牙-04               http    cf=412    dl=223    OK
+  1053/1226 西班牙-05               http    cf=380    dl=268    OK
+  1054/1226 法国-01                http    cf=359    dl=228    OK
+  1055/1226 芬兰-01                http    cf=394    dl=240    OK
+  1056/1226 西班牙-06               http    cf=519    dl=224    OK
+  1057/1226 法国-02                http    cf=321    dl=291    OK
+  1058/1226 芬兰-02                http    cf=395    dl=259    OK
+  1059/1226 英国-01                http    cf=316    dl=330    OK
+  1060/1226 英国-02                http    cf=305    dl=341    OK
+  1061/1226 法国-03                http    cf=317    dl=283    OK
+  1062/1226 英国-03                http    cf=307    dl=320    OK
+  1063/1226 英国-04                http    cf=311    dl=317    OK
+  1064/1226 法国-04                http    cf=328    dl=286    OK
+  1065/1226 英国-05                http    cf=307    dl=322    OK
+  1066/1226 英国-06                http    cf=305    dl=252    OK
+  1067/1226 英国-07                http    cf=305    dl=340    OK
+  1068/1226 英国-08                http    cf=310    dl=319    OK
+  1069/1226 英国-09                http    cf=330    dl=205    OK
+  1070/1226 英国-10                http    cf=306    dl=333    OK
+  1071/1226 英国-11                http    cf=329    dl=324    OK
+  1072/1226 英国-12                http    cf=307    dl=336    OK
+  1073/1226 英国-13                http    cf=302    dl=33     OK
+  1074/1226 英国-14                http    cf=306    dl=335    OK
+  1075/1226 格鲁吉亚-01              http    cf=675    dl=130    OK
+  1076/1226 英国-15                http    cf=305    dl=310    OK
+  1077/1226 危地马拉-01              http    cf=275    dl=342    OK
+  1078/1226 加纳-01                http    cf=612    dl=114    OK
+  1079/1226 英国-16                http    cf=307    dl=339    OK
+  1080/1226 希腊-01                http    cf=460    dl=162    OK
+  1081/1226 希腊-02                http    cf=711    dl=223    OK
+  1082/1226 香港-01                http    cf=552    dl=89     OK
+  1083/1226 希腊-03                http    cf=463    dl=196    OK
+  1084/1226 克罗地亚-01              http    cf=406    dl=253    OK
+  1085/1226 香港-02                http    cf=704    dl=37     OK
+  1086/1226 希腊-04                http    cf=460    dl=222    OK
+  1087/1226 克罗地亚-02              http    cf=403    dl=254    OK
+  1088/1226 格鲁吉亚-02              http    cf=598    dl=132    OK
+  1089/1226 匈牙利-01               http    cf=395    dl=267    OK
+  1090/1226 匈牙利-02               http    cf=383    dl=259    OK
+  1091/1226 以色列-01               http    cf=436    dl=229    OK
+  1092/1226 爱尔兰-01               http    cf=282    dl=337    OK
+  1093/1226 印度尼西亚-01             http    cf=688    dl=160    OK
+  1094/1226 印度尼西亚-02             http    cf=687    dl=156    OK
+  1095/1226 匈牙利-03               http    cf=384    dl=262    OK
+  1096/1226 以色列-02               http    cf=442    dl=195    OK
+  1097/1226 印度尼西亚-03             http    cf=638    dl=132    OK
+  1098/1226 印度-01                http    cf=627    dl=156    OK
+  1099/1226 印度-02                http    cf=627    dl=155    OK
+  1100/1226 爱尔兰-02               http    cf=291    dl=199    OK
+  1101/1226 以色列-03               http    cf=445    dl=228    OK
+  1102/1226 冰岛-01                http    cf=350    dl=283    OK
+  1103/1226 印度-03                http    cf=622    dl=162    OK
+  1104/1226 意大利-01               http    cf=383    dl=246    OK
+  1105/1226 意大利-02               http    cf=375    dl=251    OK
+  1106/1226 约旦-01                http    cf=608    dl=175    OK
+  1107/1226 约旦-02                http    cf=608    dl=179    OK
+  1108/1226 意大利-03               http    cf=374    dl=247    OK
+  1109/1226 冰岛-02                http    cf=353    dl=258    OK
+  1110/1226 日本-01                http    cf=612    dl=168    OK
+  1111/1226 意大利-04               http    cf=391    dl=263    OK
+  1112/1226 肯尼亚-01               http    cf=824    dl=113    OK
+  1113/1226 日本-02                http    cf=611    dl=105    OK
+  1114/1226 日本-03                http    cf=612    dl=170    OK
+  1115/1226 日本-04                http    cf=613    dl=150    OK
+  1116/1226 日本-05                http    cf=613    dl=149    OK
+  1117/1226 日本-06                http    cf=614    dl=105    OK
+  1118/1226 吉尔吉斯斯坦-01            http    cf=706    dl=157    OK
+  1119/1226 日本-07                http    cf=612    dl=171    OK
+  1120/1226 韩国-01                http    cf=625    dl=164    OK
+  1121/1226 吉尔吉斯斯坦-02            http    cf=696    dl=159    OK
+  1122/1226 韩国-02                http    cf=479    dl=170    OK
+  1123/1226 立陶宛-01               http    cf=410    dl=208    OK
+  1124/1226 韩国-03                http    cf=582    dl=201    OK
+  1125/1226 卢森堡-01               http    cf=386    dl=263    OK
+  1126/1226 卢森堡-02               http    cf=390    dl=269    OK
+  1127/1226 哈萨克斯坦-01             http    cf=683    dl=141    OK
+  1128/1226 卢森堡-03               http    cf=390    dl=264    OK
+  1129/1226 立陶宛-02               http    cf=418    dl=246    OK
+  1130/1226 斯里兰卡-01              http    cf=601    dl=159    OK
+  1131/1226 科威特-01               http    cf=624    dl=58     OK
+  1132/1226 卢森堡-04               http    cf=387    dl=271    OK
+  1133/1226 卢森堡-05               http    cf=389    dl=270    OK
+  1134/1226 摩洛哥-01               http    cf=421    dl=201    OK
+  1135/1226 卢森堡-06               http    cf=390    dl=265    OK
+  1136/1226 拉脱维亚-01              http    cf=406    dl=262    OK
+  1137/1226 摩洛哥-02               http    cf=421    dl=236    OK
+  1138/1226 拉脱维亚-02              http    cf=417    dl=239    OK
+  1139/1226 蒙古-01                http    cf=680    dl=152    OK
+  1140/1226 马耳他-01               http    cf=464    dl=190    OK
+  1141/1226 墨西哥-01               http    cf=5001   dl=-      X
+  1142/1226 尼日利亚-01              http    cf=606    dl=165    OK
+  1143/1226 马耳他-02               http    cf=464    dl=20     OK
+  1144/1226 墨西哥-02               http    cf=685    dl=82     OK
+  1145/1226 蒙古-02                http    cf=677    dl=150    OK
+  1146/1226 尼加拉瓜-01              http    cf=270    dl=381    OK
+  1147/1226 马来西亚-01              http    cf=655    dl=159    OK
+  1148/1226 新西兰-01               http    cf=608    dl=165    OK
+  1149/1226 荷兰-01                http    cf=312    dl=288    OK
+  1150/1226 马来西亚-02              http    cf=714    dl=78     OK
+  1151/1226 荷兰-02                http    cf=319    dl=298    OK
+  1152/1226 新西兰-02               http    cf=626    dl=146    OK
+  1153/1226 新西兰-03               http    cf=618    dl=162    OK
+  1154/1226 马来西亚-03              http    cf=643    dl=108    OK
+  1155/1226 秘鲁-01                http    cf=477    dl=224    OK
+  1156/1226 荷兰-03                http    cf=321    dl=328    OK
+  1157/1226 挪威-01                http    cf=358    dl=281    OK
+  1158/1226 菲律宾-01               http    cf=789    dl=30     OK
+  1159/1226 挪威-02                http    cf=368    dl=275    OK
+  1160/1226 秘鲁-02                http    cf=478    dl=228    OK
+  1161/1226 新西兰-04               http    cf=621    dl=135    OK
+  1162/1226 挪威-03                http    cf=358    dl=281    OK
+  1163/1226 巴拿马-01               http    cf=332    dl=316    OK
+  1164/1226 波兰-01                http    cf=419    dl=249    OK
+  1165/1226 菲律宾-02               http    cf=747    dl=116    OK
+  1166/1226 菲律宾-03               http    cf=672    dl=64     OK
+  1167/1226 巴基斯坦-01              http    cf=919    dl=108    OK
+  1168/1226 波兰-02                http    cf=406    dl=246    OK
+  1169/1226 波多黎各-01              http    cf=195    dl=471    OK
+  1170/1226 波兰-03                http    cf=405    dl=252    OK
+  1171/1226 葡萄牙-01               http    cf=392    dl=63     OK
+  1172/1226 葡萄牙-02               http    cf=396    dl=57     OK
+  1173/1226 巴拉圭-01               http    cf=640    dl=74     OK
+  1174/1226 波多黎各-02              http    cf=201    dl=438    OK
+  1175/1226 巴拉圭-02               http    cf=663    dl=62     OK
+  1176/1226 俄罗斯-01               http    cf=390    dl=267    OK
+  1177/1226 罗马尼亚-01              http    cf=427    dl=235    OK
+  1178/1226 俄罗斯-02               http    cf=390    dl=266    OK
+  1179/1226 葡萄牙-03               http    cf=398    dl=23     OK
+  1180/1226 俄罗斯-03               http    cf=390    dl=265    OK
+  1181/1226 新加坡-01               http    cf=688    dl=150    OK
+  1182/1226 新加坡-02               http    cf=681    dl=137    OK
+  1183/1226 瑞典-01                http    cf=408    dl=257    OK
+  1184/1226 沙特阿拉伯-01             http    cf=611    dl=138    OK
+  1185/1226 俄罗斯-04               http    cf=391    dl=270    OK
+  1186/1226 斯洛文尼亚-01             http    cf=399    dl=260    OK
+  1187/1226 新加坡-03               http    cf=-      dl=-      X
+  1188/1226 罗马尼亚-02              http    cf=428    dl=240    OK
+  1189/1226 新加坡-04               http    cf=593    dl=177    OK
+  1190/1226 斯洛伐克-01              http    cf=381    dl=268    OK
+  1191/1226 斯洛文尼亚-02             http    cf=393    dl=259    OK
+  1192/1226 泰国-01                http    cf=659    dl=156    OK
+  1193/1226 斯洛伐克-02              http    cf=403    dl=262    OK
+  1194/1226 斯洛伐克-03              http    cf=400    dl=261    OK
+  1195/1226 土耳其-01               http    cf=432    dl=236    OK
+  1196/1226 泰国-02                http    cf=654    dl=150    OK
+  1197/1226 土耳其-02               http    cf=449    dl=148    OK
+  1198/1226 乌克兰-01               http    cf=402    dl=257    OK
+  1199/1226 土耳其-03               http    cf=430    dl=239    OK
+  1200/1226 台湾-01                http    cf=677    dl=113    OK
+  1201/1226 台湾-02                http    cf=568    dl=138    OK
+  1202/1226 乌克兰-02               http    cf=404    dl=255    OK
+  1203/1226 乌克兰-03               http    cf=431    dl=240    OK
+  1204/1226 乌克兰-04               http    cf=435    dl=231    OK
+  1205/1226 土耳其-04               http    cf=433    dl=236    OK
+  1206/1226 美国-01                http    cf=123    dl=226    OK
+  1207/1226 美国-02                http    cf=151    dl=630    OK
+  1208/1226 美国-03                http    cf=52     dl=28     OK
+  1209/1226 美国-04                http    cf=108    dl=774    OK
+  1210/1226 美国-05                http    cf=115    dl=818    OK
+  1211/1226 美国-06                http    cf=115    dl=851    OK
+  1212/1226 美国-07                http    cf=160    dl=664    OK
+  1213/1226 美国-08                http    cf=161    dl=652    OK
+  1214/1226 美国-09                http    cf=45     dl=1031   OK
+  1215/1226 美国-10                http    cf=127    dl=330    OK
+  1216/1226 美国-11                http    cf=113    dl=548    OK
+  1217/1226 乌拉圭-01               http    cf=1117   dl=70     OK
+  1218/1226 美国-12                http    cf=107    dl=780    OK
+  1219/1226 美国-13                http    cf=73     dl=579    OK
+  1220/1226 美国-14                http    cf=111    dl=739    OK
+  1221/1226 越南-01                http    cf=723    dl=157    OK
+  1222/1226 乌拉圭-02               http    cf=519    dl=192    OK
+  1223/1226 南非-01                http    cf=721    dl=146    OK
+  1224/1226 南非-02                http    cf=720    dl=144    OK
+  1225/1226 越南-02                http    cf=668    dl=11     OK
+  1226/1226 github-anytls-1      anytls  cf=116    dl=208    OK
 名字已按真实地区纠正
-写入 report.html（149 条，可用 149）
-写入 0070077.xyz：149 条
+写入 report.html（746 条，可用 746）
+写入 0070077.xyz：746 条
