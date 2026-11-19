@@ -293,16 +293,9 @@ def profile(q):
                 return out
             out["gg"] = curl_ms(port, GOOGLE)
             out["yt"] = curl_ms(port, YT)
-            # 下载最多测 3 次：成功 2 次即通过，通过后不再测第 3 次
-            vals, ok = [], 0
-            for _ in range(3):
-                v = curl_dl(port)
-                if v:
-                    ok += 1
-                    vals.append(v)
-                    if ok >= 2:
-                        break
-            out["dl"] = min(vals) if ok >= 2 else None
+            # 下载测 3 次：成功 1 次即通过，取最小速度
+            vals = [v for v in (curl_dl(port) for _ in range(3)) if v]
+            out["dl"] = min(vals) if vals else None
             out["udp"] = udp_via(port)
     finally:
         p.terminate()
