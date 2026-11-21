@@ -13,7 +13,7 @@ KEEP_TYPES = ("http", "anytls")
 CF = "http://cp.cloudflare.com/generate_204"
 GOOGLE = "https://www.gstatic.com/generate_204"
 YT = "https://i.ytimg.com/generate_204"
-DL = "https://speed.cloudflare.com/__down?bytes=300000"
+DL = "https://speed.cloudflare.com/__down?bytes=100000"
 
 BLOCKED = ()
 
@@ -182,7 +182,7 @@ def curl_ms(port, url, timeout=15):
     return int(v * 1000) if v > 0 else None
 
 
-def curl_dl(port, timeout=25, bytes_=300000):
+def curl_dl(port, timeout=25, bytes_=100000):
     r = subprocess.run(["curl", "-s", "-o", "/dev/null", "--max-time", str(timeout),
                         "-x", "http://127.0.0.1:%d" % port,
                         "-w", "%{http_code} %{size_download} %{speed_download}",
@@ -289,8 +289,6 @@ def profile(q):
         if samples:
             out["cf"] = min(samples)
             out["jit"] = max(samples) - min(samples) if len(samples) > 1 else 0
-            if out["cf"] > 3000:      # CF 延迟超过 3000ms 直接判死
-                return out
             out["gg"] = curl_ms(port, GOOGLE)
             out["yt"] = curl_ms(port, YT)
             # 下载测 3 次：成功 1 次即通过，取最小速度
