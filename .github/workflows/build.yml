@@ -57,13 +57,9 @@ jobs:
           git add -A sub/ 2>/dev/null || true
           git add -f sources.json 2>/dev/null || true
           git commit -q -m "update" 2>/dev/null || true
-          for i in 1 2 3; do
-            git pull --rebase -q origin main 2>/dev/null || true
-            git push -q && break
-            sleep 5
-          done
+          for i in 1 2 3; do git push -q && break; sleep 5; done
       - name: next
-        if: always()
+        if: success()
         env:
           PAT: ${{ secrets.PAT_TOKEN }}
         run: |
